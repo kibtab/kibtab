@@ -1,9 +1,20 @@
+<!--
+Badges. Uncomment these lines once `make coverage-svg` writes coverage.svg.
+The coverage badge needs a test run first. Keep the badge links in step
+with the repository name.
+
+![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/kibtab/kibtab?style=for-the-badge&logo=go)
+![GitHub License](https://img.shields.io/github/license/kibtab/kibtab?style=for-the-badge)
+
+![Coverage](coverage.svg)
+-->
+
 # Kibtab
 
 **Spreadsheet as client, database as server.**
 
 Kibtab turns a spreadsheet into a client for your relational database.
-> Excel is the first client. Other spreadsheet software can come later.
+Excel is the first client. Other spreadsheet software can come later.
 
 Your team keeps the familiar grid.
 The engine keeps the transactions, the version checks, and the audit trail.

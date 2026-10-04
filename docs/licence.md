@@ -48,7 +48,7 @@ It does not change at any version.
 
 The add-in for Microsoft Office uses the same terms.
 The client under `client/` ships in the same archive as the engine.
-Read [the plan](../plan.md) section 9 for the add-in.
+Read [the plan](../plan.md) section 8 for the add-in.
 
 ## The Vendored Skill
 

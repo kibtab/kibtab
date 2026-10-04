@@ -18,7 +18,7 @@ You must follow these rules when you write code or edit files in this repository
   `internal/adapters/driver/<transport>/`.
 * Put all CLI commands inside `cmd/kibtab/`. The CLI holds no domain logic.
 
-The canonical list of ports is in `plan.md` section 2.2.
+The canonical list of ports is in section 1.5.
 Add a port there first. Then define it in `internal/core/ports/`.
 
 ### 1.2 Database Agnostic Rules
@@ -61,6 +61,62 @@ The core must not name one client.
 * Fail at start when a chosen adapter has no implementation.
 * Keep `internal/core/` free of build tags. A build tag changes an adapter,
   never the domain.
+
+### 1.5 The Layout And The Port Contract
+
+This section is the canonical layout for the repository.
+Change this section first. Then change the code.
+
+```text
+kibtab/
+├── cmd/
+│   └── kibtab/                 # The wiring. It builds each adapter.
+│       └── main.go
+├── internal/
+│   ├── core/                   # The kernel. It has no I/O.
+│   │   ├── domain/             # The models. They name no engine or client.
+│   │   ├── ports/              # The interfaces. The core owns them.
+│   │   └── services/           # The use cases. They call the ports only.
+│   └── adapters/
+│       ├── driven/             # One package per database engine.
+│       │   └── postgres/       # The first engine.
+│       └── driver/             # One package per transport.
+│           └── http/           # The first transport.
+├── client/                     # The spreadsheet clients. One folder each.
+├── docs/                       # The documentation and the changelogs.
+│   ├── changelogs/             # One file per release.
+│   └── self-hosting/           # The guides for a server.
+├── skills/simple-english/      # The vendored writing skill.
+├── scripts/                    # The checks that run without a container.
+├── AGENTS.md                   # These rules.
+├── plan.md                     # The implementation plan.
+├── Makefile
+├── air.toml
+├── Caddyfile
+├── docker-compose.yml
+├── Dockerfile
+├── .goreleaser.yaml
+└── go.mod
+```
+
+The core names a need. The adapter supplies the answer.
+Add a row to the table below before you add a port.
+
+| Port | Need it fills |
+| --- | --- |
+| `RowRepository` | Read and write rows in a table. |
+| `TableRegistry` | List the tables. Read the metadata for a table. |
+| `AuditWriter` | Record a change to a cell. |
+| `Dialect` | Quote an identifier. Map a value to a type. Page a query. |
+| `TransactionRunner` | Run a group of writes as one unit. |
+| `Clock` | Give the current time. |
+| `SyncService` | Accept a sync payload. Return a sync result. |
+
+A new engine implements the ports. It does not change the core.
+A new client implements `SyncService`. It does not change the core.
+
+Use the `Clock` port in the core. Do not call the system clock in a test.
+Add a check that fails the build when the core imports an adapter.
 
 ## 2. Writing Code
 
