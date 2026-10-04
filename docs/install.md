@@ -61,7 +61,10 @@ Kibtab needs no C compiler.
 Every target sets `CGO_ENABLED=0`.
 Do not unset that variable.
 
-The build needs Go 1.22 or a newer version.
+The build needs Go 1.22.
+Kibtab targets `go 1.22` in `go.mod`.
+Kibtab does not raise the version for a newer release.
+Go 1.22 runs on `golang:1.22-alpine` and on every CI platform.
 
 ```bash
 go version

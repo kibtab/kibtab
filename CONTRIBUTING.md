@@ -41,7 +41,7 @@ cd kibtab
 go version
 ```
 
-Kibtab needs Go 1.22 or a newer version.
+Kibtab needs Go 1.22.
 Kibtab builds without a C compiler.
 
 ```bash

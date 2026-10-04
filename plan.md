@@ -52,6 +52,7 @@ The gate for a release lives in `AGENTS.md` section 5.
 ### Scope
 
 * [ ] Create `go.mod`. Set the module path and Go 1.22.
+* [ ] Set `go 1.22` in `go.mod`. Never raise the Go version.
 * [ ] Create `cmd/kibtab/main.go`. It reads `PORT` and `DATABASE_URL`.
 * [ ] Keep `README.md` as a landing page. Link to each guide under `docs/`.
 * [ ] Keep `CONTRIBUTING.md`. It holds the steps to send a change.
@@ -68,6 +69,8 @@ The gate for a release lives in `AGENTS.md` section 5.
 * [ ] Add `docs/releasing.md`. It holds the version, the gate, and the release
       steps.
 * [ ] Add `scripts/docs-check.py`. It runs under `make docs-check`.
+* [ ] Add `docs/ste100/index.md`. It holds the approved Technical Names.
+* [ ] Add each lexicon under `docs/ste100/`. It holds one category.
 * [ ] Create the folder `internal/core/` with `domain`, `ports`, `services`.
 * [ ] Create the folder `internal/adapters/driven/` for the engines.
 * [ ] Create the folder `internal/adapters/driver/` for the transports.
@@ -437,7 +440,7 @@ The boxes stay open until the work starts.
 * [ ] Remove the field names from v1.
 * [ ] Publish a migration guide for each v1 route.
 
-### v3.0.0 - Plugin Ports
+### v3.0.0 - External Ports
 
 * [ ] Open the port interfaces to an external module.
 * [ ] Load a module at start.

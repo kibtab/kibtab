@@ -17,6 +17,7 @@ It rejects a write from an old client.
 | [Self-hosting](self-hosting/README.md) | The section for running Kibtab on a server. |
 | [Architecture](architecture.md) | The layers, the ports, and the extension steps. |
 | [Conventions](conventions.md) | The code, the documentation, and the scope rules. |
+| [STE100 Technical Names](ste100/index.md) | The approved technical names for Kibtab. |
 | [Testing](testing.md) | The kinds of test and the coverage rules. |
 | [Releasing](releasing.md) | The version number, the gate, and the release steps. |
 | [Licence](licence.md) | The terms for the engine and the skill. |
@@ -71,6 +72,7 @@ Each one updates when its release arrives.
 | `docs/install.md` | v0.1.0 | The install steps. |
 | `docs/architecture.md` | v0.2.0 | The layers and the port contract. |
 | `docs/conventions.md` | v0.1.0 | The code, the documentation, and the scope rules. |
+| `docs/ste100/` | v0.1.0 | The approved Technical Names and the rejected words. |
 | `docs/testing.md` | v0.1.0 | The kinds of test and the coverage rules. |
 | `docs/releasing.md` | v0.1.0 | The version number, the gate, and the release steps. |
 | `docs/licence.md` | v0.1.0 | The terms for the engine and the skill. |
@@ -86,6 +88,7 @@ The first style is Simplified Technical English.
 The second style is British English.
 The full rules are in `../AGENTS.md` section 3.
 The detail is in [conventions.md](conventions.md).
+The approved technical names are in [ste100/index.md](ste100/index.md).
 
 Run the check before you open a pull request.
 
@@ -114,6 +117,7 @@ Each guide owns one task. Do not copy a step into a second file.
 | [self-hosting/troubleshooting.md](self-hosting/troubleshooting.md) | The steps to diagnose a fault. |
 | [architecture.md](architecture.md) | The layers, the ports, and the extension steps. |
 | [conventions.md](conventions.md) | The code, the documentation, and the scope rules. |
+| [ste100/index.md](ste100/index.md) | The approved Technical Names for Kibtab. |
 | [testing.md](testing.md) | The kinds of test and the coverage rules. |
 | [releasing.md](releasing.md) | The version number, the gate, and the release steps. |
 | [licence.md](licence.md) | The licence terms and the obligations. |

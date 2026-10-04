@@ -10,6 +10,7 @@ This document holds the rules that bind you. It points at the detail.
 | --- | --- |
 | [plan.md](plan.md) | The scope of each version. The open check boxes. |
 | [docs/conventions.md](docs/conventions.md) | The code, docs, and scope conventions. |
+| [docs/ste100/index.md](docs/ste100/index.md) | The approved Technical Names. Use them in every document. |
 | [docs/architecture.md](docs/architecture.md) | The tree, the ports, and the data flow. |
 | [docs/testing.md](docs/testing.md) | The unit tests and the coverage. |
 | [docs/releasing.md](docs/releasing.md) | The version, the gate, and the release. |
@@ -40,7 +41,7 @@ table, the data flow, and the steps to add an adapter.
 
 ## 2. Code
 
-* Use Go 1.22 or a newer version. Run `gofmt` and `go vet`.
+* Use Go 1.22. Set `go 1.22` in `go.mod`. Run `gofmt` and `go vet`.
 * Handle all errors directly. Never ignore a returned error.
 * Set `CGO_ENABLED=0` in every build, test, and release command.
 * Add no dependency that needs CGO.
@@ -62,6 +63,8 @@ The second style is British English.
 Both styles apply to every document, comment, and commit message.
 
 * Keep sentences shorter than 20 words. Use active voice.
+* Use each Technical Name as the catalogue defines it.
+  Add a name to the catalogue before you use it.
 * Use `-ise` and `-our`, never `-ize` or `-or`. Use `licence` as a noun.
 * Never use em dashes, contractions, or the words `should`, `would`, `may`,
   and `might`.
@@ -73,6 +76,8 @@ Three documents have one valid form. Copy them as written.
 
 Read [docs/conventions.md](docs/conventions.md) for the word rules and the
 documentation layout.
+Read [docs/ste100/index.md](docs/ste100/index.md) before you use a technical
+term. It holds the approved names and the rejected words.
 
 ## 4. Tests
 

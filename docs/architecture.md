@@ -35,6 +35,7 @@ kibtab/
 ├── client/<spreadsheet>/    One folder per spreadsheet client.
 ├── docs/                    The documentation and the changelogs.
 │   ├── changelogs/          One file per release.
+│   ├── ste100/              The approved Technical Names.
 │   └── self-hosting/        The guides for a server.
 ├── scripts/                 The checks that run without a container.
 ├── skills/simple-english/   The vendored writing skill.

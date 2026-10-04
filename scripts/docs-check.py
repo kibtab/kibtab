@@ -52,6 +52,27 @@ CODE_SPAN = re.compile(r"`[^`]*`")
 COMMENT = re.compile(r"<!--.*?-->", re.DOTALL)
 SENTENCE = re.compile(r"(?<=[.!?:])\s+")
 
+CATALOGUE_DIR = os.path.join("docs", "ste100")
+CATALOGUE_ENTRY = re.compile(r"^##\s+Technical Name:\s*(.+?)\s*$")
+ENTRY_FIELDS = (
+    "Part of Speech",
+    "Category",
+    "Definition",
+    "Approved Form",
+    "Do Not Use",
+    "Correct Example",
+    "Incorrect Example",
+)
+PARTS_OF_SPEECH = ("Noun", "Modifier")
+CATEGORIES = (
+    "Spreadsheet Term",
+    "Database Term",
+    "Architecture Term",
+    "Tooling Term",
+    "Identifier",
+)
+FIELD_LINE = re.compile(r"^-\s+\*\*([^*]+?):\*\*\s*(.+?)\s*$")
+
 
 def markdown_files(roots):
     """Yield each first-party Markdown file at or below each root."""
@@ -228,6 +249,142 @@ def check_style(files, failures):
                     )
 
 
+def check_catalogue(roots, failures):
+    """Check each Technical Name entry in the catalogue.
+
+    The check fails when an entry lacks a field, uses a part of speech that
+    the rules reject, repeats a name, or names a file that no longer exists.
+    """
+    if not os.path.isdir(CATALOGUE_DIR):
+        return
+    for name in sorted(os.listdir(CATALOGUE_DIR)):
+        if not name.endswith(".md") or name == "index.md":
+            continue
+        path = os.path.join(CATALOGUE_DIR, name)
+        lines = read(path).splitlines()
+        current = None
+        seen = set()
+        for number, line in enumerate(lines, start=1):
+            heading = CATALOGUE_ENTRY.match(line)
+            if heading:
+                current = heading.group(1)
+                key = current.lower()
+                if key in seen:
+                    failures.append(
+                        f"{path}:{number}: duplicate name in one lexicon: "
+                        f"{current}"
+                    )
+                seen.add(key)
+                found = set()
+                continue
+            if not current:
+                continue
+            field = FIELD_LINE.match(line.strip())
+            if field:
+                name_of_field, value = field.group(1), field.group(2)
+                if name_of_field not in ENTRY_FIELDS:
+                    failures.append(
+                        f"{path}:{number}: unknown field: {name_of_field}"
+                    )
+                    continue
+                found.add(name_of_field)
+                if name_of_field == "Part of Speech":
+                    if value not in PARTS_OF_SPEECH:
+                        failures.append(
+                            f"{path}:{number}: part of speech must be "
+                            f"Noun or Modifier: {value}"
+                        )
+                if name_of_field == "Category":
+                    category = value.strip()
+                    if category not in CATEGORIES:
+                        failures.append(
+                            f"{path}:{number}: unknown category: {value}"
+                        )
+        for field in ENTRY_FIELDS:
+            if field not in found:
+                failures.append(
+                    f"{path}: entry {current} has no {field}"
+                )
+        current = None
+        found = set()
+
+
+def check_catalogue_files(files, failures):
+    """Check each link from the catalogue index points at a lexicon file."""
+    index = os.path.join(CATALOGUE_DIR, "index.md")
+    if not os.path.isfile(index):
+        return
+    text = COMMENT.sub("", read(index))
+    for line in text.splitlines():
+        if not line.lstrip().startswith("|"):
+            continue
+        for _, target in LINK.findall(line):
+            if target.startswith(("http://", "https://", "#")):
+                continue
+            resolved = os.path.normpath(
+                os.path.join(CATALOGUE_DIR, target.split("#", 1)[0])
+            )
+            if not os.path.isfile(resolved):
+                failures.append(
+                    f"{index}: catalogue link is missing: {target}"
+                )
+
+
+def check_go_version(failures):
+    """Check that each document states the pinned Go version.
+
+    Kibtab pins Go 1.22. A document that names a different minor version
+    drifts from the pin, so the check fails.
+    """
+    patterns = (
+        re.compile(r"Go\s+(\d+)\.(\d+)\s+or\s+a\s+newer"),
+        re.compile(r"go\s+(\d+)\.(\d+)\s+or\s+later"),
+    )
+    for root, dirs, names in os.walk("."):
+        dirs[:] = [d for d in dirs if d not in SKIP_DIRS]
+        for name in sorted(names):
+            if not name.endswith(".md"):
+                continue
+            path = os.path.relpath(os.path.join(root, name), ".")
+            if is_checked(path):
+                continue
+            text = COMMENT.sub("", read(path))
+            for line in text.splitlines():
+                for pattern in patterns:
+                    match = pattern.search(line)
+                    if match and match.group(2) != "22":
+                        failures.append(
+                            f"{path}: Go pin drifted from 1.22: {match.group(0)}"
+                        )
+    if os.path.isfile("go.mod"):
+        with open("go.mod", encoding="utf-8") as handle:
+            match = re.search(r"^go\s+(\d+)\.(\d+)", handle.read(), re.M)
+        if match and match.group(2) != "22":
+            failures.append(
+                f"go.mod: go directive must be 1.22, found {match.group(0)}"
+            )
+
+
+def check_catalogue_complete(failures):
+    """Check each lexicon file has a link from the catalogue index.
+
+    A lexicon that no index link names cannot be found by a reader.
+    """
+    index = os.path.join(CATALOGUE_DIR, "index.md")
+    if not os.path.isfile(index):
+        return
+    text = COMMENT.sub("", read(index))
+    linked = set(LINK.findall(text))
+    linked = {target for _, target in linked}
+    for name in sorted(os.listdir(CATALOGUE_DIR)):
+        if not name.endswith(".md") or name == "index.md":
+            continue
+        if name not in linked:
+            failures.append(
+                f"{index}: no link to the lexicon file: {name}"
+            )
+
+
 def main():
     roots = sys.argv[1:]
     if not roots:
@@ -238,6 +395,10 @@ def main():
     check_sections(files, failures)
     check_links(files, failures)
     check_style(files, failures)
+    check_catalogue(roots, failures)
+    check_catalogue_files(files, failures)
+    check_catalogue_complete(failures)
+    check_go_version(failures)
     for line in failures:
         print(line)
     print(f"checked {len(files)} file(s), {len(failures)} problem(s)")

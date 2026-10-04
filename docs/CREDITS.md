@@ -56,9 +56,9 @@ Read `skills/simple-english/VENDOR.md` for the pinned commit.
 
 ## Test Data
 
-Kibtab tests use these sample datasets.
+Kibtab tests use these sample data sets.
 
-| Dataset | Source | Licence |
+| Sample | Source | Licence |
 | --- | --- | --- |
 | The sample sales table | Made for this project. | Apache-2.0. |
 | The conflict test fixture | Made for this project. | Apache-2.0. |

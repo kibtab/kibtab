@@ -8,7 +8,9 @@ Read [architecture.md](architecture.md) for the tree and the ports.
 
 ## Writing Code
 
-* Use Go 1.22 or a newer version.
+* Use Go 1.22. Kibtab targets `go 1.22` in `go.mod`. Kibtab does not raise
+  the version for a newer release. Go 1.22 is mature and it runs on every
+  CI platform, on `golang:1.22-alpine`, and in the GoReleaser pipeline.
 * Run `gofmt` on all code. Run `go vet` before you commit.
 * Handle all errors directly. Never ignore a returned error.
 * Use the standard library first. Add a dependency only for a real need.
@@ -60,6 +62,9 @@ Load the vendored skill first. Read
 `../skills/simple-english/SKILL.md`.
 
 ### Simplified Technical English
+
+Read [the catalogue](ste100/index.md) before you use a technical term.
+It holds the approved Technical Names for Kibtab.
 
 * Keep sentences shorter than 20 words.
 * Use active voice and simple tenses.
@@ -153,6 +158,8 @@ Run this before you send a change for review.
 * Keep the local stack in `docker-compose.yml`.
 * Keep no copy of the ASD-STE100 word lists. The vendored skill holds the
   Simplified Technical English rules.
+* Keep the catalogue at [ste100/index.md](ste100/index.md). Add each approved
+  name there before an author uses it.
 
 ## Next Steps
 

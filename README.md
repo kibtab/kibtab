@@ -85,6 +85,7 @@ Read [the architecture guide](docs/architecture.md) for the full design.
 | [Documentation index](docs/index.md) | The list of every document. |
 | [Agent rules](AGENTS.md) | The rules for AI coding agents. |
 | [Conventions](docs/conventions.md) | The code, the documentation, and the scope rules. |
+| [Technical names](docs/ste100/index.md) | The approved technical names for Kibtab. |
 | [Testing](docs/testing.md) | The kinds of test and the coverage rules. |
 | [Releasing](docs/releasing.md) | The version number, the gate, and the release steps. |
 | [Licence](docs/licence.md) | The terms for the engine and the skill. |
