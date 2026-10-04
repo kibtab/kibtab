@@ -131,10 +131,11 @@ The rules for this file are in the section above.
 | File | Purpose |
 | --- | --- |
 | `air.toml` | The hot reload settings for a local run. |
-| `.goreleaser.yaml` | The release build settings. |
+| `Makefile` | The build, the test, the lint, and the release targets. |
+| `.goreleaser.yaml` | The release build for each target. |
 | `docker-compose.yml` | The local stack with Caddy, the engine, and PostgreSQL. |
 | `Dockerfile` | The multi-stage build. It uses a `scratch` base. |
-| `Makefile` | The targets `build`, `test`, `lint`, `run`, `docs-check`, `notice-check`, and `release-check`. |
+| `.gitignore` | The build, coverage, and profile output. |
 
 Kibtab sets `CGO_ENABLED=0` in every build.
 No dependency needs a C compiler.

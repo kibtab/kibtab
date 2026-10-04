@@ -52,11 +52,13 @@ Clone the repository and build the engine.
 ```bash
 git clone https://github.com/kibtab/kibtab.git
 cd kibtab
-CGO_ENABLED=0 go build ./cmd/kibtab
+make build
 ```
 
+The command puts the binary in `bin/kibtab`.
+
 Kibtab needs no C compiler.
-Every build sets `CGO_ENABLED=0`.
+Every target sets `CGO_ENABLED=0`.
 Do not unset that variable.
 
 The build needs Go 1.22 or a newer version.
@@ -65,13 +67,15 @@ The build needs Go 1.22 or a newer version.
 go version
 ```
 
+Run `make help` for the full list of targets.
+
 ## Run In Watch Mode
 
 Use `air` during development. It rebuilds the engine on a code change.
 
 ```bash
-go install github.com/air-verse/air@latest
-air
+make tools
+make watch
 ```
 
 Read `air.toml` before you change it.
@@ -79,7 +83,7 @@ Read `air.toml` before you change it.
 ## Run The Tests
 
 ```bash
-CGO_ENABLED=0 go test ./...
+make test
 ```
 
 The core tests need no database.

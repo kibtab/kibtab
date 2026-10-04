@@ -1,0 +1,21 @@
+# Build output
+bin/
+dist/
+
+# Test and coverage output
+coverage.out
+coverage.svg
+build-errors.log
+*.test
+cpu.prof
+trace.out
+bench.txt
+new-bench.txt
+
+# Local secrets. Never commit a .env file.
+.env
+.env.*
+
+# Editor and OS files
+.DS_Store
+*.swp

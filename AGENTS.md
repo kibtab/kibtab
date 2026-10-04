@@ -116,19 +116,31 @@ Both rules apply to every document. Neither style replaces the other.
 * Run `make docs-check` before you commit. The target checks the sentence
   length and the banned words. It does not check the word lists.
 
-### 3.4 Copied Work
+### 3.4 The Canonical Document Exception
 
-Some files hold text from another project.
-Keep that text as it was written upstream.
-Do not apply the rules in sections 3.1 to 3.3 to it.
+Some documents have one valid form.
+For these, only the canonical version applies.
+Do not rewrite them for the rules in this section.
 
-| File | Source |
+| Document | Canonical source |
 | --- | --- |
-| `skills/simple-english/` | The SimpleEnglish skill. MIT licence. |
-| `CODE_OF_CONDUCT.md` | Contributor Covenant 3.0. CC BY-SA 4.0. |
+| `LICENSE` | The Apache License 2.0 text. |
+| `CODE_OF_CONDUCT.md` | Contributor Covenant 3.0. |
+| `skills/simple-english/LICENSE` | The MIT licence from the skill author. |
+
+For each of these:
+
+* Copy the text from the canonical source. Keep each word.
+* Do not apply Simplified Technical English to it.
+* Do not apply British English spellings to it.
+* Do not fix a sentence, a long clause, or a banned word in it.
+* Keep the attribution block that the source requires.
+* Update it only when the canonical source changes.
+
+Read the canonical source before you change one of these documents.
 
 A contributor report and a pull request are not documentation.
-Do not apply the rules in section 3 to them.
+Do not apply the rules in this section to them.
 
 ## 4. Database Rules
 

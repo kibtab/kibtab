@@ -171,9 +171,13 @@ Mark each box only when the check passes.
 * [ ] Create the folder `internal/adapters/driver/` for the transports.
 * [ ] Create the folder `client/` for the spreadsheet clients.
 * [ ] Add the route `GET /healthz`. It returns the status and the version.
-* [ ] Add `air.toml`. Air rebuilds on a change in `internal/` or `cmd/`.
-* [ ] Add the `Makefile` with the targets `build`, `test`, `lint`, `run`,
-      `docs-check`, `notice-check`, and `release-check`.
+* [x] Add `air.toml`. Air rebuilds on a change in `internal/` or `cmd/`.
+* [x] Add the `Makefile`. It holds `build`, `install`, `run`, `test`, `vet`,
+      `lint`, `fmt`, `tidy`, `watch`, `cover`, `cover-verify`, `bench`,
+      `docs-check`, `notice-check`, `check`, `release-check`, `tag`, and
+      `tools`.
+* [x] Add `.gitignore`. It covers the build, the coverage, and the profile
+      output.
 * [ ] Add `scripts/docs-check.py`. It checks the sentence length and the
       banned words. It does not need the ASD word lists.
 * [ ] Add `scripts/notice-check.py`. It compares `go.mod` with the tables in
@@ -371,7 +375,7 @@ This release holds no export of an audit row.
 
 ### Scope
 
-* [ ] Add `.goreleaser.yaml`. It builds for Linux, macOS, and Windows.
+* [x] Add `.goreleaser.yaml`. It builds for Linux, macOS, and Windows.
 * [ ] Set `CGO_ENABLED=0` in the GoReleaser build environment.
 * [ ] Build an archive for each target. Use `tar.gz` for Linux and macOS.
       Use `zip` for Windows.
@@ -379,6 +383,8 @@ This release holds no export of an audit row.
 * [ ] Read the release notes from `docs/changelogs/`.
 * [ ] Add `docs/THIRD_PARTY_NOTICES.md` to each archive.
 * [ ] Keep `air.toml` at the repository root as the only reload file.
+* [ ] Set `CGO_ENABLED=0` in every GoReleaser build and in every Make target
+      that calls the Go tool.
 * [ ] Add `Dockerfile`. Use a multi-stage build and a `scratch` base.
 * [ ] Add `docker-compose.yml`. It holds Caddy, the engine, and PostgreSQL.
 * [ ] Add `Caddyfile`. It holds the domain and the rate limit.

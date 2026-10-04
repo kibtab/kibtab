@@ -45,12 +45,13 @@ Kibtab needs Go 1.22 or a newer version.
 Kibtab builds without a C compiler.
 
 ```bash
-CGO_ENABLED=0 go build ./...
-air
+make build
+make watch
 ```
 
-The tool `air` reloads the engine on a code change.
+The target `make watch` reloads the engine on a code change.
 Read `air.toml` before you change it.
+Run `make help` for the full list of targets.
 
 ## Issues
 
@@ -93,16 +94,24 @@ docs(core): record the port rules in the architecture guide
 
 ## Run The Checks
 
-Run each check before you open a pull request.
+Run `make check` before you open a pull request.
+It runs the build, the vet, the tests, and both documentation gates.
 
 ```bash
-CGO_ENABLED=0 go build ./...
-CGO_ENABLED=0 go vet ./...
-CGO_ENABLED=0 go test ./...
+make check
+```
+
+Run each gate on its own when you need one.
+
+```bash
+make vet
+make lint
+make test
 make docs-check
 make notice-check
 ```
 
+Read `make help` for the full list of targets.
 Read the target list in [docs/index.md](docs/index.md).
 
 ## Pull Requests

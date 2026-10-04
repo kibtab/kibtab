@@ -1,0 +1,88 @@
+# GoReleaser v2 configuration for Kibtab.
+# Snapshot: goreleaser release --snapshot --clean
+# Release:  goreleaser release --clean (the release workflow runs it on a tag)
+version: 2
+
+project_name: kibtab
+
+before:
+  hooks:
+    - go mod tidy
+    - go test ./...
+
+builds:
+  - id: kibtab
+    main: ./cmd/kibtab
+    binary: kibtab
+    env:
+      # Every build sets CGO_ENABLED=0. No dependency needs a C compiler.
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
+
+archives:
+  - formats: ["tar.gz"]
+    name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
+    format_overrides:
+      - goos: windows
+        formats: ["zip"]
+    files:
+      - LICENSE
+      - README.md
+      - docs/THIRD_PARTY_NOTICES.md
+      - docs/licence.md
+
+dockers:
+  - id: kibtab
+    goos: linux
+    goarch: amd64
+    dockerfile: Dockerfile
+    image_templates:
+      - "kibtab/kibtab:{{ .Version }}-amd64"
+      - "kibtab/kibtab:latest"
+    # The build stage sets CGO_ENABLED=0, so the image needs no libc.
+    use: buildx
+    build_flag_templates:
+      - "--platform=linux/amd64"
+      - "--label=org.opencontainers.image.title={{ .ProjectName }}"
+      - "--label=org.opencontainers.image.version={{ .Version }}"
+      - "--label=org.opencontainers.image.revision={{ .FullCommit }}"
+      - "--label=org.opencontainers.image.licenses=Apache-2.0"
+
+source:
+  enabled: true
+
+checksum:
+  name_template: "checksums.txt"
+
+snapshot:
+  version_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  use: github
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^chore:"
+      - Merge pull request
+      - Merge branch
+
+release:
+  # The release workflow runs on a version tag, so the result is a real
+  # release and not a draft. The body links the changelog file of the tag.
+  draft: false
+  header: |
+    [The release notes for {{ .Tag }}](https://github.com/kibtab/kibtab/blob/main/docs/changelogs/{{ .Tag }}.md)
+  footer: |
+    [The full changelog](https://github.com/kibtab/kibtab/blob/main/docs/index.md)
