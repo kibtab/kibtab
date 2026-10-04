@@ -71,7 +71,7 @@ The Code of Conduct is stewarded by the Organisation for Ethical Source.
 Its enforcement ladder follows the Contributor Covenant 3.0.
 Update a canonical document only when its source changes.
 
-Read [AGENTS.md](../AGENTS.md) section 3.4 before you change one.
+Read the canonical documents table in this document before you change one.
 
 ## The Vendored Skill
 

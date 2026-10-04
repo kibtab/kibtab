@@ -156,12 +156,12 @@ The floor is 100.
 Never lower the floor to make a build pass.
 Never skip a test to make a build pass.
 
-Read [AGENTS.md](AGENTS.md) section 9 for the full rules.
+Read [AGENTS.md](AGENTS.md) section 4 for the full rules.
 
 ## The Rules For A Change
 
 * Do one thing in a commit. Split the rest into another commit.
-* Do one thing in a function. Read [AGENTS.md](AGENTS.md) section 9.
+* Do one thing in a function. Read [AGENTS.md](AGENTS.md) section 7.
 * Keep the core free of an engine name and of a client name.
 * Put each engine in its own package under `internal/adapters/driven/`.
 * Put each transport in its own package under `internal/adapters/driver/`.
@@ -192,7 +192,7 @@ make notice-check
 ```
 
 Read `make help` for the full list of targets.
-Read the gate rules in [AGENTS.md](AGENTS.md) section 6.
+Read the gate rules in [AGENTS.md](AGENTS.md) section 5.
 
 ## Pull Requests
 
@@ -204,6 +204,34 @@ Read the gate rules in [AGENTS.md](AGENTS.md) section 6.
 * Reference the issue with `Fixes #123`.
 * Allow edits from the maintainers.
 * Read your own diff before you send it.
+
+## Developer Certificate of Origin (DCO)
+
+We encourage all contributors to sign off on their commits using the `-s` or
+`--signoff` flag with `git commit`:
+
+```bash
+git commit -s -m "feat(core): add batch delta validation handler"
+```
+
+Signing off indicates that you have the right to submit your contribution
+under the Apache License 2.0. While we do not automatically reject pull
+requests missing a sign-off, adopting this habit helps us maintain clear
+provenance across the codebase as Kibtab grows.
+
+Set the flag once for this repository to sign every commit.
+
+```bash
+git config --local commit.signoff true
+```
+
+The sign-off line sits under the commit message.
+
+```text
+feat(core): add the optimistic version compare
+
+Signed-off-by: Your Name <you@example.com>
+```
 
 ## The Documentation
 

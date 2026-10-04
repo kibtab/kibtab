@@ -57,5 +57,5 @@ The full rule is in `../../plan.md` section 1.
 ## The First File
 
 The first file is `v0.1.0.md`.
-Its `Added` section holds the scope of `plan.md` section 2.
+Its `Added` section holds the scope of `../../plan.md` section 2.
 Its `Released` line holds `Not released.` until the tag exists.

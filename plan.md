@@ -29,7 +29,7 @@ No release file exists yet.
 
 This plan holds the work, not the rules.
 The rules live in [AGENTS.md](AGENTS.md).
-The gate for a release lives in `AGENTS.md` section 6.
+The gate for a release lives in `AGENTS.md` section 5.
 
 | Version | Theme | Result |
 | --- | --- | --- |
@@ -62,6 +62,12 @@ The gate for a release lives in `AGENTS.md` section 6.
       in `docs/THIRD_PARTY_NOTICES.md`.
 * [ ] Keep `docs/install.md`. It holds the install and build steps.
 * [ ] Keep `docs/licence.md`. It holds the terms for the engine and the skill.
+* [ ] Add `docs/conventions.md`. It holds the code, the documentation, and the
+      scope rules.
+* [ ] Add `docs/testing.md`. It holds the kinds of test and the coverage rules.
+* [ ] Add `docs/releasing.md`. It holds the version, the gate, and the release
+      steps.
+* [ ] Add `scripts/docs-check.py`. It runs under `make docs-check`.
 * [ ] Create the folder `internal/core/` with `domain`, `ports`, `services`.
 * [ ] Create the folder `internal/adapters/driven/` for the engines.
 * [ ] Create the folder `internal/adapters/driver/` for the transports.
@@ -69,9 +75,9 @@ The gate for a release lives in `AGENTS.md` section 6.
 * [ ] Add the route `GET /healthz`. It returns the status and the version.
 * [x] Add `air.toml`. Air rebuilds on a change in `internal/` or `cmd/`.
 * [x] Add the `Makefile`. It holds `build`, `install`, `run`, `test`, `vet`,
-      `lint`, `fmt`, `tidy`, `watch`, `cover`, `cover-verify`, `bench`,
-      `docs-check`, `notice-check`, `check`, `release-check`, `tag`, and
-      `tools`.
+      and `lint`. It holds `fmt`, `tidy`, `watch`, `cover`, and `bench`.
+      It holds `docs-check`, `notice-check`, `check`, `release-check`,
+      `tag`, and `tools`.
 * [x] Add `.gitignore`. It covers the build, the coverage, and the profile
       output.
 * [ ] Add `scripts/docs-check.py`. It checks the sentence length and the
@@ -451,5 +457,5 @@ The boxes stay open until the work starts.
 
 ## 14. When A Release Is Done
 
-A release is done when each check in `AGENTS.md` section 6.3 passes.
+A release is done when each check in `AGENTS.md` section 5 passes.
 Read that section before you tag a release.

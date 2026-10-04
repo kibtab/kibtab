@@ -16,6 +16,9 @@ It rejects a write from an old client.
 | [Install](install.md) | The install steps for a binary or a source build. |
 | [Self-hosting](self-hosting/README.md) | The section for running Kibtab on a server. |
 | [Architecture](architecture.md) | The layers, the ports, and the extension steps. |
+| [Conventions](conventions.md) | The code, the documentation, and the scope rules. |
+| [Testing](testing.md) | The kinds of test and the coverage rules. |
+| [Releasing](releasing.md) | The version number, the gate, and the release steps. |
 | [Licence](licence.md) | The terms for the engine and the skill. |
 | [Third Party Notices](THIRD_PARTY_NOTICES.md) | The licences of the dependencies. |
 | [Credits](CREDITS.md) | The people, the projects, and the sources. |
@@ -67,6 +70,9 @@ Each one updates when its release arrives.
 | `.github/ISSUE_TEMPLATE/` | v0.1.0 | The forms for a bug, a feature, and a security report. |
 | `docs/install.md` | v0.1.0 | The install steps. |
 | `docs/architecture.md` | v0.2.0 | The layers and the port contract. |
+| `docs/conventions.md` | v0.1.0 | The code, the documentation, and the scope rules. |
+| `docs/testing.md` | v0.1.0 | The kinds of test and the coverage rules. |
+| `docs/releasing.md` | v0.1.0 | The version number, the gate, and the release steps. |
 | `docs/licence.md` | v0.1.0 | The terms for the engine and the skill. |
 | `docs/openapi.yaml` | v0.5.0 | The REST interface definition. |
 | `docs/self-hosting/` | v0.8.0 | The section for running Kibtab on a server. |
@@ -79,15 +85,7 @@ Write each document in two styles at the same time.
 The first style is Simplified Technical English.
 The second style is British English.
 The full rules are in `../AGENTS.md` section 3.
-
-* Load the vendored skill first. Read `../skills/simple-english/SKILL.md`.
-* Keep a sentence under 20 words.
-* Use active voice and simple tenses.
-* Define each technical term at its first use.
-* Do not use em dashes, contractions, `should`, `would`, `may`, or `might`.
-* Use the approved words in `../skills/simple-english/references/`.
-* Use British English spellings. The forms are `licence`, `artefact`, and
-  `behaviour`.
+The detail is in [conventions.md](conventions.md).
 
 Run the check before you open a pull request.
 
@@ -98,13 +96,6 @@ make docs-check
 The target checks the sentence length and the banned words.
 The target does not check the word lists.
 The vendored skill is the source of the word rules.
-Kibtab does not keep a copy of the ASD-STE100 word lists.
-The standard states that no reproduction of it is allowed without written
-authority from ASD.
-
-## The Vendored Skill
-
-The skill lives in `../skills/simple-english/`.
 Read `../skills/simple-english/VENDOR.md` for the pinned commit.
 Read `../skills/simple-english/LICENSE` for the terms.
 
@@ -122,6 +113,9 @@ Each guide owns one task. Do not copy a step into a second file.
 | [self-hosting/backup-restore.md](self-hosting/backup-restore.md) | The steps to save and to restore the data. |
 | [self-hosting/troubleshooting.md](self-hosting/troubleshooting.md) | The steps to diagnose a fault. |
 | [architecture.md](architecture.md) | The layers, the ports, and the extension steps. |
+| [conventions.md](conventions.md) | The code, the documentation, and the scope rules. |
+| [testing.md](testing.md) | The kinds of test and the coverage rules. |
+| [releasing.md](releasing.md) | The version number, the gate, and the release steps. |
 | [licence.md](licence.md) | The licence terms and the obligations. |
 
 The rules for this file are in the section above.

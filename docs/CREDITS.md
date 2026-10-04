@@ -44,7 +44,7 @@ The `skills/simple-english/` directory holds a copy of the
 [SimpleEnglish](https://github.com/AminBlg/SimpleEnglish) skill by
 [AminBlg](https://github.com/AminBlg). The skill carries an MIT licence.
 
-The vendored skill gives Kibtab the word rules in `AGENTS.md` section 3.
+The vendored skill gives Kibtab the word rules in `../AGENTS.md` section 3.
 Read `skills/simple-english/VENDOR.md` for the pinned commit.
 
 ## Icons And Assets

@@ -84,6 +84,9 @@ Read [the architecture guide](docs/architecture.md) for the full design.
 | [Plan](plan.md) | The release plan. It splits the work by version. |
 | [Documentation index](docs/index.md) | The list of every document. |
 | [Agent rules](AGENTS.md) | The rules for AI coding agents. |
+| [Conventions](docs/conventions.md) | The code, the documentation, and the scope rules. |
+| [Testing](docs/testing.md) | The kinds of test and the coverage rules. |
+| [Releasing](docs/releasing.md) | The version number, the gate, and the release steps. |
 | [Licence](docs/licence.md) | The terms for the engine and the skill. |
 | [Third party notices](docs/THIRD_PARTY_NOTICES.md) | The licences of each dependency. |
 | [Changelog format](docs/changelogs/README.md) | The format for each release file. |
@@ -105,7 +108,7 @@ Each task in the plan is a markdown check box.
 Read [CONTRIBUTING.md](CONTRIBUTING.md) for the full steps.
 
 Every commit uses Conventional Commits.
-Read [AGENTS.md](AGENTS.md) section 8 for the format and the scopes.
+Read [AGENTS.md](AGENTS.md) section 6 for the format and the scopes.
 
 ## Acknowledgements
 
