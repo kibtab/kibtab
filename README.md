@@ -14,7 +14,7 @@ with the repository name.
 **Spreadsheet as client, database as server.**
 
 Kibtab turns a spreadsheet into a client for your relational database.
-Excel is the first client. Other spreadsheet software can come later.
+> Excel is the first client. Other spreadsheet software can come later.
 
 Your team keeps the familiar grid.
 The engine keeps the transactions, the version checks, and the audit trail.

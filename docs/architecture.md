@@ -3,7 +3,7 @@
 Version 0.0.0-docs. This document holds the design of Kibtab.
 It holds the layer rules and the port contract.
 
-Read [AGENTS.md](../AGENTS.md) section 1.5 for the canonical layout.
+Read [AGENTS.md](../AGENTS.md) section 1.3 for the canonical layout.
 Read [AGENTS.md](../AGENTS.md) section 1 for the rules for agents.
 
 ## The Goal
@@ -38,6 +38,7 @@ The core imports nothing outside the standard library.
 ## The Ports
 
 The core names a need. The adapter supplies the answer.
+The table lives in [AGENTS.md](../AGENTS.md) section 1.3.
 
 | Port | Need it fills |
 | --- | --- |
@@ -49,7 +50,7 @@ The core names a need. The adapter supplies the answer.
 | `Clock` | Give the current time. |
 | `SyncService` | Accept a sync payload. Return a sync result. |
 
-Add a port to [AGENTS.md](../AGENTS.md) section 1.5 first.
+Add a port to `AGENTS.md` section 1.3 first.
 Then define it in `internal/core/ports/`.
 
 ## The Data Flow

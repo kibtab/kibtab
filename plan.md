@@ -25,19 +25,11 @@ The format is in `docs/changelogs/README.md`.
 The template is in `docs/changelogs/TEMPLATE.md`.
 No release file exists yet.
 
-## 1. Version Meaning
+## 1. Release Milestones
 
-Kibtab uses the version number to tell a user what changed.
-
-| Part | Meaning in Kibtab |
-| --- | --- |
-| MAJOR | The public interface changed. A client must change. |
-| MINOR | Kibtab added a feature. An old client keeps working. |
-| PATCH | Kibtab fixed a defect. No interface changed. |
-
-Kibtab holds the REST paths, the JSON field names, and the CLI flags as the
-public interface.
-A change to any of them needs a MAJOR version.
+This plan holds the work, not the rules.
+The rules live in [AGENTS.md](AGENTS.md).
+The gate for a release lives in `AGENTS.md` section 6.
 
 | Version | Theme | Result |
 | --- | --- | --- |
@@ -53,26 +45,7 @@ A change to any of them needs a MAJOR version.
 | v1.0.0 | Stable | The interface freezes. |
 | v1.1.0 and later | Growth | New adapters and new features. |
 
-## 2. The Gate For Every Release
-
-Every release must pass each gate below.
-Mark a box only when the check passes.
-The rules behind each gate live in [AGENTS.md](AGENTS.md).
-This section holds only the checks.
-
-* [ ] `CGO_ENABLED=0 go build ./...` succeeds with no environment variable.
-* [ ] The module has no dependency that needs a C compiler.
-* [ ] `CGO_ENABLED=0 go vet ./...` reports no problem.
-* [ ] `CGO_ENABLED=0 go test ./...` passes.
-* [ ] `make docs-check` reports no problem.
-* [ ] `make notice-check` reports no problem.
-* [ ] The code follows `AGENTS.md` section 1 for the layers and the ports.
-* [ ] The documentation follows `AGENTS.md` section 3 for both styles.
-* [ ] The change follows `AGENTS.md` section 9 for the scope.
-* [ ] The commits follow `AGENTS.md` section 8 for the format.
-* [ ] A changelog file exists at `docs/changelogs/vX.Y.Z.md`.
-
-## 3. Release v0.1.0 - Skeleton
+## 2. Release v0.1.0 - Skeleton
 
 **Goal:** The engine starts and it answers a health check.
 
@@ -121,7 +94,7 @@ This release holds no write path.
 * [ ] `curl localhost:8080/healthz` returns the version.
 * [ ] `docs/changelogs/v0.1.0.md` exists.
 
-## 4. Release v0.2.0 - Domain And Ports
+## 3. Release v0.2.0 - Domain And Ports
 
 **Goal:** The pure domain exists and it has tests.
 
@@ -152,7 +125,7 @@ This release holds no HTTP.
 * [ ] The CI step finds no driver import in `internal/core/`.
 * [ ] `docs/changelogs/v0.2.0.md` exists.
 
-## 5. Release v0.3.0 - PostgreSQL Adapter
+## 4. Release v0.3.0 - PostgreSQL Adapter
 
 **Goal:** Kibtab reads and writes rows in PostgreSQL.
 
@@ -188,7 +161,7 @@ This release holds no cell write path.
 * [ ] `make notice-check` passes.
 * [ ] `docs/changelogs/v0.3.0.md` exists.
 
-## 6. Release v0.4.0 - Write Path
+## 5. Release v0.4.0 - Write Path
 
 **Goal:** A cell change writes to the database in a transaction.
 
@@ -213,7 +186,7 @@ This release holds no REST API.
 * [ ] The rollback test passes. The other groups stay.
 * [ ] `docs/changelogs/v0.4.0.md` exists.
 
-## 7. Release v0.5.0 - HTTP API
+## 6. Release v0.5.0 - HTTP API
 
 **Goal:** A client can read and write over REST.
 
@@ -246,7 +219,7 @@ This release holds no Office.js taskpane.
 * [ ] The OpenAPI file matches each handler.
 * [ ] `docs/changelogs/v0.5.0.md` exists.
 
-## 8. Release v0.6.0 - Office.js Client
+## 7. Release v0.6.0 - Office.js Client
 
 **Goal:** A user edits a cell in Excel and Kibtab stores it.
 
@@ -274,7 +247,7 @@ This release holds no store submission.
 * [ ] The build produces the `kibtab-taskpane.zip` file.
 * [ ] `docs/changelogs/v0.6.0.md` exists.
 
-## 9. Release v0.7.0 - Audit And Locking
+## 8. Release v0.7.0 - Audit And Locking
 
 **Goal:** Kibtab records each change and it blocks a stale write.
 
@@ -298,7 +271,7 @@ This release holds no export of an audit row.
 * [ ] A stale write returns the conflict code. It writes nothing.
 * [ ] `docs/changelogs/v0.7.0.md` exists.
 
-## 10. Release v0.8.0 - Packaging
+## 9. Release v0.8.0 - Packaging
 
 **Goal:** GoReleaser ships binaries. Air runs the engine in development.
 
@@ -343,7 +316,7 @@ This section holds no Kubernetes guide.
 * [ ] `ldd` reports no dynamic library for the Linux binary.
 * [ ] `docs/changelogs/v0.8.0.md` exists.
 
-## 11. Release v0.9.0 - Hardening
+## 10. Release v0.9.0 - Hardening
 
 **Goal:** The engine survives load and it reports its health.
 
@@ -369,7 +342,7 @@ This release holds no horizontal scale.
 * [ ] The metrics route shows the query count and the error count.
 * [ ] `docs/changelogs/v0.9.0.md` exists.
 
-## 12. Release v1.0.0 - Stable
+## 11. Release v1.0.0 - Stable
 
 **Goal:** The public interface freezes.
 
@@ -395,7 +368,7 @@ This release adds no feature.
       from v0.x.
 * [ ] Each migration guide exists.
 
-## 13. Releases After v1.0.0
+## 12. Releases After v1.0.0
 
 These releases are the expected direction.
 The boxes stay open until the work starts.
@@ -462,7 +435,7 @@ The boxes stay open until the work starts.
 * [ ] Load a module at start.
 * [ ] Let a module add a driven adapter.
 
-## 14. Risk And Mitigation
+## 13. Risk And Mitigation
 
 | Risk | Effect | Mitigation |
 | --- | --- | --- |
@@ -474,16 +447,7 @@ The boxes stay open until the work starts.
 | The interface changes after v1.0.0 | High | The contract test suite freezes the interface. |
 | An upstream skill change alters the docs | Medium | The skill is vendored at a pinned commit. |
 
-## 15. Definition Of Done For A Release
+## 14. When A Release Is Done
 
-A release is done when each box below is true.
-The rules behind each box live in [AGENTS.md](AGENTS.md).
-
-* [ ] Every box in section 2 passes.
-* [ ] The code builds with `CGO_ENABLED=0` for each target in the archive.
-* [ ] `ldd` reports no dynamic library for the Linux binary.
-* [ ] The changelog file exists at `docs/changelogs/vX.Y.Z.md`.
-* [ ] The changelog states the upgrade steps.
-* [ ] `docs/index.md` lists the release.
-* [ ] The tag exists. The tag does not move.
-* [ ] `make release-check` passes.
+A release is done when each check in `AGENTS.md` section 6.3 passes.
+Read that section before you tag a release.
