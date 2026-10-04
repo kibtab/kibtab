@@ -7,6 +7,9 @@ The maintainers take a security issue seriously.
 Report a vulnerability in private.
 Do not open a public issue.
 
+Read [the documentation index](docs/index.md) for every guide.
+Read [AGENTS.md](AGENTS.md) before you change code for a report.
+
 ## How To Report
 
 Use the private route that matches the urgency.
@@ -17,9 +20,9 @@ Use the private route that matches the urgency.
 
 A report helps the maintainers most when it gives these items.
 
-* The version of the engine.
+* The version of Kibtab.
 * The steps to reproduce the fault.
-* The table and the column that the fault touches.
+* The table and the field that the fault touches.
 * The impact on the data.
 
 Keep a proof of concept small.
@@ -31,14 +34,14 @@ Use a table that holds no personal data.
 Kibtab writes to a table from a spreadsheet.
 The threat model for that path holds these items.
 
-* A table name or a column name that comes from a request.
+* A table name or a field name that comes from a request.
 * A value that the client sends without a check.
 * A cell write that skips the version check.
 * A query that a client can change through a parameter.
 * A spreadsheet that a user opens from an unknown sender.
 
-The engine rejects a table that the registry does not hold.
-The engine compares the version before it writes.
+The **instance** rejects a table that the registry does not hold.
+The **instance** compares the version before it writes.
 
 ## What A Fix Must Do
 
@@ -58,6 +61,7 @@ These reports do not qualify.
 * A report from an automated scan with no proof.
 
 Read [the architecture guide](docs/architecture.md) for the trust boundary.
+Read [the security rules](docs/conventions.md) for the code rules.
 Read [the licence guide](docs/licence.md) for the terms.
 
 ## After A Report

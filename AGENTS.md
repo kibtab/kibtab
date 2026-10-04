@@ -14,7 +14,7 @@ This document holds the rules that bind you. It points at the detail.
 | [docs/architecture.md](docs/architecture.md) | The tree, the ports, and the data flow. |
 | [docs/testing.md](docs/testing.md) | The unit tests and the coverage. |
 | [docs/releasing.md](docs/releasing.md) | The version, the gate, and the release. |
-| [CONTRIBUTING.md](CONTRIBUTING.md) | The steps to send a change. |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | The commit format, the scope table, and the DCO. |
 | [docs/licence.md](docs/licence.md) | The licence terms and the canonical documents. |
 | [docs/install.md](docs/install.md) | Installing and building. |
 | [docs/self-hosting/](docs/self-hosting/README.md) | Running Kibtab on a server. |
@@ -120,8 +120,12 @@ Kibtab uses Conventional Commits. The format is
 
 * Keep the subject under 50 characters. Start with a verb.
 * Do not end the subject with a full stop. Use British English.
-* Choose the scope of the file that changed most. Never invent a scope.
+* Name the scope of the component that the change serves.
+  Use `db-postgres`, `client-excel`, or `transport-http`.
+  Never use a bare engine name or a bare client name.
 * Use no scope when the change touches the whole repository.
+* Split a change that touches two components into two commits.
+* Never invent a scope. Add it to the table in `CONTRIBUTING.md` first.
 * Explain why the change was needed. Never repeat what the diff shows.
 * Link the issue at the end with `Closes #123`.
 
@@ -133,7 +137,9 @@ Give the message in a fenced block. State why the scope fits the change.
 Name the version in `plan.md` that the change belongs to.
 Say whether the change needs a MAJOR version.
 
-[CONTRIBUTING.md](CONTRIBUTING.md) holds the full type and scope tables.
+[CONTRIBUTING.md](CONTRIBUTING.md) holds the type table and the scope table.
+[docs/conventions.md](docs/conventions.md) holds the full scope rules.
+Read the scope table before you write a commit.
 
 ## 7. Scope
 

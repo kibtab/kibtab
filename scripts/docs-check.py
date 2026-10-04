@@ -385,6 +385,65 @@ def check_catalogue_complete(failures):
             )
 
 
+def approved_scopes():
+    """Return each scope in the table in CONTRIBUTING.md."""
+    path = "CONTRIBUTING.md"
+    if not os.path.isfile(path):
+        return set()
+    scopes = set()
+    in_table = False
+    for line in read(path).splitlines():
+        if line.startswith("| Scope | Covers |"):
+            in_table = True
+            continue
+        if in_table:
+            if not line.startswith("|"):
+                break
+            cell = line.split("|")[1].strip().strip("`")
+            if cell and cell != "---" and not set(cell) <= {"-"}:
+                scopes.add(cell)
+    return scopes
+
+
+def check_commit_examples(failures):
+    """Check each commit example uses an approved scope.
+
+    Kibtab serves any database and any spreadsheet. A bare engine name such
+    as `postgres` hides which side of the product the change serves, so the
+    check rejects it in favour of `db-postgres`.
+    """
+    scopes = approved_scopes()
+    if not scopes:
+        return
+    types = (
+        "feat",
+        "fix",
+        "docs",
+        "refactor",
+        "test",
+        "perf",
+        "build",
+        "ci",
+        "chore",
+    )
+    scoped = re.compile(r"\b(" + "|".join(types) + r")\(([a-z0-9-]+)\)")
+    bare_names = ("postgres", "duckdb", "excel", "sheets", "local", "http")
+    for path in ("CONTRIBUTING.md", "AGENTS.md", "docs/releasing.md"):
+        if not os.path.isfile(path):
+            continue
+        for number, line in enumerate(read(path).splitlines(), start=1):
+            for _, scope in scoped.findall(line):
+                if scope in bare_names:
+                    failures.append(
+                        f"{path}:{number}: bare component name in scope: "
+                        f"{scope}"
+                    )
+                elif scope not in scopes:
+                    failures.append(
+                        f"{path}:{number}: scope not in the table: {scope}"
+                    )
+
+
 def main():
     roots = sys.argv[1:]
     if not roots:
@@ -399,6 +458,7 @@ def main():
     check_catalogue_files(files, failures)
     check_catalogue_complete(failures)
     check_go_version(failures)
+    check_commit_examples(failures)
     for line in failures:
         print(line)
     print(f"checked {len(files)} file(s), {len(failures)} problem(s)")

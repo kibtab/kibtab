@@ -14,6 +14,15 @@ Read the [STE100 Technical Names](index.md) dictionary first.
 - **Correct Example:** *The **core** names a need through a port.*
 - **Incorrect Example:** *The kernel names a need through a port.*
 
+## Technical Name: Instance
+- **Part of Speech:** Noun
+- **Category:** Architecture Term
+- **Definition:** One running copy of Kibtab. It serves one database.
+- **Approved Form:** Instance (singular), Instances (plural)
+- **Do Not Use:** Engine, Server, Process, Node, Deployment
+- **Correct Example:** *Each **instance** holds one version for each table.*
+- **Incorrect Example:** *Each engine holds one version for each table.*
+
 ## Technical Name: Port
 - **Part of Speech:** Noun
 - **Category:** Architecture Term

@@ -19,3 +19,6 @@ new-bench.txt
 # Editor and OS files
 .DS_Store
 *.swp
+# Python bytecode from the scripts
+__pycache__/
+*.pyc

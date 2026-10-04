@@ -48,6 +48,8 @@ Every release passes each check below.
 * Write one file at `docs/changelogs/vX.Y.Z.md` for each release.
 * Copy [changelogs/TEMPLATE.md](changelogs/TEMPLATE.md) for the file.
 * Follow [changelogs/README.md](changelogs/README.md) for the sections.
+* Use the commit scope of the component. Read
+  [CONTRIBUTING.md](../CONTRIBUTING.md) for the scope table.
 * Update `docs/index.md` and `docs/CREDITS.md` with the release notes.
 * Update `docs/THIRD_PARTY_NOTICES.md` when a dependency changes.
 
@@ -56,7 +58,7 @@ Every release passes each check below.
 Sign off each commit with the Developer Certificate of Origin.
 
 ```bash
-git commit -s -m "feat(core): add batch delta validation handler"
+git commit -s -m "feat(db-postgres): add the batch delta validation"
 ```
 
 Read [CONTRIBUTING.md](../CONTRIBUTING.md) for the full DCO section.

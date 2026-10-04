@@ -72,8 +72,9 @@ Read the [STE100 Technical Names](index.md) dictionary first.
 - **Part of Speech:** Noun
 - **Category:** Database Term
 - **Definition:** The database product that Kibtab connects to.
+  It names only the product. It never names the Kibtab process.
 - **Approved Form:** Engine (singular), Engines (plural)
-- **Do Not Use:** Database, Server, Backend, Provider
+- **Do Not Use:** Database, Server, Backend, Provider, Instance
 - **Correct Example:** *Each **engine** runs in its own adapter package.*
 - **Incorrect Example:** *Each database runs in its own adapter package.*
 

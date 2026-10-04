@@ -58,6 +58,17 @@ A missing field fails the catalogue check.
   The [identifiers.md](identifiers.md) entry names the exact case.
   Each other lexicon names the concept.
 
+## A Known Ambiguity
+
+The word engine names two things in older Kibtab prose.
+It names the database product in the port and adapter rules.
+It names the running copy of Kibtab in the install and self-hosting guides.
+
+Use **Engine** only for the database product.
+Use **Instance** for the running copy of Kibtab.
+The newer guides follow this rule.
+The older prose still uses engine for both senses.
+
 ## What The Check Does
 
 `make docs-check` checks the shape of this catalogue.

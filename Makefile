@@ -4,7 +4,7 @@
 BINARY := bin/kibtab
 GO ?= go
 GORELEASER ?= goreleaser
-# The module aims for 100% coverage. AGENTS.md section 9.5 states the rule.
+# The module aims for 100% coverage. docs/testing.md states the rule.
 COVERAGE_FLOOR := 100
 CHANGELOG_URL_BASE := https://github.com/kibtab/kibtab/blob/main/docs/changelogs
 
