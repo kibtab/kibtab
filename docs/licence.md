@@ -50,6 +50,29 @@ The add-in for Microsoft Office uses the same terms.
 The client under `client/` ships in the same archive as the engine.
 Read [the plan](../plan.md) section 7 for the add-in.
 
+## The Canonical Documents
+
+Three documents have one valid form. Copy the text as written.
+Do not rewrite them for the house style.
+
+| Document | Canonical source | Its own licence |
+| --- | --- | --- |
+| `LICENSE` | The Apache License 2.0 text. | Apache-2.0 |
+| `CODE_OF_CONDUCT.md` | Contributor Covenant 3.0. | CC BY-SA 4.0 |
+| `skills/simple-english/LICENSE` | The MIT text from the skill author. | MIT |
+
+Each document keeps the licence of its own source.
+Do not apply Simplified Technical English to them.
+Do not apply British English spellings to them.
+Do not fix a sentence or a long clause in them.
+Keep each attribution block.
+
+The Code of Conduct is stewarded by the Organisation for Ethical Source.
+Its enforcement ladder follows the Contributor Covenant 3.0.
+Update a canonical document only when its source changes.
+
+Read [AGENTS.md](../AGENTS.md) section 3.4 before you change one.
+
 ## The Vendored Skill
 
 The writing skill under `skills/simple-english/` uses the MIT licence.

@@ -109,6 +109,7 @@ This release holds no write path.
       merge, and the version compare.
 * [ ] Write a table-driven test for each service.
 * [ ] Keep the core test suite free of a container.
+* [ ] Reach 100% coverage on `internal/core/`. Run `make cover-verify`.
 * [ ] Keep `docs/architecture.md`. It holds the layers and the port contract.
 * [ ] Add a CI step. It fails the build on a driver import in the core.
 * [ ] Add a CI step. It fails the build when the core names an engine or a
@@ -147,6 +148,7 @@ This release holds no HTTP.
       engine.
 * [ ] Run the engine suite against a real database container.
 * [ ] Add an integration test. It writes a row and reads it back.
+* [ ] Cover every error path in the adapter. Cover each boundary case.
 * [ ] Add the row for `pgx/v5` to `docs/THIRD_PARTY_NOTICES.md`.
 
 ### Out Of Scope

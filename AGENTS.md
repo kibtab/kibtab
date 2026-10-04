@@ -6,6 +6,15 @@ You must follow these rules when you write code or edit files in this repository
 `plan.md` holds the work. This document holds the rules.
 Change this document first. Then change the code.
 
+| Read this | For |
+| --- | --- |
+| [plan.md](plan.md) | The scope of each version. The open check boxes. |
+| [docs/architecture.md](docs/architecture.md) | The tree, the ports, and the data flow. |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | The full steps to send a change. |
+| [docs/licence.md](docs/licence.md) | The licence terms and the canonical documents. |
+| [docs/self-hosting/](docs/self-hosting/README.md) | Running Kibtab on a server. |
+| [docs/install.md](docs/install.md) | Installing and building. |
+
 ## 1. Code Architecture Rules
 
 ### 1.1 The Layers
@@ -49,52 +58,12 @@ The core names a need. The adapter supplies the answer.
 
 ### 1.3 The Layout And The Port Contract
 
-This section is the canonical layout.
-Change it before you add a file, a package, or a port.
+[docs/architecture.md](docs/architecture.md) holds the full tree, the port
+table, the data flow, and the steps to add an engine, a client, or a
+transport. Read it before you move a file.
 
-```text
-kibtab/
-├── cmd/
-│   └── kibtab/                 # The wiring. It builds each adapter.
-│       └── main.go
-├── internal/
-│   ├── core/                   # The kernel. It has no I/O.
-│   │   ├── domain/             # The models. They name no engine or client.
-│   │   ├── ports/              # The interfaces. The core owns them.
-│   │   └── services/           # The use cases. They call the ports only.
-│   └── adapters/
-│       ├── driven/             # One package per database engine.
-│       │   └── postgres/       # The first engine.
-│       └── driver/             # One package per transport.
-│           └── http/           # The first transport.
-├── client/                     # The spreadsheet clients. One folder each.
-├── docs/                       # The documentation and the changelogs.
-│   ├── changelogs/             # One file per release.
-│   └── self-hosting/           # The guides for a server.
-├── scripts/                    # The checks that run without a container.
-├── skills/simple-english/      # The vendored writing skill.
-├── AGENTS.md                   # These rules.
-├── plan.md                     # The implementation plan.
-├── Makefile
-├── air.toml
-├── Caddyfile
-├── docker-compose.yml
-├── Dockerfile
-├── .goreleaser.yaml
-└── go.mod
-```
-
-| Port | Need it fills |
-| --- | --- |
-| `RowRepository` | Read and write rows in a table. |
-| `TableRegistry` | List the tables. Read the metadata for a table. |
-| `AuditWriter` | Record a change to a cell. |
-| `Dialect` | Quote an identifier. Map a value to a type. Page a query. |
-| `TransactionRunner` | Run a group of writes as one unit. |
-| `Clock` | Give the current time. |
-| `SyncService` | Accept a sync payload. Return a sync result. |
-
-Add a row to this table before you add a port.
+Add a port to that document first.
+Then define it in `internal/core/ports/`.
 Use the `Clock` port in the core. Never call the system clock in a test.
 
 ## 2. Writing Code
@@ -150,17 +119,11 @@ Load the vendored skill first. Read
 ### 3.4 The Canonical Document Exception
 
 Three documents have one valid form. Copy the text as written.
-
-| Document | Canonical source |
-| --- | --- |
-| `LICENSE` | The Apache License 2.0 text. |
-| `CODE_OF_CONDUCT.md` | Contributor Covenant 3.0. |
-| `skills/simple-english/LICENSE` | The MIT licence from the skill author. |
+[docs/licence.md](docs/licence.md) lists them and their canonical source.
 
 Do not apply section 3 to these documents.
 Do not fix a sentence, a long clause, or a banned word in them.
 Keep the attribution block that the source requires.
-Update one only when its canonical source changes.
 
 A contributor report and a pull request are not documentation.
 
@@ -251,81 +214,22 @@ flags. A change to any of them needs a MAJOR version.
 
 ## 8. Commit Message Rules
 
-Kibtab uses Conventional Commits.
-Write each message for a reader who knows the plan but not the change.
+Kibtab uses Conventional Commits. The format is
+`<type>(<scope>): <description>`.
+[CONTRIBUTING.md](CONTRIBUTING.md) holds the full table of types and scopes
+with examples. Read it before your first commit.
 
-```text
-<type>(<scope>): <description>
-```
-
-Keep the subject under 50 characters. Use the imperative mood.
-Start with a verb. Do not end the subject with a full stop.
-Use British English in the subject and the body.
-
-| Type | Use for |
-| --- | --- |
-| `feat` | A new feature for a user. |
-| `fix` | A defect repair. |
-| `docs` | A documentation change only. |
-| `refactor` | A code change with no new behaviour. |
-| `test` | A test change only. |
-| `perf` | A change that improves a measured result. |
-| `build` | The toolchain, a dependency, or a build setting. |
-| `ci` | The workflow files. |
-| `chore` | A task with no source change. |
-
-| Scope | Covers |
-| --- | --- |
-| `core` | `internal/core/`. The domain, the ports, the services. |
-| `postgres` | `internal/adapters/driven/postgres/`. |
-| `duckdb` | `internal/adapters/driven/duckdb/`. |
-| `adapters` | The wiring of each adapter in `cmd/kibtab/`. |
-| `http` | `internal/adapters/driver/http/`. |
-| `client` | `client/`. The spreadsheet clients. |
-| `schema` | The `_kibtab_meta` schema and the migrations. |
-| `cli` | `cmd/kibtab/`. The entry point and the flags. |
-| `deploy` | The `Dockerfile`, the `Caddyfile`, and the compose file. |
-| `release` | GoReleaser, the tags, and the archives. |
-| `docs` | Every file under `docs/`, plus `README.md` and `AGENTS.md`. |
-| `deps` | `go.mod`, `go.sum`, and the client packages. |
-| `ci` | The workflow files. |
-| `skills` | The vendored skill in `skills/simple-english/`. |
-
-Choose the scope of the file that changed most.
-An engine scope names the engine. `core` is not an engine scope.
-Use `adapters` for the wiring that builds each adapter in `cmd/kibtab/`.
-Use `deps` for a version bump. Use `release` for a build setting.
-Never invent a scope. Add it to the table first.
-Use no scope when the change touches the whole repository.
-
-```text
-feat(core): add the optimistic version compare
-fix(postgres): stop the audit insert from rolling back the bump
-feat(http): add the POST /v1/tables/{table}/cells route
-refactor(postgres): move the row query out of the table registry
-feat(duckdb): add the DuckDB dialect behind the Dialect port
-build(release): set CGO_ENABLED=0 in the goreleaser environment
-test(postgres): cover the rollback of a failed batch
-chore(skills): pin the simple-english skill to 32ea2d3
-```
-
-A change to a REST path, a JSON field name, or a CLI flag is breaking.
-Write `!` after the scope. Add a `BREAKING CHANGE:` footer.
-
-```text
-feat(http)!: replace the cell write body with a versioned envelope
-
-The v1 field names move to the envelope meta object.
-A client must read the version from meta.version.
-
-BREAKING CHANGE: the v1 JSON field names are removed.
-Read docs/changelogs/v2.0.0.md before you upgrade.
-```
-
-Add a body when the subject does not explain the change.
-Wrap each line at 72 characters.
-Explain why the change was needed. Do not repeat what the diff shows.
-Link the issue at the end with `Closes #123`.
+* Keep the subject under 50 characters. Start with a verb.
+* Do not end the subject with a full stop. Use British English.
+* Choose the scope of the file that changed most. Never invent a scope.
+* Use no scope when the change touches the whole repository.
+* A change to a REST path, a JSON field name, or a CLI flag needs `!` after
+  the scope and a `BREAKING CHANGE:` footer.
+* Add a body when the subject does not explain the change. Wrap it at 72
+  characters.
+* Explain why the change was needed. Do not repeat what the diff shows.
+* Link the issue at the end with `Closes #123`.
+* Tag the commit. Never move a published tag.
 
 After you finish a change, suggest a commit message.
 Do not run the commit yourself unless the user asks for it.
@@ -379,15 +283,37 @@ Give each file, each package, each commit, and each guide one job.
 * Keep the core test free of an adapter. Use a fake for a port.
 * Run the contract suite for an adapter. Do not repeat it in each adapter.
 * Keep a fixture in one file. Share it.
+* Cover every line and every branch of the code you add or change.
+* Aim for 100% coverage. Never lower the floor to make a build pass.
+* Cover the error path. A happy-path test alone is not a test.
+* Cover the boundary. Test the empty case and the overflow case.
+* Use a table-driven test for each set of related cases.
 
-### 9.5 The RTFM Rules
+### 9.5 The Coverage Rules
+
+The module must reach 100% coverage.
+
+* Run `make cover-verify`. It fails below the floor in `Makefile`.
+* Run `make cover` for the per-function breakdown of each file.
+* Write a test for each bug before you write the fix.
+* Cover the code that a port supplies. A fake covers the port, not the
+  adapter.
+* Keep the core test suite free of a container. The engine suite uses a real
+  database container.
+* Never use `//go:build ignore` or a blank identifier to hide a line.
+* Never skip a test to make a build pass. Fix the code or the test.
+
+`COVERAGE_FLOOR` lives in `Makefile`.
+Read [the architecture guide](docs/architecture.md) for the test layers.
+
+### 9.6 The RTFM Rules
 
 * Read the file before you change it. Read the whole file.
 * Read `plan.md` before you start. Read this document before you edit.
 * Search for the answer before you ask. Then search for the question.
 * When a rule has no answer in the repository, write the rule first.
 
-### 9.6 The Scope Test
+### 9.7 The Scope Test
 
 Run this before you send a change for review.
 

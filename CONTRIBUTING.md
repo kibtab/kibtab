@@ -70,14 +70,93 @@ Copy [the template](docs/changelogs/TEMPLATE.md) first.
 
 ## The Commit Message
 
-Kibtab uses Conventional Commits.
-Read [AGENTS.md](AGENTS.md) section 8 for the format and the scopes.
+Kibtab uses Conventional Commits. The format is
+`<type>(<scope>): <description>`.
+
+| Type | Use for |
+| --- | --- |
+| `feat` | A new feature for a user. |
+| `fix` | A defect repair. |
+| `docs` | A documentation change only. |
+| `refactor` | A code change with no new behaviour. |
+| `test` | A test change only. |
+| `perf` | A change that improves a measured result. |
+| `build` | The toolchain, a dependency, or a build setting. |
+| `ci` | The workflow files. |
+| `chore` | A task with no source change. |
+
+| Scope | Covers |
+| --- | --- |
+| `core` | `internal/core/`. The domain, the ports, the services. |
+| `postgres` | `internal/adapters/driven/postgres/`. |
+| `duckdb` | `internal/adapters/driven/duckdb/`. |
+| `adapters` | The wiring of each adapter in `cmd/kibtab/`. |
+| `http` | `internal/adapters/driver/http/`. |
+| `client` | `client/`. The spreadsheet clients. |
+| `schema` | The `_kibtab_meta` schema and the migrations. |
+| `cli` | `cmd/kibtab/`. The entry point and the flags. |
+| `deploy` | The `Dockerfile`, the `Caddyfile`, and the compose file. |
+| `release` | GoReleaser, the tags, and the archives. |
+| `docs` | Every file under `docs/`, plus `README.md` and `AGENTS.md`. |
+| `deps` | `go.mod`, `go.sum`, and the client packages. |
+| `ci` | The workflow files. |
+| `skills` | The vendored skill in `skills/simple-english/`. |
+
+Keep the subject under 50 characters. Start with a verb.
+Do not end the subject with a full stop.
+Choose the scope of the file that changed most.
+Never invent a scope. Add it to the table first.
+Use no scope when the change touches the whole repository.
 
 ```text
 feat(core): add the optimistic version compare
 fix(postgres): stop the audit insert from rolling back the bump
-docs(core): record the port rules in the architecture guide
+feat(http): add the POST /v1/tables/{table}/cells route
+feat(duckdb): add the DuckDB dialect behind the Dialect port
+build(release): set CGO_ENABLED=0 in the goreleaser environment
+test(postgres): cover the rollback of a failed batch
+chore(skills): pin the simple-english skill to 32ea2d3
 ```
+
+A change to a REST path, a JSON field name, or a CLI flag is breaking.
+Write `!` after the scope. Then add a `BREAKING CHANGE:` footer.
+
+```text
+feat(http)!: replace the cell write body with a versioned envelope
+
+The v1 field names move to the envelope meta object.
+A client must read the version from meta.version.
+
+BREAKING CHANGE: the v1 JSON field names are removed.
+Read docs/changelogs/v2.0.0.md before you upgrade.
+```
+
+## The Tests
+
+The module aims for 100% coverage. Every line and every branch needs a test.
+
+* Write a test for each bug before you write the fix.
+* Cover the error path. A happy-path test alone is not a test.
+* Cover the boundary. Test the empty case and the overflow case.
+* Use a table-driven test for a set of related cases.
+* Name each test for the concern that it covers.
+* Keep the core test free of an adapter. Use a fake for a port.
+* Run the contract suite for an adapter. Do not repeat it in each adapter.
+* Keep a fixture in one file. Share it.
+
+Read the coverage before you send the change.
+
+```bash
+make cover
+make cover-verify
+```
+
+`make cover-verify` fails below the floor in `Makefile`.
+The floor is 100.
+Never lower the floor to make a build pass.
+Never skip a test to make a build pass.
+
+Read [AGENTS.md](AGENTS.md) section 9 for the full rules.
 
 ## The Rules For A Change
 
@@ -107,12 +186,13 @@ Run each gate on its own when you need one.
 make vet
 make lint
 make test
+make cover-verify
 make docs-check
 make notice-check
 ```
 
 Read `make help` for the full list of targets.
-Read the target list in [docs/index.md](docs/index.md).
+Read the gate rules in [AGENTS.md](AGENTS.md) section 6.
 
 ## Pull Requests
 

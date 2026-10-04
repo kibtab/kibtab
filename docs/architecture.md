@@ -17,18 +17,38 @@ The core must not name one client.
 A new engine needs one package.
 A new client needs one folder.
 
-## The Layers
+## The Repository Tree
+
+This tree is canonical. Change it before you add a file or a folder.
 
 ```text
-cmd/kibtab/                 The wiring. It builds each adapter.
-internal/core/              The kernel. It has no I/O.
-  domain/                   The models.
-  ports/                    The interfaces. The core owns them.
-  services/                 The use cases.
-internal/adapters/
-  driven/<engine>/          One package per database engine.
-  driver/<transport>/       One package per transport.
-client/<spreadsheet>/       One folder per spreadsheet client.
+kibtab/
+├── cmd/kibtab/              The wiring. It builds each adapter.
+├── internal/
+│   ├── core/                The kernel. It has no I/O.
+│   │   ├── domain/          The models.
+│   │   ├── ports/           The interfaces. The core owns them.
+│   │   └── services/        The use cases.
+│   └── adapters/
+│       ├── driven/<engine>/ One package per database engine.
+│       └── driver/<transport>/  One package per transport.
+├── client/<spreadsheet>/    One folder per spreadsheet client.
+├── docs/                    The documentation and the changelogs.
+│   ├── changelogs/          One file per release.
+│   └── self-hosting/        The guides for a server.
+├── scripts/                 The checks that run without a container.
+├── skills/simple-english/   The vendored writing skill.
+├── AGENTS.md                The rules for agents.
+├── CONTRIBUTING.md          The steps to send a change.
+├── plan.md                  The implementation plan.
+├── Makefile                 The build, test, and release targets.
+├── air.toml                 The hot reload settings.
+├── Caddyfile                The edge proxy and the TLS.
+├── docker-compose.yml       The local stack.
+├── Dockerfile               The multi-stage build.
+├── .goreleaser.yaml         The release build.
+├── .gitignore               The build and coverage output.
+└── go.mod                   The module. It sets Go 1.22.
 ```
 
 A file in `internal/core/` never imports a package under `internal/adapters/`.
