@@ -2,8 +2,8 @@
 
 **Spreadsheet as client, database as server.**
 
-Kibtab turns Microsoft Excel into a client for your relational database.
-> And potentially other spreadsheet software in the future.
+Kibtab turns a spreadsheet into a client for your relational database.
+Excel is the first client. Other spreadsheet software can come later.
 
 Your team keeps the familiar grid.
 The engine keeps the transactions, the version checks, and the audit trail.
@@ -15,56 +15,41 @@ Every cell change is recorded.
 
 Kibtab is pre-release.
 The first release is v0.1.0.
-Read the [plan](plan.md) for the scope of each version.
 No binary is published yet.
+Read [the plan](plan.md) for the scope of each version.
 
-## Install
+## Getting Started
 
-The install command works after the first release.
+Read the guide for your task.
 
-```bash
-go install github.com/kibtab/kibtab/cmd/kibtab@latest
+| Task | Guide |
+| --- | --- |
+| Install a binary or build from source | [docs/install.md](docs/install.md) |
+| Run the stack with Docker and Caddy | [docs/self-hosting.md](docs/self-hosting.md) |
+| Read the layers and the port contract | [docs/architecture.md](docs/architecture.md) |
+| Read the terms | [docs/licence.md](docs/licence.md) |
+
+## Architecture
+
+The code follows the Hexagonal architecture.
+The core holds the domain logic. It has no database driver and no HTTP code.
+The core names no database engine and no spreadsheet client.
+
+```text
+cmd/kibtab/                    The wiring and the CLI
+internal/core/domain/          The models. They name no engine or client.
+internal/core/ports/           The interfaces. The core owns them.
+internal/core/services/        The use cases. They call the ports only.
+internal/adapters/driven/      One package per database engine.
+internal/adapters/driver/      One package per transport.
+client/                        One folder per spreadsheet client.
 ```
 
-Kibtab builds without a C compiler. Every build sets `CGO_ENABLED=0`.
+A new database means one new package under `adapters/driven/`.
+A new spreadsheet means one new client folder.
+Neither changes a file under `internal/core/`.
 
-## Self-host
-
-The stack holds Caddy, the engine, and PostgreSQL.
-
-```bash
-git clone https://github.com/kibtab/kibtab.git
-cd kibtab
-docker compose up -d
-```
-
-Read [the self-hosting guide](docs/self-hosting.md) after v0.8.0 ships.
-
-## The Name
-
-**Kibtab** joins two words.
-
-*Kiban* (基盤) means *foundation* in Japanese.
-It is the word for the base layer under a structure.
-
-*Tabularium* is the Latin register of public tables.
-It was the Roman archive where the state kept its records.
-
-A foundation plus a register.
-That is what this project is.
-
-The name is pronounced `/kɪb-tæb/`.
-
-## Licence
-
-Apache License 2.0.
-Read [LICENSE](LICENSE) for the full terms.
-
-Kibtab ships third party software.
-Read [the third party notices](docs/THIRD_PARTY_NOTICES.md) for each
-dependency and its licence.
-
-The engine licence finalises at v1.0.0. Read [the plan](plan.md) section 12.
+Read [the architecture guide](docs/architecture.md) for the full design.
 
 ## Documentation
 
@@ -73,33 +58,15 @@ The engine licence finalises at v1.0.0. Read [the plan](plan.md) section 12.
 | [Plan](plan.md) | The release plan. It splits the work by version. |
 | [Documentation index](docs/index.md) | The list of every document. |
 | [Agent rules](AGENTS.md) | The rules for AI coding agents. |
+| [Licence](docs/licence.md) | The terms for the engine and the skill. |
+| [Third party notices](docs/THIRD_PARTY_NOTICES.md) | The licences of each dependency. |
 | [Changelog format](docs/changelogs/README.md) | The format for each release file. |
 | [Credits](docs/CREDITS.md) | The people, the projects, and the sources. |
-| [Architecture](docs/architecture.md) | The Hexagonal layers. Added at v0.2.0. |
-| [REST interface](docs/openapi.yaml) | The API definition. Added at v0.5.0. |
-| [Self-hosting](docs/self-hosting.md) | The install steps. Added at v0.8.0. |
-| [Runbook](docs/runbook.md) | The operator steps. Added at v0.9.0. |
 
 Documentation follows two styles at the same time.
 The first style is Simplified Technical English.
 The second style is British English.
 Read [the agent rules](AGENTS.md) section 3 for both.
-
-## Architecture
-
-The code follows the Hexagonal architecture.
-The core holds the domain logic. It has no database driver and no HTTP code.
-
-```text
-cmd/kibtab/                    The entry point and the CLI
-internal/core/domain/          The models
-internal/core/ports/           The interfaces
-internal/core/services/        The business logic
-internal/adapters/driven/      PostgreSQL with pgx/v5
-internal/adapters/driver/      The HTTP handlers
-```
-
-Read [the architecture document](docs/architecture.md) at v0.2.0.
 
 ## Contributing
 
@@ -115,3 +82,18 @@ Read [AGENTS.md](AGENTS.md) section 8 for the format and the scopes.
 Built on the ideas in [docs/CREDITS.md](docs/CREDITS.md).
 The documentation rules come from the vendored
 [SimpleEnglish](https://github.com/AminBlg/SimpleEnglish) skill.
+
+## The Name
+
+**Kibtab** joins two words.
+
+*Kiban* (基盤) means *foundation* in Japanese.
+It is the word for the base layer under a structure.
+
+*Tabularium* is the Latin register of public tables.
+It was the Roman archive where the state kept its records.
+
+A foundation plus a register.
+That is what this project is.
+
+The name is pronounced `/kɪb-tæb/`.

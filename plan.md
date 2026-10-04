@@ -53,21 +53,102 @@ A change to any of them needs a MAJOR version.
 | v1.0.0 | Stable | The interface freezes. The project is open core. |
 | v1.1.0 and later | Growth | New adapters and new features. |
 
-## 2. Rules For All Releases
+## 2. Proposed Codebase Structure
+
+Kibtab must stay flexible.
+It must serve any relational database.
+It must serve any spreadsheet.
+The structure below keeps both sides replaceable.
+
+### 2.1 The Layout
+
+```text
+kibtab/
+├── cmd/
+│   └── kibtab/                 # The wiring. It builds each adapter.
+│       └── main.go
+├── internal/
+│   ├── core/                   # The kernel. It has no I/O.
+│   │   ├── domain/             # The models. They name no engine or client.
+│   │   ├── ports/              # The interfaces. The core owns them.
+│   │   └── services/           # The use cases. They call the ports only.
+│   └── adapters/
+│       ├── driven/             # One package per database engine.
+│       │   └── postgres/       # The first engine.
+│       └── driver/             # One package per transport or client.
+│           └── http/           # The first transport.
+├── client/                     # The spreadsheet clients. One folder each.
+├── docs/                       # The documentation and the changelogs.
+├── skills/simple-english/      # The vendored writing skill.
+├── AGENTS.md
+├── plan.md
+├── air.toml
+├── Caddyfile
+├── docker-compose.yml
+├── Dockerfile
+├── .goreleaser.yaml
+└── go.mod
+```
+
+### 2.2 The Port Names
+
+The core names no engine and no client.
+It names a need.
+The adapter supplies the answer.
+
+| Port | Need it fills |
+| --- | --- |
+| `RowRepository` | Read and write rows in a table. |
+| `TableRegistry` | List the tables. Read the metadata for a table. |
+| `AuditWriter` | Record a change to a cell. |
+| `Dialect` | Quote an identifier. Map a value to a type. Page a query. |
+| `TransactionRunner` | Run a group of writes as one unit. |
+| `Clock` | Give the current time. |
+| `SyncService` | Accept a sync payload. Return a sync result. |
+
+A new engine implements the ports. It does not change the core.
+A new client implements `SyncService`. It does not change the core.
+
+### 2.3 The Rules For Agility
+
+* Keep the core free of an engine name.
+* Keep the core free of a client name.
+* Keep the core free of a transport name.
+* Give each engine its own package under `adapters/driven/`.
+* Give each transport its own package under `adapters/driver/`.
+* Use `Clock` in the core. Do not call the system clock in a test.
+* Reach a database only through a port.
+* Put the wiring in `cmd/kibtab/`. Keep it in one place.
+* Choose the engine and the transport from the environment.
+* Add a CI step. It fails the build when the core imports an adapter.
+
+### 2.4 The Test Strategy
+
+Agility needs a test that holds each side to the contract.
+
+* [ ] Write a contract test suite for `RowRepository`. Run it for each engine.
+* [ ] Write a contract test suite for `SyncService`. Run it for each client.
+* [ ] Run the engine suite in CI against a real database container.
+* [ ] Keep the core test suite free of a container.
+* [ ] Measure the engine swap. Add a second engine with no core change.
+
+## 3. Rules For All Releases
 
 Every release below must meet these rules.
 Mark each box only when the check passes.
 
 * [ ] `CGO_ENABLED=0 go build ./...` succeeds with no environment variable.
 * [ ] The module has no dependency that needs a C compiler.
-* [ ] All SQL sits in `internal/adapters/driven/postgres/`.
+* [ ] All SQL sits in the engine package under `internal/adapters/driven/`.
 * [ ] `internal/core/` has no database driver import and no HTTP import.
+* [ ] `internal/core/` names no database engine and no spreadsheet client.
 * [ ] `CGO_ENABLED=0 go vet ./...` reports no problem.
 * [ ] `make docs-check` reports no problem.
 * [ ] The documentation follows `AGENTS.md` section 3.
+* [ ] Each guide owns one task. No setup step sits in two files.
 * [ ] A changelog file exists at `docs/changelogs/vX.Y.Z.md`.
 
-## 3. Release v0.1.0 - Skeleton
+## 4. Release v0.1.0 - Skeleton
 
 **Goal:** The engine starts and it answers a health check.
 
@@ -75,10 +156,13 @@ Mark each box only when the check passes.
 
 * [ ] Create `go.mod`. Set the module path and Go 1.22.
 * [ ] Create `cmd/kibtab/main.go`. It reads `PORT` and `DATABASE_URL`.
-* [ ] Keep `README.md`. State the tagline, the install, and the licence.
+* [ ] Keep `README.md` as a landing page. Link to each guide under `docs/`.
+* [ ] Keep `docs/install.md`. It holds the install and build steps.
+* [ ] Keep `docs/licence.md`. It holds the terms for the engine and the skill.
 * [ ] Create the folder `internal/core/` with `domain`, `ports`, `services`.
-* [ ] Create the folder `internal/adapters/driven/postgres/`.
-* [ ] Create the folder `internal/adapters/driver/http/`.
+* [ ] Create the folder `internal/adapters/driven/` for the engines.
+* [ ] Create the folder `internal/adapters/driver/` for the transports.
+* [ ] Create the folder `client/` for the spreadsheet clients.
 * [ ] Add the route `GET /healthz`. It returns the status and the version.
 * [ ] Add `air.toml`. Air rebuilds on a change in `internal/` or `cmd/`.
 * [ ] Add the `Makefile` with the targets `build`, `test`, `lint`, `run`,
@@ -103,7 +187,7 @@ This release holds no write path.
 * [ ] `curl localhost:8080/healthz` returns the version.
 * [ ] `docs/changelogs/v0.1.0.md` exists.
 
-## 4. Release v0.2.0 - Domain And Ports
+## 5. Release v0.2.0 - Domain And Ports
 
 **Goal:** The pure domain exists and it has tests.
 
@@ -111,13 +195,16 @@ This release holds no write path.
 
 * [ ] Add `internal/core/domain/`. It holds `TableMetadata`, `CellValue`,
       `CellDelta`, `SyncPayload`, `SyncResult`, and `ValidationError`.
-* [ ] Add `internal/core/ports/`. It holds `TableRegistry`, `RowRepository`,
-      and `AuditWriter`.
+* [ ] Add `internal/core/ports/`. It holds `RowRepository`, `TableRegistry`,
+      `AuditWriter`, `Dialect`, `TransactionRunner`, `Clock`, and
+      `SyncService`.
 * [ ] Add `internal/core/services/`. It holds the validation, the batch
       merge, and the version compare.
 * [ ] Write a table-driven test for each service.
-* [ ] Add `docs/architecture.md`. It holds the layer rules.
+* [ ] Keep `docs/architecture.md`. It holds the layers and the port contract.
 * [ ] Add a CI step. It fails the build on a driver import in the core.
+* [ ] Add a CI step. It fails the build when the core names an engine or a
+      client.
 
 ### Out Of Scope
 
@@ -130,7 +217,7 @@ This release holds no HTTP.
 * [ ] The CI step finds no driver import in `internal/core/`.
 * [ ] `docs/changelogs/v0.2.0.md` exists.
 
-## 5. Release v0.3.0 - PostgreSQL Adapter
+## 6. Release v0.3.0 - PostgreSQL Adapter
 
 **Goal:** Kibtab reads and writes rows in PostgreSQL.
 
@@ -141,11 +228,13 @@ This release holds no HTTP.
 * [ ] Create the table `_kibtab_meta.table_versions`.
 * [ ] Create the table `_kibtab_meta.audit_log`.
 * [ ] Add the migrations. They run at start. They use an advisory lock.
+* [ ] Implement the `Dialect` port for PostgreSQL. It quotes with
+      `pgx.Identifier`. It maps each type. It pages a query.
 * [ ] Implement `TableRegistry`. It reads the table list from the
       environment.
 * [ ] Implement `RowRepository`. It reads a page of rows. It writes one row.
+* [ ] Implement `TransactionRunner`. It opens a transaction.
 * [ ] Use a parameterized query for each statement.
-* [ ] Use `pgx.Identifier` for each table name and column name.
 * [ ] Add an integration test. It writes a row and reads it back.
 * [ ] Add the row for `pgx/v5` to `docs/THIRD_PARTY_NOTICES.md`.
 
@@ -161,7 +250,7 @@ This release holds no cell write path.
 * [ ] `make notice-check` passes.
 * [ ] `docs/changelogs/v0.3.0.md` exists.
 
-## 6. Release v0.4.0 - Write Path
+## 7. Release v0.4.0 - Write Path
 
 **Goal:** A cell change writes to the database in a transaction.
 
@@ -186,7 +275,7 @@ This release holds no REST API.
 * [ ] The rollback test passes. The other groups stay.
 * [ ] `docs/changelogs/v0.4.0.md` exists.
 
-## 7. Release v0.5.0 - HTTP API
+## 8. Release v0.5.0 - HTTP API
 
 **Goal:** A client can read and write over REST.
 
@@ -217,7 +306,7 @@ This release holds no Office.js taskpane.
 * [ ] The OpenAPI file matches each handler.
 * [ ] `docs/changelogs/v0.5.0.md` exists.
 
-## 8. Release v0.6.0 - Office.js Client
+## 9. Release v0.6.0 - Office.js Client
 
 **Goal:** A user edits a cell in Excel and Kibtab stores it.
 
@@ -245,7 +334,7 @@ This release holds no store submission.
 * [ ] The build produces the `kibtab-taskpane.zip` file.
 * [ ] `docs/changelogs/v0.6.0.md` exists.
 
-## 9. Release v0.7.0 - Audit And Locking
+## 10. Release v0.7.0 - Audit And Locking
 
 **Goal:** Kibtab records each change and it blocks a stale write.
 
@@ -269,7 +358,7 @@ This release holds no export of an audit row.
 * [ ] A stale write returns the conflict code. It writes nothing.
 * [ ] `docs/changelogs/v0.7.0.md` exists.
 
-## 10. Release v0.8.0 - Packaging
+## 11. Release v0.8.0 - Packaging
 
 **Goal:** GoReleaser ships binaries. Air runs the engine in development.
 
@@ -286,7 +375,7 @@ This release holds no export of an audit row.
 * [ ] Add `Dockerfile`. Use a multi-stage build and a `scratch` base.
 * [ ] Add `docker-compose.yml`. It holds Caddy, the engine, and PostgreSQL.
 * [ ] Add `Caddyfile`. It holds the domain and the rate limit.
-* [ ] Add `docs/self-hosting.md`.
+* [ ] Keep `docs/self-hosting.md`. It holds the Docker stack steps.
 * [ ] Add the target `make release-check`. It runs `goreleaser check`.
 * [ ] Add the rows for GoReleaser, Caddy, and PostgreSQL to
       `docs/THIRD_PARTY_NOTICES.md`.
@@ -303,7 +392,7 @@ The default job does not push an image to a registry.
 * [ ] `ldd` reports no dynamic library for the Linux binary.
 * [ ] `docs/changelogs/v0.8.0.md` exists.
 
-## 11. Release v0.9.0 - Hardening
+## 12. Release v0.9.0 - Hardening
 
 **Goal:** The engine survives load and it reports its health.
 
@@ -329,7 +418,7 @@ This release holds no horizontal scale.
 * [ ] The metrics route shows the query count and the error count.
 * [ ] `docs/changelogs/v0.9.0.md` exists.
 
-## 12. Release v1.0.0 - Stable
+## 13. Release v1.0.0 - Stable
 
 **Goal:** The public interface freezes.
 
@@ -354,7 +443,7 @@ This release adds no feature.
       from v0.x.
 * [ ] Each migration guide exists.
 
-## 13. Releases After v1.0.0
+## 14. Releases After v1.0.0
 
 These releases are the expected direction.
 The boxes stay open until the work starts.
@@ -417,7 +506,7 @@ The boxes stay open until the work starts.
 * [ ] Load a module at start.
 * [ ] Let a module add a driven adapter.
 
-## 14. Risk And Mitigation
+## 15. Risk And Mitigation
 
 | Risk | Effect | Mitigation |
 | --- | --- | --- |
@@ -429,7 +518,7 @@ The boxes stay open until the work starts.
 | The interface changes after v1.0.0 | High | The contract test suite freezes the interface. |
 | An upstream skill change alters the docs | Medium | The skill is vendored at a pinned commit. |
 
-## 15. Definition Of Done For A Release
+## 16. Definition Of Done For A Release
 
 A release is done when all of these are true.
 

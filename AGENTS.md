@@ -5,20 +5,70 @@ You must follow these rules when you write code or edit files in this repository
 
 ## 1. Code Architecture Rules
 
+### 1.1 Layer Rules
+
 * Keep code in the correct Hexagonal layer.
-* Do not import database drivers into `internal/core/`.
 * `internal/core/` must contain only pure Go domain logic and ports.
-* Put all PostgreSQL queries inside `internal/adapters/driven/postgres/`.
-* Put all HTTP handlers inside `internal/adapters/driver/http/`.
-* Put all CLI commands inside `cmd/kibtab/`.
-* Define interfaces in `internal/core/ports/`. Implement them in adapters.
+* Do not import a database driver into `internal/core/`.
+* Do not import an HTTP package into `internal/core/`.
+* Define each interface in `internal/core/ports/`. Implement it in an adapter.
+* Put each database engine in its own package under
+  `internal/adapters/driven/<engine>/`.
+* Put each transport in its own package under
+  `internal/adapters/driver/<transport>/`.
+* Put all CLI commands inside `cmd/kibtab/`. The CLI holds no domain logic.
+
+The canonical list of ports is in `plan.md` section 2.2.
+Add a port there first. Then define it in `internal/core/ports/`.
+
+### 1.2 Database Agnostic Rules
+
+Kibtab is a server for any relational database.
+The core must not name one engine.
+
+* Put every SQL statement inside the engine package that owns it.
+* Do not put a PostgreSQL type, function, or DSN in `internal/core/`.
+* Reach a database only through the ports in `internal/core/ports/`.
+* Use the `Dialect` port for quoting, the type map, and the paging.
+* Give each engine its own `Dialect` value. Do not switch on the engine name in
+  the core.
+* Keep a table name and a column name as data. Validate them against the
+  registry before a query uses them.
+* Add a new database by adding one package under `driven/` and a constructor
+  in the wiring. Do not change a file under `internal/core/`.
+
+### 1.3 Client Agnostic Rules
+
+Kibtab is a client for any spreadsheet.
+The core must not name one client.
+
+* Treat the `SyncService` port as the boundary. A spreadsheet talks to the
+  contract, not to a handler.
+* Keep the value model client-neutral. Do not model an Excel range in the core.
+* Put a client-specific mapping in the transport package that serves it.
+* Do not put a client name, such as Excel or Sheets, in `internal/core/`.
+* Keep the sync request and the sync result in the domain package. Every
+  transport reuses them.
+* Add a new spreadsheet by adding a client adapter and a manifest. Do not
+  change a file under `internal/core/`.
+* Add a new transport by adding one package under `driver/`. Do not change a
+  file under `internal/core/`.
+
+### 1.4 Wiring Rules
+
+* Build each adapter in one place. Put that code under `cmd/kibtab/`.
+* Read the engine choice and the transport choice from the environment.
+* Fail at start when a chosen adapter has no implementation.
+* Keep `internal/core/` free of build tags. A build tag changes an adapter,
+  never the domain.
 
 ## 2. Writing Code
 
 * Use Go 1.22 or a newer version.
 * Write clear Go code. Use `gofmt` to format all code.
 * Handle all errors directly. Do not ignore returned errors.
-* Use `pgx/v5` for PostgreSQL connections.
+* Use `pgx/v5` for the PostgreSQL engine. Add another driver for another
+  engine.
 * Keep functions short. Do not write functions with more than 50 lines.
 * Keep files short. Do not write files with more than 300 lines.
 * Write table-driven tests for each service in `internal/core/services/`.
@@ -67,13 +117,25 @@ Both rules apply to every document. Neither style replaces the other.
 
 ## 4. Database Rules
 
+Write a rule here for every engine. Never write one rule for all engines.
+The rules below hold for the engine they name.
+
+### 4.1 Rules For Every Engine
+
 * Do not execute raw SQL string concatenations.
 * Use parameterized queries to prevent SQL injection.
-* Always wrap multi-cell updates in a PostgreSQL transaction (`BEGIN` and
-  `COMMIT`).
-* Quote identifiers with `pgx.Identifier` when a query needs a table name.
+* Wrap a multi-cell update in one transaction of the target engine.
+* Quote each identifier through the `Dialect` port. Do not quote it by hand.
 * Never accept a table or column name from a request without validating it
   against the table registry.
+* Keep each statement in the package for its engine.
+
+### 4.2 Rules For The PostgreSQL Engine
+
+* Use `pgx/v5` for the connection.
+* Quote each identifier with `pgx.Identifier`.
+* Wrap a multi-cell update with `BEGIN` and `COMMIT`.
+* Run the migrations under a PostgreSQL advisory lock.
 
 ## 5. Build And Toolchain Rules
 
@@ -148,10 +210,12 @@ A change to more than one layer uses the widest scope.
 | Scope | Covers |
 | --- | --- |
 | `core` | `internal/core/`. The domain, the ports, the services. |
+| `adapters` | The wiring of each adapter in `cmd/kibtab/`. |
 | `postgres` | `internal/adapters/driven/postgres/`. |
+| `duckdb` | `internal/adapters/driven/duckdb/`. |
 | `http` | `internal/adapters/driver/http/`. The routes and the codec. |
 | `cli` | `cmd/kibtab/`. The entry point and the flags. |
-| `client` | `client/`. The Office.js taskpane. |
+| `client` | `client/`. The spreadsheet clients. |
 | `schema` | The `_kibtab_meta` schema and the migrations. |
 | `deploy` | The `Dockerfile`, the `Caddyfile`, and the compose file. |
 | `release` | GoReleaser, the tags, and the archives. |
@@ -159,6 +223,9 @@ A change to more than one layer uses the widest scope.
 | `deps` | `go.mod`, `go.sum`, and the client packages. |
 | `ci` | The workflow files. |
 | `skills` | The vendored skill in `skills/simple-english/`. |
+
+An engine scope names the engine. Use `duckdb` for that adapter.
+Use `core` for a change in the domain. It is not an engine scope.
 
 ### 8.4 Examples
 
@@ -168,6 +235,7 @@ fix(postgres): stop the audit insert from rolling back the version bump
 docs(core): record the port rules in the architecture guide
 feat(http): add the POST /v1/tables/{table}/cells route
 refactor(postgres): move the row query out of the table registry
+feat(duckdb): add the DuckDB dialect behind the Dialect port
 build(release): set CGO_ENABLED=0 in the goreleaser environment
 test(postgres): cover the rollback of a failed batch
 chore(skills): pin the simple-english skill to 32ea2d3
@@ -178,6 +246,8 @@ chore(skills): pin the simple-english skill to 32ea2d3
 * Choose the scope of the file that changed most.
 * Use `deps` for a version bump. Use `release` for a build setting.
 * Use `core` for a change in more than one package under `internal/core/`.
+* Use an engine scope for a change in one engine package.
+* Use `adapters` for a change in the wiring that builds each adapter.
 * Do not invent a scope. Add a new scope to the table in this section first.
 * Use no scope when the change touches the whole repository.
 
@@ -216,3 +286,49 @@ Say whether the change needs a MAJOR version.
 
 If the change has no good scope, say so. Propose a new scope and add it to
 the table in section 8.3.
+
+## 9. Scope And Discipline Rules
+
+### 9.1 The Scope Of A Change
+
+* Do one thing in a commit. Split the rest into another commit.
+* Do one thing in a function. Split the rest into another function.
+* Solve the problem in the task. Do not solve the next task.
+* Keep each commit to one purpose. Keep each file to one purpose.
+* Reject a change that touches two layers for one reason. Split it.
+* Do not add a flag, a switch, or a mode for a case that no user has.
+* Do not add an abstraction before a second caller needs it.
+* Keep the diff small. A large diff hides a large defect.
+
+### 9.2 The Unix Rules
+
+* Do one thing and do it well.
+* Write each tool to read from a stream and to write to a stream where it
+  makes sense.
+* Keep each module small. Push the detail down to the layer that owns it.
+* Use the standard library first. Add a dependency only for a real need.
+* Fail loudly and early. Do not hide an error behind a default value.
+* Prefer text a person can read over text only a tool can parse.
+* Keep the core free of a convenience for any one adapter.
+
+### 9.3 The RTFM Rules
+
+* Read the file before you change it. Read the whole file.
+* Read `plan.md` before you start. Read `AGENTS.md` before you edit.
+* Search for the answer before you ask. Then search for the question.
+* Point to the document that holds the answer. Do not repeat it in a reply.
+* Write the answer in one file. Link to that file from every other place.
+* Do not copy a setup step into a second file. One file owns each step.
+* When a rule has no answer in the repository, write the rule in the
+  repository first. Then follow it.
+* Update the document in the same commit as the code it describes.
+
+### 9.4 The Scope Test
+
+Run this test before you send a change for review.
+
+1. Name the one thing the change does. Stop when you need a second verb.
+2. Name the layer that owns the change. Stop when you need a second layer.
+3. Name the version in `plan.md` that holds the change.
+4. Read the diff. Remove each hunk that serves a second purpose.
+5. Check that the commit message names that one thing.

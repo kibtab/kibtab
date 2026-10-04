@@ -13,6 +13,10 @@ It rejects a write from an old client.
 | [Readme](../README.md) | The project summary. It is the front page. |
 | [Plan](../plan.md) | The release plan. It splits the work by version. |
 | [Agent Rules](../AGENTS.md) | The rules for AI coding agents. |
+| [Install](install.md) | The install steps for a binary or a source build. |
+| [Self-hosting](self-hosting.md) | The steps to run the Docker stack. |
+| [Architecture](architecture.md) | The layers, the ports, and the extension steps. |
+| [Licence](licence.md) | The terms for the engine and the skill. |
 | [Third Party Notices](THIRD_PARTY_NOTICES.md) | The licences of the dependencies. |
 | [Credits](CREDITS.md) | The people, the projects, and the sources. |
 | [Changelog rules](changelogs/README.md) | The format for each release file. |
@@ -48,12 +52,17 @@ Do not write a file for a planned release that has no code.
 
 ## Documents That A Release Adds
 
+The documents below exist now as pre-release drafts.
+Each one updates when its release arrives.
+
 | Document | Added in | Purpose |
 | --- | --- | --- |
 | `README.md` | v0.1.0 | The project summary. |
-| `docs/architecture.md` | v0.2.0 | The Hexagonal layers and their rules. |
+| `docs/install.md` | v0.1.0 | The install steps. |
+| `docs/architecture.md` | v0.2.0 | The layers and the port contract. |
+| `docs/licence.md` | v0.1.0 | The terms for the engine and the skill. |
 | `docs/openapi.yaml` | v0.5.0 | The REST interface definition. |
-| `docs/self-hosting.md` | v0.8.0 | The steps for a self-hosted install. |
+| `docs/self-hosting.md` | v0.8.0 | The steps to run the Docker stack. |
 | `docs/runbook.md` | v0.9.0 | The steps for an operator. |
 | `docs/licences/` | v0.8.0 | A copy of each dependency licence. |
 
@@ -91,6 +100,19 @@ authority from ASD.
 The skill lives in `../skills/simple-english/`.
 Read `../skills/simple-english/VENDOR.md` for the pinned commit.
 Read `../skills/simple-english/LICENSE` for the terms.
+
+## Which Guide Owns Which Step
+
+Each guide owns one task. Do not copy a step into a second file.
+
+| Guide | Owns |
+| --- | --- |
+| [install.md](install.md) | The install and build steps. |
+| [self-hosting.md](self-hosting.md) | The Docker stack and the configuration. |
+| [architecture.md](architecture.md) | The layers, the ports, and the extension steps. |
+| [licence.md](licence.md) | The licence terms and the obligations. |
+
+The rules for this file are in the section above.
 
 ## Build And Toolchain Documents
 
