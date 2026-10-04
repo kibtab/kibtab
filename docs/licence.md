@@ -7,17 +7,21 @@ Read [the third party notices](THIRD_PARTY_NOTICES.md) for each dependency.
 
 ## The Engine
 
-The Kibtab engine uses the Apache License 2.0.
+The whole Kibtab repository uses the Apache License 2.0.
+That licence covers the engine, the client, the docs, and the plans.
+It covers every file that Kibtab wrote.
 
 | Item | Value |
 | --- | --- |
 | Licence | Apache License 2.0 |
 | Full text | `LICENSE` at the repository root |
-| Finalised at | v1.0.0 |
+| Scope | Every file that Kibtab wrote |
+| Change at a later version | None. The licence does not change. |
 
-The repository holds the Apache License 2.0 from the first commit.
-The plan confirms the licence for the engine at v1.0.0.
-Read [the plan](../plan.md) section 13.
+The repository holds one folder of copied work.
+The folder `skills/simple-english/` holds a copy from another project.
+That copy keeps the licence of its author.
+Read [the vendored skill](#the-vendored-skill) below.
 
 The Apache License 2.0 lets a user do these things.
 
@@ -36,8 +40,9 @@ The licence asks for these things.
 ## Open Core
 
 Kibtab is an open core project.
-The engine stays open under the Apache License 2.0.
-A future hosted service can be closed source.
+Every file that Kibtab wrote stays open under the Apache License 2.0.
+The licence does not change at v1.0.0.
+It does not change at any version.
 
 ## The Office Add-In
 
@@ -80,6 +85,10 @@ Read the requirement in [the third party notices](THIRD_PARTY_NOTICES.md).
 A contribution uses the Apache License 2.0.
 Send a patch. Do not send a licence change.
 A pull request needs a passing build.
+
+Do not edit the copied work under `skills/simple-english/`.
+A change to that folder needs a new pinned commit.
+Read `skills/simple-english/VENDOR.md` for the refresh steps.
 
 Read [AGENTS.md](../AGENTS.md) before you contribute.
 

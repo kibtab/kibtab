@@ -25,7 +25,7 @@ Read the guide for your task.
 | Task | Guide |
 | --- | --- |
 | Install a binary or build from source | [docs/install.md](docs/install.md) |
-| Run the stack with Docker and Caddy | [docs/self-hosting.md](docs/self-hosting.md) |
+| Run the stack on a server | [docs/self-hosting/](docs/self-hosting/README.md) |
 | Read the layers and the port contract | [docs/architecture.md](docs/architecture.md) |
 | Read the terms | [docs/licence.md](docs/licence.md) |
 

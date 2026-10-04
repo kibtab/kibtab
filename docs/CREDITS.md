@@ -51,7 +51,7 @@ Read `skills/simple-english/VENDOR.md` for the pinned commit.
 
 | Asset | Source | Licence |
 | --- | --- | --- |
-| The Kibtab logo | Made for this project. | Apache-2.0 with the engine. |
+| The Kibtab logo | Made for this project. | Apache-2.0. |
 | The README diagram | Made with Mermaid. | Mermaid is MIT. |
 
 ## Test Data
@@ -60,8 +60,8 @@ Kibtab tests use these sample datasets.
 
 | Dataset | Source | Licence |
 | --- | --- | --- |
-| The sample sales table | Made for this project. | Apache-2.0 with the engine. |
-| The conflict test fixture | Made for this project. | Apache-2.0 with the engine. |
+| The sample sales table | Made for this project. | Apache-2.0. |
+| The conflict test fixture | Made for this project. | Apache-2.0. |
 
 No test data holds personal data.
 

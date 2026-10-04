@@ -2,7 +2,7 @@
 
 Version 0.0.0-docs. This document holds the install steps for Kibtab.
 
-Read [the self-hosting guide](self-hosting.md) for the Docker stack.
+Read [the self-hosting section](self-hosting/README.md) for the server stack.
 Read [the architecture guide](architecture.md) for the design.
 
 ## Status
@@ -96,7 +96,7 @@ The health route returns the status and the version.
 
 ## Next Steps
 
-* Read [the self-hosting guide](self-hosting.md) for the Docker stack.
+* Read [the self-hosting section](self-hosting/README.md) for the server stack.
 * Read [the architecture guide](architecture.md) for the code layout.
 * Read [the plan](../plan.md) for the scope of each version.
 * Read [the licence](licence.md) for the terms.

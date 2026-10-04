@@ -332,3 +332,43 @@ Run this test before you send a change for review.
 3. Name the version in `plan.md` that holds the change.
 4. Read the diff. Remove each hunk that serves a second purpose.
 5. Check that the commit message names that one thing.
+
+## 10. Separation Of Concerns Rules
+
+Keep each part of the code for one reason only.
+Give each file, each package, and each guide one job.
+
+### 10.1 The Layer Rules
+
+* Keep each file to one job. Split a file that serves two jobs.
+* Keep each package to one job. Split a package that serves two jobs.
+* Keep the domain free of transport, persistence, and presentation.
+* Keep the transport free of SQL. Keep SQL free of the domain.
+* Keep the wiring in `cmd/kibtab/`. Do not build an adapter elsewhere.
+* Keep a configuration value out of the domain. Read it at the edge.
+
+### 10.2 The Change Rules
+
+* Change one concern in a commit. Split the rest into another commit.
+* Do not mix a repair with a new feature in one commit.
+* Do not mix a rename with a behaviour change in one commit.
+* Move code before you change it. Use one commit for the move.
+* Do not add a second reason to keep an argument in a function.
+* Return a value. Do not set a field for a caller in another layer.
+
+### 10.3 The Documentation Rules
+
+* Give each guide one task. Do not copy a step into a second file.
+* Put each setup step in the one file that owns it.
+* Put a section of many files in its own folder. Add a `README.md` index.
+* Link each file of a section from the index. Do not leave a file unlinked.
+* Update the index in the same commit as the file that it lists.
+* Read the index before you write a new file. Place the file beside its task.
+
+### 10.4 The Test Rules
+
+* Test one concern per test. Split a test that asserts two things.
+* Name the test for the concern that it covers.
+* Keep the core test free of an adapter. Use a fake for a port.
+* Run the contract suite for an adapter. Do not repeat it in each adapter.
+* Keep a fixture in one file. Share it. Do not copy it into each test.

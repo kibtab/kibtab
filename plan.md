@@ -50,7 +50,7 @@ A change to any of them needs a MAJOR version.
 | v0.7.0 | Audit and locking | Kibtab records each change. It blocks a stale write. |
 | v0.8.0 | Packaging | GoReleaser ships binaries. Air runs the engine. |
 | v0.9.0 | Hardening | The engine survives load. It reports its health. |
-| v1.0.0 | Stable | The interface freezes. The project is open core. |
+| v1.0.0 | Stable | The interface freezes. |
 | v1.1.0 and later | Growth | New adapters and new features. |
 
 ## 2. Proposed Codebase Structure
@@ -146,6 +146,7 @@ Mark each box only when the check passes.
 * [ ] `make docs-check` reports no problem.
 * [ ] The documentation follows `AGENTS.md` section 3.
 * [ ] Each guide owns one task. No setup step sits in two files.
+* [ ] Each section of many files has an index that links each file.
 * [ ] A changelog file exists at `docs/changelogs/vX.Y.Z.md`.
 
 ## 4. Release v0.1.0 - Skeleton
@@ -375,14 +376,23 @@ This release holds no export of an audit row.
 * [ ] Add `Dockerfile`. Use a multi-stage build and a `scratch` base.
 * [ ] Add `docker-compose.yml`. It holds Caddy, the engine, and PostgreSQL.
 * [ ] Add `Caddyfile`. It holds the domain and the rate limit.
-* [ ] Keep `docs/self-hosting.md`. It holds the Docker stack steps.
 * [ ] Add the target `make release-check`. It runs `goreleaser check`.
 * [ ] Add the rows for GoReleaser, Caddy, and PostgreSQL to
       `docs/THIRD_PARTY_NOTICES.md`.
+* [ ] Add the section `docs/self-hosting/`. It holds the guides for a server.
+* [ ] Add the guide `docs/self-hosting/README.md`. It indexes the section.
+* [ ] Add the guide `docs/self-hosting/deployment.md`. It owns the first start.
+* [ ] Add the guide `docs/self-hosting/configuration.md`. It owns each setting.
+* [ ] Add the guide `docs/self-hosting/upgrade.md`. It owns each version change.
+* [ ] Add the guide `docs/self-hosting/backup-restore.md`. It owns the data.
+* [ ] Add the guide `docs/self-hosting/troubleshooting.md`. It owns each fault.
+* [ ] Link each self-hosting guide from the section index and from
+      `docs/index.md`.
 
 ### Out Of Scope
 
 The default job does not push an image to a registry.
+This section holds no Kubernetes guide.
 
 ### Done When
 
@@ -427,7 +437,8 @@ This release holds no horizontal scale.
 * [ ] Freeze the REST paths and the JSON field names.
 * [ ] Freeze the CLI flags and the exit codes.
 * [ ] Write the migration guide for each earlier version.
-* [ ] Set the licence of the engine to Apache 2.0. Keep the open-core split.
+* [ ] Confirm the Apache License 2.0 covers every file that Kibtab wrote.
+      The licence does not change at this version.
 * [ ] Sign the release artefact.
 * [ ] Publish the announcement.
 * [ ] Add the contract test suite. It runs against the frozen interface.

@@ -14,7 +14,7 @@ It rejects a write from an old client.
 | [Plan](../plan.md) | The release plan. It splits the work by version. |
 | [Agent Rules](../AGENTS.md) | The rules for AI coding agents. |
 | [Install](install.md) | The install steps for a binary or a source build. |
-| [Self-hosting](self-hosting.md) | The steps to run the Docker stack. |
+| [Self-hosting](self-hosting/README.md) | The section for running Kibtab on a server. |
 | [Architecture](architecture.md) | The layers, the ports, and the extension steps. |
 | [Licence](licence.md) | The terms for the engine and the skill. |
 | [Third Party Notices](THIRD_PARTY_NOTICES.md) | The licences of the dependencies. |
@@ -62,7 +62,7 @@ Each one updates when its release arrives.
 | `docs/architecture.md` | v0.2.0 | The layers and the port contract. |
 | `docs/licence.md` | v0.1.0 | The terms for the engine and the skill. |
 | `docs/openapi.yaml` | v0.5.0 | The REST interface definition. |
-| `docs/self-hosting.md` | v0.8.0 | The steps to run the Docker stack. |
+| `docs/self-hosting/` | v0.8.0 | The section for running Kibtab on a server. |
 | `docs/runbook.md` | v0.9.0 | The steps for an operator. |
 | `docs/licences/` | v0.8.0 | A copy of each dependency licence. |
 
@@ -108,7 +108,12 @@ Each guide owns one task. Do not copy a step into a second file.
 | Guide | Owns |
 | --- | --- |
 | [install.md](install.md) | The install and build steps. |
-| [self-hosting.md](self-hosting.md) | The Docker stack and the configuration. |
+| [self-hosting/README.md](self-hosting/README.md) | The index for the self-hosting section. |
+| [self-hosting/deployment.md](self-hosting/deployment.md) | The steps to deploy the stack on a server. |
+| [self-hosting/configuration.md](self-hosting/configuration.md) | Each setting and each environment variable. |
+| [self-hosting/upgrade.md](self-hosting/upgrade.md) | The steps to update a running install. |
+| [self-hosting/backup-restore.md](self-hosting/backup-restore.md) | The steps to save and to restore the data. |
+| [self-hosting/troubleshooting.md](self-hosting/troubleshooting.md) | The steps to diagnose a fault. |
 | [architecture.md](architecture.md) | The layers, the ports, and the extension steps. |
 | [licence.md](licence.md) | The licence terms and the obligations. |
 
