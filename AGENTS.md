@@ -112,8 +112,23 @@ Both rules apply to every document. Neither style replaces the other.
   `may`, and `might` in technical documentation.
 * Keep articles. Keep `that` after a verb.
 * Put the version in the first line of every document.
+* Keep copied work as it was written upstream. Read the rule below.
 * Run `make docs-check` before you commit. The target checks the sentence
   length and the banned words. It does not check the word lists.
+
+### 3.4 Copied Work
+
+Some files hold text from another project.
+Keep that text as it was written upstream.
+Do not apply the rules in sections 3.1 to 3.3 to it.
+
+| File | Source |
+| --- | --- |
+| `skills/simple-english/` | The SimpleEnglish skill. MIT licence. |
+| `CODE_OF_CONDUCT.md` | Contributor Covenant 3.0. CC BY-SA 4.0. |
+
+A contributor report and a pull request are not documentation.
+Do not apply the rules in section 3 to them.
 
 ## 4. Database Rules
 

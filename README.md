@@ -3,7 +3,7 @@
 **Spreadsheet as client, database as server.**
 
 Kibtab turns a spreadsheet into a client for your relational database.
-Excel is the first client. Other spreadsheet software can come later.
+> Excel is the first client. Other spreadsheet software can come later.
 
 Your team keeps the familiar grid.
 The engine keeps the transactions, the version checks, and the audit trail.
@@ -17,6 +17,21 @@ Kibtab is pre-release.
 The first release is v0.1.0.
 No binary is published yet.
 Read [the plan](plan.md) for the scope of each version.
+
+## The Name
+
+**Kibtab** joins two words.
+
+*Kiban* (基盤) means *foundation* in Japanese.
+It is the word for the base layer under a structure.
+
+*Tabularium* is the Latin register of public tables.
+It was the Roman archive where the state kept its records.
+
+A foundation plus a register.
+That is what this project is.
+
+The name is pronounced `/kɪb-tæb/`.
 
 ## Getting Started
 
@@ -62,6 +77,9 @@ Read [the architecture guide](docs/architecture.md) for the full design.
 | [Third party notices](docs/THIRD_PARTY_NOTICES.md) | The licences of each dependency. |
 | [Changelog format](docs/changelogs/README.md) | The format for each release file. |
 | [Credits](docs/CREDITS.md) | The people, the projects, and the sources. |
+| [Contributing](CONTRIBUTING.md) | The steps to send a change. |
+| [Code of Conduct](CODE_OF_CONDUCT.md) | The terms for taking part. |
+| [Security](SECURITY.md) | The private route for a vulnerability. |
 
 Documentation follows two styles at the same time.
 The first style is Simplified Technical English.
@@ -73,6 +91,7 @@ Read [the agent rules](AGENTS.md) section 3 for both.
 Read [AGENTS.md](AGENTS.md) before you write code.
 Read [plan.md](plan.md) before you start a task.
 Each task in the plan is a markdown check box.
+Read [CONTRIBUTING.md](CONTRIBUTING.md) for the full steps.
 
 Every commit uses Conventional Commits.
 Read [AGENTS.md](AGENTS.md) section 8 for the format and the scopes.
@@ -82,18 +101,3 @@ Read [AGENTS.md](AGENTS.md) section 8 for the format and the scopes.
 Built on the ideas in [docs/CREDITS.md](docs/CREDITS.md).
 The documentation rules come from the vendored
 [SimpleEnglish](https://github.com/AminBlg/SimpleEnglish) skill.
-
-## The Name
-
-**Kibtab** joins two words.
-
-*Kiban* (基盤) means *foundation* in Japanese.
-It is the word for the base layer under a structure.
-
-*Tabularium* is the Latin register of public tables.
-It was the Roman archive where the state kept its records.
-
-A foundation plus a register.
-That is what this project is.
-
-The name is pronounced `/kɪb-tæb/`.

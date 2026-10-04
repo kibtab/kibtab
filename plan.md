@@ -158,6 +158,12 @@ Mark each box only when the check passes.
 * [ ] Create `go.mod`. Set the module path and Go 1.22.
 * [ ] Create `cmd/kibtab/main.go`. It reads `PORT` and `DATABASE_URL`.
 * [ ] Keep `README.md` as a landing page. Link to each guide under `docs/`.
+* [ ] Keep `CONTRIBUTING.md`. It holds the steps to send a change.
+* [ ] Keep `CODE_OF_CONDUCT.md`. It holds the terms for taking part.
+* [ ] Keep `SECURITY.md`. It holds the private route for a vulnerability.
+* [ ] Keep `.github/ISSUE_TEMPLATE/`. It holds the forms for an issue.
+* [ ] Add the CI step. It fails the build when a module has no licence row
+      in `docs/THIRD_PARTY_NOTICES.md`.
 * [ ] Keep `docs/install.md`. It holds the install and build steps.
 * [ ] Keep `docs/licence.md`. It holds the terms for the engine and the skill.
 * [ ] Create the folder `internal/core/` with `domain`, `ports`, `services`.

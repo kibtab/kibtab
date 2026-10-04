@@ -20,6 +20,9 @@ It rejects a write from an old client.
 | [Third Party Notices](THIRD_PARTY_NOTICES.md) | The licences of the dependencies. |
 | [Credits](CREDITS.md) | The people, the projects, and the sources. |
 | [Changelog rules](changelogs/README.md) | The format for each release file. |
+| [Contributing](../CONTRIBUTING.md) | The steps to send a change. |
+| [Code of Conduct](../CODE_OF_CONDUCT.md) | The terms for taking part. |
+| [Security](../SECURITY.md) | The private route for a vulnerability. |
 
 The plan in `plan.md` holds the scope for each release.
 Read it before you start a task.
@@ -58,6 +61,10 @@ Each one updates when its release arrives.
 | Document | Added in | Purpose |
 | --- | --- | --- |
 | `README.md` | v0.1.0 | The project summary. |
+| `CONTRIBUTING.md` | v0.1.0 | The steps to send a change. |
+| `CODE_OF_CONDUCT.md` | v0.1.0 | The terms for taking part. |
+| `SECURITY.md` | v0.1.0 | The private route for a vulnerability. |
+| `.github/ISSUE_TEMPLATE/` | v0.1.0 | The forms for a bug, a feature, and a security report. |
 | `docs/install.md` | v0.1.0 | The install steps. |
 | `docs/architecture.md` | v0.2.0 | The layers and the port contract. |
 | `docs/licence.md` | v0.1.0 | The terms for the engine and the skill. |
