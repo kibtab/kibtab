@@ -2,8 +2,8 @@
 
 Version 0.0.0-docs. This document holds the rules for tests and for coverage.
 
-Read [AGENTS.md](../AGENTS.md) section 4 for the rules that bind an agent.
-Read [CONTRIBUTING.md](../CONTRIBUTING.md) for the steps to send a change.
+Read [the agent rules](../AGENTS.md) section 4 for the rules that bind an agent.
+Read [the contributing guide](../CONTRIBUTING.md) for the steps to send a change.
 
 ## The Coverage Aim
 
@@ -40,10 +40,10 @@ Kibtab holds three kinds of test.
 | --- | --- | --- |
 | Unit | The core. It uses a fake for each port. | No |
 | Contract | One adapter. It holds the adapter to a port. | For an engine |
-| Integration | The engine against a real database. | Yes |
+| Integration | Kibtab against a real database. | Yes |
 
 * Keep the core test suite free of a container.
-* Run the engine suite against a real database container.
+* Run the integration suite against a real database container.
 * Run the contract suite for an adapter. Never repeat it in each adapter.
 * Keep the client suite against a fake transport.
 
@@ -88,6 +88,6 @@ Keep them thin so the gap stays small.
 
 ## Next Steps
 
-* Read [conventions.md](conventions.md) for the code rules.
-* Read [architecture.md](architecture.md) for the tree and the ports.
-* Read [CONTRIBUTING.md](../CONTRIBUTING.md) to send a change.
+* Read [the conventions guide](conventions.md) for the code rules.
+* Read [the architecture guide](architecture.md) for the tree and the ports.
+* Read [the contributing guide](../CONTRIBUTING.md) to send a change.

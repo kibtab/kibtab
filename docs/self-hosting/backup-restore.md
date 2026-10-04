@@ -44,7 +44,7 @@ gzip -t backup.sql.gz
 
 ## Restore
 
-Stop the engine before a restore.
+Stop the instance before a restore.
 Keep the API closed while the data changes.
 
 ```bash
@@ -57,7 +57,7 @@ Load the file into the database.
 docker compose exec -T db psql -U kibtab_user kibtab_db < backup.sql
 ```
 
-Start the engine after the load.
+Start the instance after the load.
 
 ```bash
 docker compose start engine

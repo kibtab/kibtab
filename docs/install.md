@@ -2,7 +2,7 @@
 
 Version 0.0.0-docs. This document holds the install steps for Kibtab.
 
-Read [the self-hosting section](self-hosting/README.md) for the server stack.
+Read [the self-hosting guides](self-hosting/README.md) for the server stack.
 Read [the architecture guide](architecture.md) for the design.
 
 ## Status
@@ -14,7 +14,7 @@ The commands below apply from v0.1.0.
 
 ## Install With Go
 
-Install the engine with the Go tool.
+Install Kibtab with the Go tool.
 
 ```bash
 go install github.com/kibtab/kibtab/cmd/kibtab@latest
@@ -47,7 +47,7 @@ The archives use `zip` for Windows.
 
 ## Build From Source
 
-Clone the repository and build the engine.
+Clone the repository and build Kibtab.
 
 ```bash
 git clone https://github.com/kibtab/kibtab.git
@@ -74,7 +74,7 @@ Run `make help` for the full list of targets.
 
 ## Run In Watch Mode
 
-Use `air` during development. It rebuilds the engine on a code change.
+Use `air` during development. It rebuilds Kibtab on a code change.
 
 ```bash
 make tools
@@ -90,7 +90,7 @@ make test
 ```
 
 The core tests need no database.
-The engine tests need a PostgreSQL container.
+The integration tests need a PostgreSQL container.
 
 ## Check The Install
 
@@ -103,7 +103,7 @@ The health route returns the status and the version.
 
 ## Next Steps
 
-* Read [the self-hosting section](self-hosting/README.md) for the server stack.
+* Read [the self-hosting guides](self-hosting/README.md) for the server stack.
 * Read [the architecture guide](architecture.md) for the code layout.
 * Read [the plan](../plan.md) for the scope of each version.
-* Read [the licence](licence.md) for the terms.
+* Read [the licence guide](licence.md) for the terms.

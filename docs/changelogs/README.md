@@ -11,7 +11,7 @@ No release file exists yet.
 
 ## The Format
 
-Copy [TEMPLATE.md](TEMPLATE.md) to `vX.Y.Z.md` before you write the file.
+Copy [the changelog template](TEMPLATE.md) to `vX.Y.Z.md` before you write it.
 Use these headings in this order.
 
 | Order | Heading | Content |

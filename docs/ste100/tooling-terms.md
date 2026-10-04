@@ -3,7 +3,7 @@
 Version 0.0.0-docs. This document holds the tooling Technical Names.
 
 These terms name the commands, targets, files, and gates of Kibtab.
-Read the [STE100 Technical Names](index.md) dictionary first.
+Read [the catalogue](index.md) first.
 
 ## Technical Name: Target
 - **Part of Speech:** Noun
@@ -97,5 +97,5 @@ Read the [STE100 Technical Names](index.md) dictionary first.
 
 ## Next Steps
 
-* Read [identifiers.md](identifiers.md) for the source names.
-* Read [architecture-terms.md](architecture-terms.md) for the layer terms.
+* Read [the identifier lexicon](identifiers.md) for the source names.
+* Read [the architecture lexicon](architecture-terms.md) for the layer terms.

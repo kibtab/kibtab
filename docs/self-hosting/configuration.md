@@ -13,7 +13,7 @@ Read [the plan](../../plan.md) for the version that adds each setting.
 
 ## The Variables
 
-The engine reads each setting from the environment.
+The instance reads each setting from the environment.
 
 | Variable | Default | Purpose |
 | --- | --- | --- |
@@ -27,8 +27,8 @@ The engine reads each setting from the environment.
 | `KIBTAB_TRANSPORT` | `http` | The transport that serves the clients. |
 | `KIBTAB_LOG_LEVEL` | `info` | The level of the log. |
 
-The engine exits at start when a value is missing.
-The engine exits at start when a chosen adapter has no package.
+The instance exits at start when a value is missing.
+The instance exits at start when a chosen adapter has no package.
 
 ## The Database
 
@@ -50,7 +50,7 @@ KIBTAB_TABLES=orders,customers,inventory
 ```
 
 The registry limits the tables that a request can name.
-The engine rejects a table that the registry does not hold.
+The instance rejects a table that the registry does not hold.
 
 ## The Pool
 

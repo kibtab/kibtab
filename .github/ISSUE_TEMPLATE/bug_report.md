@@ -54,7 +54,7 @@ Name the part of Kibtab that shows the fault.
 - [ ] The client, the Excel taskpane.
 - [ ] The HTTP layer, the routes or the codec.
 - [ ] The core, the services or the ports.
-- [ ] The engine, the database adapter.
+- [ ] A database engine, the adapter for it.
 - [ ] The deployment, Caddy or the stack.
 - [ ] The documentation.
 -->

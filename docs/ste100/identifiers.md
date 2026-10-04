@@ -4,7 +4,7 @@ Version 0.0.0-docs. This document holds the identifier Technical Names.
 
 These terms are the exact names in the Kibtab source and build files.
 Use the exact case of each name in every document.
-Read the [STE100 Technical Names](index.md) dictionary first.
+Read [the catalogue](index.md) first.
 
 ## Technical Name: RowRepository
 - **Part of Speech:** Noun
@@ -98,5 +98,5 @@ Read the [STE100 Technical Names](index.md) dictionary first.
 
 ## Next Steps
 
-* Read [architecture-terms.md](architecture-terms.md) for the layer terms.
-* Read [tooling-terms.md](tooling-terms.md) for the command terms.
+* Read [the architecture lexicon](architecture-terms.md) for the layer terms.
+* Read [the tooling lexicon](tooling-terms.md) for the command terms.

@@ -37,7 +37,7 @@ Name the part that the fault touches.
 - [ ] The client. A spreadsheet sends a value or a table name.
 - [ ] The HTTP layer. A request carries an untrusted input.
 - [ ] The core. A rule lets a bad value reach a port.
-- [ ] The engine. A query builds a statement from a name.
+- [ ] A database engine. A query builds a statement from a name.
 - [ ] The deployment. A setting opens a path to the data.
 -->
 

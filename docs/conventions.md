@@ -2,9 +2,9 @@
 
 Version 0.0.0-docs. This document holds the conventions for the Kibtab codebase.
 
-Read [AGENTS.md](../AGENTS.md) for the rules that bind an agent.
-Read [CONTRIBUTING.md](../CONTRIBUTING.md) for the steps to send a change.
-Read [architecture.md](architecture.md) for the tree and the ports.
+Read [the agent rules](../AGENTS.md) for the rules that bind an agent.
+Read [the contributing guide](../CONTRIBUTING.md) for the steps to send a change.
+Read [the architecture guide](architecture.md) for the tree and the ports.
 
 ## Writing Code
 
@@ -90,7 +90,11 @@ It holds the approved Technical Names for Kibtab.
 * Never use em dashes, contractions, or the words `should`, `would`, `may`,
   and `might`.
 * Keep articles. Keep `that` after a verb.
-* Put the version in the first line of every document.
+* Put the version in the first line of every guide under `docs/`.
+* Add no version line to a file at the repository root.
+  The readme is a landing page. The other root files are community files.
+* Add no version line to a template or to an issue form.
+* Add no version line to a changelog index or to a template.
 * Run `make docs-check` before you commit.
 
 ## The Documentation Layout
@@ -100,16 +104,20 @@ It holds the approved Technical Names for Kibtab.
 * Put a section of many files in its own folder. Add a `README.md` index.
 * Link each file from the index. Leave no file unlinked.
 * Update the index in the same commit as the file that it lists.
+* Give each link an alias that reads as words in its sentence.
+  Write `the testing guide`. Never write `docs/testing.md` as the alias.
+* Use a file name as an alias only in a table of files.
+  A table of documents can name each file. A routing table cannot.
 * Point to the document that holds the answer. Never repeat it in a reply.
 * Write the answer in one file. Link to it from every other place.
 * Update a document in the same commit as the code it describes.
 
-[index.md](index.md) holds the table that names the owner of each step.
+[the documentation index](index.md) holds the table that names the owner of each step.
 
 ## The Canonical Documents
 
 Three documents have one valid form. Copy the text as written.
-[licence.md](licence.md) lists them and their canonical source.
+[the licence guide](licence.md) lists them and their canonical source.
 
 Never apply the documentation styles to them.
 Never fix a sentence, a long clause, or a banned word in them.
@@ -138,14 +146,14 @@ Run this before you send a change for review.
 
 1. Name the one thing the change does. Stop when you need a second verb.
 2. Name the layer that owns the change. Stop when you need a second layer.
-3. Name the version in [plan.md](../plan.md) that holds the change.
+3. Name the version in [the plan](../plan.md) that holds the change.
 4. Read the diff. Remove each hunk that serves a second purpose.
 5. Check that the commit message names that one thing.
 
 ## The RTFM Rules
 
 * Read the file before you change it. Read the whole file.
-* Read [plan.md](../plan.md) before you start.
+* Read [the plan](../plan.md) before you start.
 * Search for the answer before you ask. Then search for the question.
 * When a rule has no answer in the repository, write the rule first.
 
@@ -154,16 +162,16 @@ Run this before you send a change for review.
 * Set `CGO_ENABLED=0` in every build, test, and release command.
 * Add no dependency that needs CGO. Never use `go-sqlite3` or a C resolver.
 * Keep `go.mod` free of any `require` block that pulls a C compiler.
-* Run the engine locally with `air`. Read `air.toml` before you change it.
+* Run Kibtab locally with `air`. Read `air.toml` before you change it.
 * Keep the local stack in `docker-compose.yml`.
 * Keep no copy of the ASD-STE100 word lists. The vendored skill holds the
   Simplified Technical English rules.
-* Keep the catalogue at [ste100/index.md](ste100/index.md). Add each approved
-  name there before an author uses it.
+* Keep each approved name in [the catalogue](ste100/index.md).
+  Add the name there before an author uses it.
 
 ## Next Steps
 
-* Read [architecture.md](architecture.md) for the tree and the ports.
-* Read [testing.md](testing.md) for the tests and the coverage.
-* Read [releasing.md](releasing.md) for the version and the gate.
-* Read [CONTRIBUTING.md](../CONTRIBUTING.md) to send a change.
+* Read [the architecture guide](architecture.md) for the tree and the ports.
+* Read [the testing guide](testing.md) for the tests and the coverage.
+* Read [the releasing guide](releasing.md) for the version and the gate.
+* Read [the contributing guide](../CONTRIBUTING.md) to send a change.

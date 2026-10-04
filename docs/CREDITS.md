@@ -11,7 +11,7 @@ Add your name in the pull request that adds your work.
 
 | Name | Role |
 | --- | --- |
-| Kibtab contributors | The engine, the client, the documentation. |
+| Kibtab contributors | Kibtab, the clients, and the documentation. |
 
 Find the current list in the `AUTHORS` file and in the repository contributors.
 

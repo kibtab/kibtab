@@ -4,7 +4,7 @@ Version 0.0.0-docs. This document holds the design of Kibtab.
 It holds the layer rules and the port contract.
 
 This document holds the canonical layout and the canonical port table.
-Read [AGENTS.md](../AGENTS.md) section 1 for the rules for agents.
+Read [the agent rules](../AGENTS.md) section 1 for the rules for agents.
 
 ## The Goal
 
@@ -82,7 +82,7 @@ A request moves through the layers in this order.
 2. The transport maps the request to a domain value.
 3. A service in `internal/core/services/` calls the ports.
 4. An engine package under `driven/` runs the query.
-5. The engine maps the result to a domain value.
+5. Kibtab maps the result to a domain value.
 6. The transport maps the domain value to a response.
 
 The core runs at steps 3 and 4.
@@ -130,7 +130,7 @@ The core needs no change.
 A contract test holds each adapter to the port.
 
 * The core test suite needs no database.
-* The engine suite runs against a real database container.
+* The integration suite runs against a real database container.
 * The client suite runs against a fake transport.
 * The CI step fails the build when the core imports an adapter.
 * The CI step fails the build when the core names an engine or a client.
@@ -138,5 +138,5 @@ A contract test holds each adapter to the port.
 ## Next Steps
 
 * Read [the plan](../plan.md) for the version that adds each adapter.
-* Read [AGENTS.md](../AGENTS.md) section 1 for the rules.
-* Read [the install guide](install.md) to build the engine.
+* Read [the agent rules](../AGENTS.md) section 1 for the rules.
+* Read [the install guide](install.md) to build Kibtab.

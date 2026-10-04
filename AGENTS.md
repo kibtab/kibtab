@@ -8,16 +8,16 @@ This document holds the rules that bind you. It points at the detail.
 
 | Read this | For |
 | --- | --- |
-| [plan.md](plan.md) | The scope of each version. The open check boxes. |
-| [docs/conventions.md](docs/conventions.md) | The code, docs, and scope conventions. |
-| [docs/ste100/index.md](docs/ste100/index.md) | The approved Technical Names. Use them in every document. |
-| [docs/architecture.md](docs/architecture.md) | The tree, the ports, and the data flow. |
-| [docs/testing.md](docs/testing.md) | The unit tests and the coverage. |
-| [docs/releasing.md](docs/releasing.md) | The version, the gate, and the release. |
-| [CONTRIBUTING.md](CONTRIBUTING.md) | The commit format, the scope table, and the DCO. |
-| [docs/licence.md](docs/licence.md) | The licence terms and the canonical documents. |
-| [docs/install.md](docs/install.md) | Installing and building. |
-| [docs/self-hosting/](docs/self-hosting/README.md) | Running Kibtab on a server. |
+| [the plan](plan.md) | The scope of each version. The open check boxes. |
+| [the conventions guide](docs/conventions.md) | The code, docs, and scope conventions. |
+| [the catalogue](docs/ste100/index.md) | The approved Technical Names. Use them in every document. |
+| [the architecture guide](docs/architecture.md) | The tree, the ports, and the data flow. |
+| [the testing guide](docs/testing.md) | The unit tests and the coverage. |
+| [the releasing guide](docs/releasing.md) | The version, the gate, and the release. |
+| [the contributing guide](CONTRIBUTING.md) | The commit format, the scope table, and the DCO. |
+| [the licence guide](docs/licence.md) | The licence terms and the canonical documents. |
+| [the install guide](docs/install.md) | Installing and building. |
+| [the self-hosting guides](docs/self-hosting/README.md) | Running Kibtab on a server. |
 
 Read the linked document before you act. Do not work from this file alone.
 
@@ -36,7 +36,7 @@ It names no database engine and no spreadsheet client.
 * Never put a client name, such as Excel or Sheets, in `internal/core/`.
 * Add a CI step that fails the build when the core imports an adapter.
 
-Read [docs/architecture.md](docs/architecture.md) for the tree, the port
+Read [the architecture guide](docs/architecture.md) for the tree, the port
 table, the data flow, and the steps to add an adapter.
 
 ## 2. Code
@@ -53,7 +53,7 @@ table, the data flow, and the steps to add an adapter.
 * Keep `internal/core/` free of build tags. A build tag changes an adapter,
   never the domain.
 
-Read [docs/conventions.md](docs/conventions.md) for the full rules.
+Read [the conventions guide](docs/conventions.md) for the full rules.
 
 ## 3. Documentation
 
@@ -68,15 +68,16 @@ Both styles apply to every document, comment, and commit message.
 * Use `-ise` and `-our`, never `-ize` or `-or`. Use `licence` as a noun.
 * Never use em dashes, contractions, or the words `should`, `would`, `may`,
   and `might`.
-* Put the version in the first line of every document.
+* Put the version in the first line of every guide under `docs/`.
+  Put no version line at the repository root.
 * Run `make docs-check` before you commit.
 
 Three documents have one valid form. Copy them as written.
-[docs/licence.md](docs/licence.md) lists them.
+[the licence guide](docs/licence.md) lists them.
 
-Read [docs/conventions.md](docs/conventions.md) for the word rules and the
+Read [the conventions guide](docs/conventions.md) for the word rules and the
 documentation layout.
-Read [docs/ste100/index.md](docs/ste100/index.md) before you use a technical
+Read [the catalogue](docs/ste100/index.md) before you use a technical
 term. It holds the approved names and the rejected words.
 
 ## 4. Tests
@@ -93,7 +94,7 @@ The module must reach 100% coverage.
 make cover-verify
 ```
 
-Read [docs/testing.md](docs/testing.md) for the test layers and the suites.
+Read [the testing guide](docs/testing.md) for the test layers and the suites.
 
 ## 5. Versioning And Release
 
@@ -111,7 +112,7 @@ scope.
 * Write one file at `docs/changelogs/vX.Y.Z.md` for each release.
 * Tag the commit. Never move a published tag.
 
-Read [docs/releasing.md](docs/releasing.md) for the gate and the steps.
+Read [the releasing guide](docs/releasing.md) for the gate and the steps.
 
 ## 6. Commits
 
@@ -129,7 +130,7 @@ Kibtab uses Conventional Commits. The format is
 * Explain why the change was needed. Never repeat what the diff shows.
 * Link the issue at the end with `Closes #123`.
 
-Sign off each commit. Read [CONTRIBUTING.md](CONTRIBUTING.md) for the DCO.
+Sign off each commit. Read [the contributing guide](CONTRIBUTING.md) for the DCO.
 
 After you finish a change, suggest a commit message.
 Do not run the commit yourself unless the user asks for it.
@@ -137,8 +138,8 @@ Give the message in a fenced block. State why the scope fits the change.
 Name the version in `plan.md` that the change belongs to.
 Say whether the change needs a MAJOR version.
 
-[CONTRIBUTING.md](CONTRIBUTING.md) holds the type table and the scope table.
-[docs/conventions.md](docs/conventions.md) holds the full scope rules.
+[the contributing guide](CONTRIBUTING.md) holds the type table and the scope table.
+[the conventions guide](docs/conventions.md) holds the full scope rules.
 Read the scope table before you write a commit.
 
 ## 7. Scope
@@ -157,7 +158,7 @@ Give each file, each package, each commit, and each guide one job.
 * Commit no secret, no `.env` file, and no build output.
 * Keep the module path as `github.com/kibtab/kibtab`.
 
-Read [docs/conventions.md](docs/conventions.md) for the scope test and the
+Read [the conventions guide](docs/conventions.md) for the scope test and the
 layer rules.
 
 ## 8. Reading The Repository

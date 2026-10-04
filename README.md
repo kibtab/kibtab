@@ -17,7 +17,7 @@ Kibtab turns a spreadsheet into a client for your relational database.
 > Excel is the first client. Other spreadsheet software can come later.
 
 Your team keeps the familiar grid.
-The engine keeps the transactions, the version checks, and the audit trail.
+Kibtab keeps the transactions, the version checks, and the audit trail.
 
 Kibtab rejects a write from an out-of-date sheet.
 Every cell change is recorded.
@@ -88,7 +88,7 @@ Read [the architecture guide](docs/architecture.md) for the full design.
 | [Technical names](docs/ste100/index.md) | The approved technical names for Kibtab. |
 | [Testing](docs/testing.md) | The kinds of test and the coverage rules. |
 | [Releasing](docs/releasing.md) | The version number, the gate, and the release steps. |
-| [Licence](docs/licence.md) | The terms for the engine and the skill. |
+| [Licence](docs/licence.md) | The terms for Kibtab and the skill. |
 | [Third party notices](docs/THIRD_PARTY_NOTICES.md) | The licences of each dependency. |
 | [Changelog format](docs/changelogs/README.md) | The format for each release file. |
 | [Credits](docs/CREDITS.md) | The people, the projects, and the sources. |
@@ -103,16 +103,16 @@ Read [the agent rules](AGENTS.md) section 3 for both.
 
 ## Contributing
 
-Read [AGENTS.md](AGENTS.md) before you write code.
-Read [plan.md](plan.md) before you start a task.
+Read [the agent rules](AGENTS.md) before you write code.
+Read [the plan](plan.md) before you start a task.
 Each task in the plan is a markdown check box.
-Read [CONTRIBUTING.md](CONTRIBUTING.md) for the full steps.
+Read [the contributing guide](CONTRIBUTING.md) for the full steps.
 
 Every commit uses Conventional Commits.
-Read [AGENTS.md](AGENTS.md) section 6 for the format and the scopes.
+Read [the agent rules](AGENTS.md) section 6 for the format and the scopes.
 
 ## Acknowledgements
 
-Built on the ideas in [docs/CREDITS.md](docs/CREDITS.md).
+Built on the ideas in [the credits](docs/CREDITS.md).
 The documentation rules come from the vendored
 [SimpleEnglish](https://github.com/AminBlg/SimpleEnglish) skill.

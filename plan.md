@@ -28,26 +28,26 @@ No release file exists yet.
 ## 1. Release Milestones
 
 This plan holds the work, not the rules.
-The rules live in [AGENTS.md](AGENTS.md).
+The rules live in [the agent rules](AGENTS.md).
 The gate for a release lives in `AGENTS.md` section 5.
 
 | Version | Theme | Result |
 | --- | --- | --- |
-| v0.1.0 | Skeleton | The engine starts. It answers a health check. |
+| v0.1.0 | Skeleton | Kibtab starts. It answers a health check. |
 | v0.2.0 | Domain and ports | The pure Go logic exists. It has tests. |
 | v0.3.0 | PostgreSQL adapter | Kibtab reads and writes rows. |
 | v0.4.0 | Write path | A cell change writes in a transaction. |
 | v0.5.0 | HTTP API | A client reads and writes over REST. |
 | v0.6.0 | Office.js client | A user edits a cell in Excel. |
 | v0.7.0 | Audit and locking | Kibtab records each change. It blocks a stale write. |
-| v0.8.0 | Packaging | GoReleaser ships binaries. Air runs the engine. |
-| v0.9.0 | Hardening | The engine survives load. It reports its health. |
+| v0.8.0 | Packaging | GoReleaser ships binaries. Air runs the instance. |
+| v0.9.0 | Hardening | The instance survives load. It reports its health. |
 | v1.0.0 | Stable | The interface freezes. |
 | v1.1.0 and later | Growth | New adapters and new features. |
 
 ## 2. Release v0.1.0 - Skeleton
 
-**Goal:** The engine starts and it answers a health check.
+**Goal:** Kibtab starts and it answers a health check.
 
 ### Scope
 
@@ -62,7 +62,7 @@ The gate for a release lives in `AGENTS.md` section 5.
 * [ ] Add the CI step. It fails the build when a module has no licence row
       in `docs/THIRD_PARTY_NOTICES.md`.
 * [ ] Keep `docs/install.md`. It holds the install and build steps.
-* [ ] Keep `docs/licence.md`. It holds the terms for the engine and the skill.
+* [ ] Keep `docs/licence.md`. It holds the terms for Kibtab and the skill.
 * [ ] Add `docs/conventions.md`. It holds the code, the documentation, and the
       scope rules.
 * [ ] Add `docs/testing.md`. It holds the kinds of test and the coverage rules.
@@ -99,7 +99,7 @@ This release holds no write path.
 ### Done When
 
 * [ ] `CGO_ENABLED=0 go build ./...` succeeds on Linux, macOS, and Windows.
-* [ ] `air` starts the engine and reloads it on a code change.
+* [ ] `air` starts the instance and reloads it on a code change.
 * [ ] `curl localhost:8080/healthz` returns the version.
 * [ ] `docs/changelogs/v0.1.0.md` exists.
 
@@ -155,7 +155,7 @@ This release holds no HTTP.
 * [ ] Use a parameterized query for each statement.
 * [ ] Write the contract test suite for `RowRepository`. Run it for each
       engine.
-* [ ] Run the engine suite against a real database container.
+* [ ] Run the integration suite against a real database container.
 * [ ] Add an integration test. It writes a row and reads it back.
 * [ ] Cover every error path in the adapter. Cover each boundary case.
 * [ ] Add the row for `pgx/v5` to `docs/THIRD_PARTY_NOTICES.md`.
@@ -284,7 +284,7 @@ This release holds no export of an audit row.
 
 ## 9. Release v0.8.0 - Packaging
 
-**Goal:** GoReleaser ships binaries. Air runs the engine in development.
+**Goal:** GoReleaser ships binaries. Air runs the instance in development.
 
 ### Scope
 
@@ -299,7 +299,7 @@ This release holds no export of an audit row.
 * [ ] Set `CGO_ENABLED=0` in every GoReleaser build and in every Make target
       that calls the Go tool.
 * [ ] Add `Dockerfile`. Use a multi-stage build and a `scratch` base.
-* [ ] Add `docker-compose.yml`. It holds Caddy, the engine, and PostgreSQL.
+* [ ] Add `docker-compose.yml`. It holds Caddy, Kibtab, and PostgreSQL.
 * [ ] Add `Caddyfile`. It holds the domain and the rate limit.
 * [ ] Add the target `make release-check`. It runs `goreleaser check`.
 * [ ] Add the rows for GoReleaser, Caddy, and PostgreSQL to
@@ -329,7 +329,7 @@ This section holds no Kubernetes guide.
 
 ## 10. Release v0.9.0 - Hardening
 
-**Goal:** The engine survives load and it reports its health.
+**Goal:** The instance survives load and it reports its health.
 
 ### Scope
 
@@ -417,7 +417,7 @@ The boxes stay open until the work starts.
 
 ### v1.7.0 - Row Security
 
-* [ ] Read the user claims in the engine.
+* [ ] Read the user claims in the core.
 * [ ] Add a row filter to each query.
 
 ### v1.8.0 - Multi-Database

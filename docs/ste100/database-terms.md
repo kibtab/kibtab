@@ -3,7 +3,7 @@
 Version 0.0.0-docs. This document holds the database Technical Names.
 
 These terms name the tables, rows, and writes of a relational database.
-Read the [STE100 Technical Names](index.md) dictionary first.
+Read [the catalogue](index.md) first.
 
 ## Technical Name: Row
 - **Part of Speech:** Noun
@@ -47,8 +47,8 @@ Read the [STE100 Technical Names](index.md) dictionary first.
 - **Definition:** A group of writes that the database runs as one unit.
 - **Approved Form:** Transaction (singular), Transactions (plural)
 - **Do Not Use:** Batch, Group, Sequence, Operation
-- **Correct Example:** *The engine runs the writes in one **transaction**.*
-- **Incorrect Example:** *The engine runs the writes in one batch.*
+- **Correct Example:** *The instance runs the writes in one **transaction**.*
+- **Incorrect Example:** *The instance runs the writes in one batch.*
 
 ## Technical Name: Commit
 - **Part of Speech:** Noun
@@ -56,8 +56,8 @@ Read the [STE100 Technical Names](index.md) dictionary first.
 - **Definition:** The action that saves the writes of a transaction.
 - **Approved Form:** Commit (singular), Commits (plural)
 - **Do Not Use:** Save, Store, Apply, Flush
-- **Correct Example:** *The engine makes a **commit** after the audit row.*
-- **Incorrect Example:** *The engine makes a save after the audit row.*
+- **Correct Example:** *The instance makes a **commit** after the audit row.*
+- **Incorrect Example:** *The instance makes a save after the audit row.*
 
 ## Technical Name: Rollback
 - **Part of Speech:** Noun
@@ -65,8 +65,8 @@ Read the [STE100 Technical Names](index.md) dictionary first.
 - **Definition:** The action that undoes the writes of a failed transaction.
 - **Approved Form:** Rollback (singular), Rollbacks (plural)
 - **Do Not Use:** Undo, Revert, Cancel, Reverse
-- **Correct Example:** *The engine makes a **rollback** when one write fails.*
-- **Incorrect Example:** *The engine makes an undo when one write fails.*
+- **Correct Example:** *The instance makes a **rollback** when one write fails.*
+- **Incorrect Example:** *The instance makes an undo when one write fails.*
 
 ## Technical Name: Engine
 - **Part of Speech:** Noun
@@ -93,10 +93,10 @@ Read the [STE100 Technical Names](index.md) dictionary first.
 - **Definition:** One row that records a change to a cell and the time of it.
 - **Approved Form:** Audit Row (singular), Audit Rows (plural)
 - **Do Not Use:** History Row, Log Entry, Journal Entry, Trace
-- **Correct Example:** *The engine writes one **audit row** for each cell change.*
-- **Incorrect Example:** *The engine writes one history row for each cell change.*
+- **Correct Example:** *The instance writes one **audit row** for each cell change.*
+- **Incorrect Example:** *The instance writes one history row for each cell change.*
 
 ## Next Steps
 
-* Read [spreadsheet-terms.md](spreadsheet-terms.md) for the cell terms.
-* Read [architecture-terms.md](architecture-terms.md) for the layer terms.
+* Read [the spreadsheet lexicon](spreadsheet-terms.md) for the cell terms.
+* Read [the architecture lexicon](architecture-terms.md) for the layer terms.

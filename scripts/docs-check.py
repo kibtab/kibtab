@@ -444,6 +444,100 @@ def check_commit_examples(failures):
                     )
 
 
+ROUTING_HEADER = re.compile(r"\|\s*(Reader|Read this)\s*\|", re.IGNORECASE)
+
+
+def check_link_aliases(files, failures):
+    """Check each link alias reads as words, not as a file path.
+
+    Prose names what the reader gets, so an alias reads as words. A routing
+    table sends a reader to a document, so its alias reads as words too.
+    A table of files names each file on purpose, so it keeps the name.
+    """
+    for path in files:
+        routing = False
+        for number, line in enumerate(read(path).splitlines(), start=1):
+            stripped = line.lstrip()
+            if stripped.startswith("|"):
+                if ROUTING_HEADER.search(line):
+                    routing = True
+                    continue
+                if not routing:
+                    continue
+            elif stripped.startswith("<!--"):
+                continue
+            else:
+                routing = False
+            for alias, target in LINK.findall(line):
+                if target.startswith(("http://", "https://", "#", "mailto:")):
+                    continue
+                if re.search(r"\.md$", alias.strip()):
+                    failures.append(
+                        f"{path}:{number}: alias is a file name: {alias}"
+                    )
+                elif "/" in alias.strip():
+                    failures.append(
+                        f"{path}:{number}: alias is a file path: {alias}"
+                    )
+
+
+def check_engine_precedence(files, failures):
+    """Check each use of the word engine names a database product.
+
+    The catalogue gives precedence to its entries. Engine names only the
+    database product. The check accepts a line that also names a database,
+    an adapter, a package, or a variable, because those mark the product.
+    """
+    product = re.compile(
+        r"database|adapter|package|variable|environment|`KIBTAB_ENGINE`"
+        r"|PostgreSQL|postgres|DuckDB|duckdb|swap|driven|schema|SQL|table"
+        r"|query|port|dialect|migration|contract",
+        re.IGNORECASE,
+    )
+    use = re.compile(r"\b(?:the|The|each|Each|that|That)\s+engine\b|\bengines\b")
+    section = re.compile(
+        r"engine|database|contract suite|every engine|each engine",
+        re.IGNORECASE,
+    )
+    for path in files:
+        if os.path.normpath(path).startswith(CATALOGUE_DIR):
+            continue
+        in_product_section = False
+        for number, line in enumerate(read(path).splitlines(), start=1):
+            if line.startswith("#"):
+                in_product_section = bool(section.search(line))
+                continue
+            if not use.search(line):
+                continue
+            if product.search(line) or in_product_section:
+                continue
+            failures.append(
+                f"{path}:{number}: 'engine' must name a database product, "
+                f"use Kibtab or the instance: {line.strip()[:60]}"
+            )
+
+
+def check_version_line(files, failures):
+    """Check each guide under docs/ states a version near the top.
+
+    The repository root files take no version line. The readme is a landing
+    page, not a guide. A template and the changelog index take no line.
+    """
+    exempt = {
+        "docs/changelogs/TEMPLATE.md",
+        "docs/changelogs/README.md",
+    }
+    for path in files:
+        norm = os.path.normpath(path).replace(os.sep, "/")
+        if not norm.startswith("docs/") or norm in exempt:
+            continue
+        body = COMMENT.sub("", read(path))
+        head = body.splitlines()[:8]
+        if any(line.startswith("Version ") for line in head):
+            continue
+        failures.append(f"{path}: no version line in the first lines")
+
+
 def main():
     roots = sys.argv[1:]
     if not roots:
@@ -459,6 +553,9 @@ def main():
     check_catalogue_complete(failures)
     check_go_version(failures)
     check_commit_examples(failures)
+    check_link_aliases(files, failures)
+    check_engine_precedence(files, failures)
+    check_version_line(files, failures)
     for line in failures:
         print(line)
     print(f"checked {len(files)} file(s), {len(failures)} problem(s)")

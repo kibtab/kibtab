@@ -55,19 +55,19 @@ A missing field fails the catalogue check.
 * Use one name for one concept. Never approve a second name for it.
 * Keep each name once in one lexicon. Never repeat it in a second lexicon.
 * Approve a concept and its source name in two lexicons.
-  The [identifiers.md](identifiers.md) entry names the exact case.
+  The [identifier lexicon](identifiers.md) entry names the exact case.
   Each other lexicon names the concept.
 
-## A Known Ambiguity
+## The Precedence Of This Catalogue
 
-The word engine names two things in older Kibtab prose.
-It names the database product in the port and adapter rules.
-It names the running copy of Kibtab in the install and self-hosting guides.
+This catalogue takes precedence over the other documents.
+When a word conflicts with an entry here, the entry wins.
 
+The word engine is the clearest case.
 Use **Engine** only for the database product.
 Use **Instance** for the running copy of Kibtab.
-The newer guides follow this rule.
-The older prose still uses engine for both senses.
+Use **Kibtab** when you name the project itself.
+The rest of the documents follow this rule.
 
 ## What The Check Does
 
@@ -83,6 +83,8 @@ A review reads the Do Not Use field for the concept that it names.
 * Use the plural form as the Approved Form states.
 * Never invent a name in a document. Add it here first.
 * Keep each scope inside the Kibtab domain.
+* Apply this catalogue before any other document.
+  When a word conflicts with an entry here, the entry wins.
 
 ## The Template
 
@@ -95,8 +97,8 @@ Use this template for a new entry.
 - **Definition:** The flow that sends a client change to the database.
 - **Approved Form:** Sync (singular), Syncs (plural)
 - **Do Not Use:** Push, Upload, Copy
-- **Correct Example:** *The engine runs a **sync** when a cell changes.*
-- **Incorrect Example:** *The engine runs an upload when a cell changes.*
+- **Correct Example:** *The instance runs a **sync** when a cell changes.*
+- **Incorrect Example:** *The instance runs an upload when a cell changes.*
 ```
 
 ## The Difference From The Word Lists
@@ -112,8 +114,8 @@ No entry copies a word from the ASD-STE100 word lists.
 
 ## Next Steps
 
-* Read [spreadsheet-terms.md](spreadsheet-terms.md) for the cell terms.
-* Read [database-terms.md](database-terms.md) for the table terms.
-* Read [architecture-terms.md](architecture-terms.md) for the layer terms.
-* Read [tooling-terms.md](tooling-terms.md) for the command terms.
-* Read [identifiers.md](identifiers.md) for the source names.
+* Read [the spreadsheet lexicon](spreadsheet-terms.md) for the cell terms.
+* Read [the database lexicon](database-terms.md) for the table terms.
+* Read [the architecture lexicon](architecture-terms.md) for the layer terms.
+* Read [the tooling lexicon](tooling-terms.md) for the command terms.
+* Read [the identifier lexicon](identifiers.md) for the source names.

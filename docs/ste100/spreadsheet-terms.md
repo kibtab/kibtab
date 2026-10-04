@@ -3,7 +3,7 @@
 Version 0.0.0-docs. This document holds the spreadsheet Technical Names.
 
 These terms name the cells, ranges, and workbooks of a spreadsheet client.
-Read the [STE100 Technical Names](index.md) dictionary first.
+Read [the catalogue](index.md) first.
 
 ## Technical Name: Cell
 - **Part of Speech:** Noun
@@ -11,8 +11,8 @@ Read the [STE100 Technical Names](index.md) dictionary first.
 - **Definition:** The smallest box in a sheet that holds one value.
 - **Approved Form:** Cell (singular), Cells (plural)
 - **Do Not Use:** Box, Element, Field, Slot
-- **Correct Example:** *The engine writes the value into one **cell**.*
-- **Incorrect Example:** *The engine writes the value into one box.*
+- **Correct Example:** *The instance writes the value into one **cell**.*
+- **Incorrect Example:** *The instance writes the value into one box.*
 
 ## Technical Name: Range
 - **Part of Speech:** Noun
@@ -47,8 +47,8 @@ Read the [STE100 Technical Names](index.md) dictionary first.
 - **Definition:** The text at the top of a column. It names the field.
 - **Approved Form:** Column Header (singular), Column Headers (plural)
 - **Do Not Use:** Header, Caption, Label, Title
-- **Correct Example:** *The engine reads the **column header** to find the field.*
-- **Incorrect Example:** *The engine reads the caption to find the field.*
+- **Correct Example:** *The instance reads the **column header** to find the field.*
+- **Incorrect Example:** *The instance reads the caption to find the field.*
 
 ## Technical Name: Row Header
 - **Part of Speech:** Noun
@@ -56,8 +56,8 @@ Read the [STE100 Technical Names](index.md) dictionary first.
 - **Definition:** The text at the left of a row. It names the record key.
 - **Approved Form:** Row Header (singular), Row Headers (plural)
 - **Do Not Use:** Header, Key Label, Index, Marker
-- **Correct Example:** *The engine reads the **row header** to find the key.*
-- **Incorrect Example:** *The engine reads the marker to find the key.*
+- **Correct Example:** *The instance reads the **row header** to find the key.*
+- **Incorrect Example:** *The instance reads the marker to find the key.*
 
 ## Technical Name: Delta
 - **Part of Speech:** Noun
@@ -65,8 +65,8 @@ Read the [STE100 Technical Names](index.md) dictionary first.
 - **Definition:** The difference between two versions of a range.
 - **Approved Form:** Delta (singular), Deltas (plural)
 - **Do Not Use:** Change, Difference, Patch, Edit
-- **Correct Example:** *The engine rejects a **delta** from an old version.*
-- **Incorrect Example:** *The engine rejects a change from an old version.*
+- **Correct Example:** *The instance rejects a **delta** from an old version.*
+- **Incorrect Example:** *The instance rejects a change from an old version.*
 
 ## Technical Name: Client
 - **Part of Speech:** Noun
@@ -79,5 +79,5 @@ Read the [STE100 Technical Names](index.md) dictionary first.
 
 ## Next Steps
 
-* Read [database-terms.md](database-terms.md) for the table terms.
-* Read [architecture-terms.md](architecture-terms.md) for the layer terms.
+* Read [the database lexicon](database-terms.md) for the table terms.
+* Read [the architecture lexicon](architecture-terms.md) for the layer terms.

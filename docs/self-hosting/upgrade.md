@@ -39,7 +39,7 @@ git pull
 docker compose up -d
 ```
 
-The engine runs the migrations at the start.
+The instance runs the migrations at the start.
 Wait for each service to report the state.
 
 ```bash
@@ -71,7 +71,7 @@ version.
 
 1. Read the migration guide for your version.
 2. Take a backup.
-3. Run the engine once with the new binary.
+3. Run the instance once with the new binary.
 4. Rebuild the client with the taskpane of the new version.
 5. Check one table in the database.
 
@@ -82,7 +82,7 @@ kibtab migrate --apply
 
 ## Roll Back
 
-Stop the engine when a step fails.
+Stop the instance when a step fails.
 Restore the data only when the migrations changed it.
 
 ```bash

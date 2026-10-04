@@ -69,18 +69,18 @@ Deploy a release archive when the host has no Docker.
 1. Read the release page for your version.
 2. Install the archive for your operating system.
 3. Put the binary on the `PATH`.
-4. Run the engine under a service manager.
+4. Run the instance under a service manager.
 
 Read [the install guide](../install.md) for the install steps.
 
-The engine needs the variables in
+The instance needs the variables in
 [the configuration guide](configuration.md).
 Keep the password in a secret store.
 Do not put the password in a unit file on disk.
 
 ## Deploy Behind A Proxy
 
-Put a reverse proxy in front of the engine when the host has no Caddy.
+Put a reverse proxy in front of the instance when the host has no Caddy.
 The proxy must pass the WebSocket upgrade for the live sync route.
 The proxy must set a timeout above the query timeout.
 

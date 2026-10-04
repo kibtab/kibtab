@@ -3,7 +3,7 @@
 Version 0.0.0-docs. This document holds the architecture Technical Names.
 
 These terms name the layers, ports, and adapters of Kibtab.
-Read the [STE100 Technical Names](index.md) dictionary first.
+Read [the catalogue](index.md) first.
 
 ## Technical Name: Core
 - **Part of Speech:** Noun
@@ -98,11 +98,11 @@ Read the [STE100 Technical Names](index.md) dictionary first.
 ## Technical Name: Version
 - **Part of Speech:** Noun
 - **Category:** Architecture Term
-- **Definition:** The number that the engine holds for each table.
+- **Definition:** The number that the instance holds for each table.
 - **Approved Form:** Version (singular), Versions (plural)
 - **Do Not Use:** Revision, Generation, Sequence, State
-- **Correct Example:** *The engine rejects a **version** that is too old.*
-- **Incorrect Example:** *The engine rejects a revision that is too old.*
+- **Correct Example:** *The instance rejects a **version** that is too old.*
+- **Incorrect Example:** *The instance rejects a revision that is too old.*
 
 ## Technical Name: Idempotent
 - **Part of Speech:** Modifier
@@ -110,8 +110,8 @@ Read the [STE100 Technical Names](index.md) dictionary first.
 - **Definition:** Describes a write that gives the same result when it runs twice.
 - **Approved Form:** Idempotent
 - **Do Not Use:** Repeatable, Safe, Deduplicated
-- **Correct Example:** *The engine keeps the write **idempotent** for one delta.*
-- **Incorrect Example:** *The engine keeps the write repeatable for one delta.*
+- **Correct Example:** *The instance keeps the write **idempotent** for one delta.*
+- **Incorrect Example:** *The instance keeps the write repeatable for one delta.*
 
 ## Technical Name: Hexagonal Architecture
 - **Part of Speech:** Noun
@@ -124,5 +124,5 @@ Read the [STE100 Technical Names](index.md) dictionary first.
 
 ## Next Steps
 
-* Read [tooling-terms.md](tooling-terms.md) for the command terms.
-* Read [identifiers.md](identifiers.md) for the source names.
+* Read [the tooling lexicon](tooling-terms.md) for the command terms.
+* Read [the identifier lexicon](identifiers.md) for the source names.

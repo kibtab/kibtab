@@ -14,13 +14,13 @@ Each document holds its own rules. Do not work from this guide alone.
 
 | Reader | Read |
 | --- | --- |
-| A person | [The documentation index](docs/index.md). It lists every guide. |
-| An AI agent | [AGENTS.md](AGENTS.md). It holds the rules that bind an agent. |
-| A person who commits | [The commit format](#the-commit-message) below. |
-| A person who tests | [docs/testing.md](docs/testing.md). |
-| A person who releases | [docs/releasing.md](docs/releasing.md). |
-| A person who writes words | [docs/conventions.md](docs/conventions.md). |
-| A person who adds a term | [docs/ste100/index.md](docs/ste100/index.md). |
+| A person | [the documentation index](docs/index.md). It lists every guide. |
+| An AI agent | [the agent rules](AGENTS.md). They bind an agent. |
+| A person who commits | [the commit format](#the-commit-message) below. |
+| A person who tests | [the testing guide](docs/testing.md). |
+| A person who releases | [the releasing guide](docs/releasing.md). |
+| A person who writes words | [the conventions guide](docs/conventions.md). |
+| A person who adds a term | [the catalogue](docs/ste100/index.md). |
 
 This guide holds the steps to send a change.
 The [documentation index](docs/index.md) holds the detail of each topic.
@@ -40,7 +40,7 @@ These contributions all matter.
 
 ## Before You Start
 
-Read [plan.md](plan.md). It holds the scope of each version.
+Read [the plan](plan.md). It holds the scope of each version.
 
 Every task in the plan is a markdown check box.
 Pick an open box. Read the version that owns it.
@@ -67,7 +67,7 @@ make build
 make watch
 ```
 
-The target `make watch` reloads the engine on a code change.
+The target `make watch` rebuilds Kibtab on a code change.
 Read `air.toml` before you change it.
 Run `make help` for the full list of targets.
 
@@ -78,13 +78,13 @@ Search the open and closed issues before you open a new one.
 * Do not bump an issue that needs no answer.
 * For a defect, give the steps, the version, and the output.
 * For a defect, give a small case that shows the fault.
-* Do not post a security issue in a public issue. Read [SECURITY.md](SECURITY.md).
+* Do not post a security issue in a public issue. Read [the security policy](SECURITY.md).
 
 ## The Changelog
 
 Each release has one file at `docs/changelogs/vX.Y.Z.md`.
 Read [the changelog format](docs/changelogs/README.md) before you write one.
-Copy [the template](docs/changelogs/TEMPLATE.md) first.
+Copy [the changelog template](docs/changelogs/TEMPLATE.md) first.
 
 ## The Commit Message
 
@@ -202,7 +202,7 @@ The floor is 100.
 Never lower the floor to make a build pass.
 Never skip a test to make a build pass.
 
-Read [AGENTS.md](AGENTS.md) section 4 for the rules that bind an agent.
+Read [the agent rules](AGENTS.md) section 4 for the rules that bind an agent.
 
 ## The Rules For A Change
 
@@ -218,9 +218,9 @@ The rules that most often catch a change:
 * Wrap a multi-cell update in one transaction.
 * Set `CGO_ENABLED=0` in every build and test command.
 * Write the documentation in Simplified Technical English and British English.
-  Read [AGENTS.md](AGENTS.md) section 3 for both.
+  Read [the agent rules](AGENTS.md) section 3 for both.
 
-Read [AGENTS.md](AGENTS.md) section 7 for the scope rules.
+Read [the agent rules](AGENTS.md) section 7 for the scope rules.
 
 ## Run The Checks
 
@@ -243,7 +243,7 @@ make notice-check
 ```
 
 Read `make help` for the full list of targets.
-Read the gate rules in [AGENTS.md](AGENTS.md) section 5.
+Read the gate rules in [the agent rules](AGENTS.md) section 5.
 
 ## Pull Requests
 
@@ -308,7 +308,7 @@ Read [the documentation index](docs/index.md) for the list of each guide.
 ## Security
 
 Do not post a security issue in a public issue.
-Read [SECURITY.md](SECURITY.md) for the private route.
+Read [the security policy](SECURITY.md) for the private route.
 
 ## Licence
 

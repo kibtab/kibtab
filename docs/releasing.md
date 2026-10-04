@@ -2,9 +2,9 @@
 
 Version 0.0.0-docs. This document holds the versioning and the release steps.
 
-Read [AGENTS.md](../AGENTS.md) section 5 for the rules that bind an agent.
+Read [the agent rules](../AGENTS.md) section 5 for the rules that bind an agent.
 Read [the changelog format](changelogs/README.md) for the file layout.
-Read [plan.md](../plan.md) for the scope of each version.
+Read [the plan](../plan.md) for the scope of each version.
 
 ## The Version Number
 
@@ -29,8 +29,8 @@ Every release passes each check below.
 * `make cover-verify` passes.
 * `make docs-check` and `make notice-check` report no problem.
 * The module has no dependency that needs a C compiler.
-* The code follows [conventions.md](conventions.md).
-* The commits follow [CONTRIBUTING.md](../CONTRIBUTING.md).
+* The code follows [the conventions guide](conventions.md).
+* The commits follow [the contributing guide](../CONTRIBUTING.md).
 
 ## The Gate For A Ship
 
@@ -46,10 +46,10 @@ Every release passes each check below.
 
 * Release with GoReleaser. Read `.goreleaser.yaml` before you change it.
 * Write one file at `docs/changelogs/vX.Y.Z.md` for each release.
-* Copy [changelogs/TEMPLATE.md](changelogs/TEMPLATE.md) for the file.
-* Follow [changelogs/README.md](changelogs/README.md) for the sections.
+* Copy [the changelog template](changelogs/TEMPLATE.md) for the file.
+* Follow [the changelog format](changelogs/README.md) for the sections.
 * Use the commit scope of the component. Read
-  [CONTRIBUTING.md](../CONTRIBUTING.md) for the scope table.
+  [the contributing guide](../CONTRIBUTING.md) for the scope table.
 * Update `docs/index.md` and `docs/CREDITS.md` with the release notes.
 * Update `docs/THIRD_PARTY_NOTICES.md` when a dependency changes.
 
@@ -61,7 +61,7 @@ Sign off each commit with the Developer Certificate of Origin.
 git commit -s -m "feat(db-postgres): add the batch delta validation"
 ```
 
-Read [CONTRIBUTING.md](../CONTRIBUTING.md) for the full DCO section.
+Read [the contributing guide](../CONTRIBUTING.md) for the full DCO section.
 
 ## Cut The Release
 
@@ -97,5 +97,5 @@ It never moves a published tag.
 ## Next Steps
 
 * Read [the changelog format](changelogs/README.md) for the file layout.
-* Read [self-hosting/upgrade.md](self-hosting/upgrade.md) for an upgrade.
-* Read [CONTRIBUTING.md](../CONTRIBUTING.md) to send a change.
+* Read [the upgrade guide](self-hosting/upgrade.md) for an upgrade.
+* Read [the contributing guide](../CONTRIBUTING.md) to send a change.

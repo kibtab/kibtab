@@ -40,15 +40,15 @@ The stack holds three services.
 | `db` | PostgreSQL. It holds the data. |
 
 Caddy handles the certificate.
-The engine holds no TLS code.
+The instance holds no TLS code.
 
 ## Choose A Path
 
 Pick one path before you start.
 
-* Run the stack with Docker. Read [deployment.md](deployment.md).
-* Run a release archive on a bare host. Read [deployment.md](deployment.md).
-* Update a running install. Read [upgrade.md](upgrade.md).
+* Run the stack with Docker. Read [the deployment guide](deployment.md).
+* Run a release archive on a bare host. Read [the deployment guide](deployment.md).
+* Update a running install. Read [the upgrade guide](upgrade.md).
 
 ## Rules For This Section
 

@@ -27,9 +27,9 @@ docker compose logs db
 docker compose logs caddy
 ```
 
-## The Engine Does Not Start
+## The Instance Does Not Start
 
-The engine exits when it cannot reach the database.
+The instance exits when it cannot reach the database.
 Check the value of `DATABASE_URL`.
 Read [the configuration guide](configuration.md) for the variable.
 
@@ -37,12 +37,12 @@ Read [the configuration guide](configuration.md) for the variable.
 docker compose logs engine
 ```
 
-The engine exits when a chosen adapter has no package.
+The instance exits when a chosen adapter has no package.
 Check the value of `KIBTAB_ENGINE`.
 
 ## The Route Returns A Conflict
 
-The engine rejects a write when the version does not match.
+The instance rejects a write when the version does not match.
 The sheet holds an old version.
 Reload the row in the client.
 
@@ -50,8 +50,8 @@ Read [the architecture guide](../architecture.md) for the version check.
 
 ## The Query Times Out
 
-The timeout of the engine sits above the timeout of the proxy.
-Set the timeout of the engine below the timeout of the proxy.
+The timeout of the instance sits above the timeout of the proxy.
+Set the timeout of the instance below the timeout of the proxy.
 
 ```bash
 KIBTAB_DB_QUERY_TIMEOUT=5s

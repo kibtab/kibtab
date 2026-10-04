@@ -3,7 +3,7 @@
 Version 0.0.0-docs. This page lists the Kibtab documents.
 
 Kibtab turns a spreadsheet into a client for a relational database.
-The engine holds a version for each table.
+Kibtab holds a version for each table.
 It rejects a write from an old client.
 
 ## Read The Documents
@@ -20,7 +20,7 @@ It rejects a write from an old client.
 | [STE100 Technical Names](ste100/index.md) | The approved technical names for Kibtab. |
 | [Testing](testing.md) | The kinds of test and the coverage rules. |
 | [Releasing](releasing.md) | The version number, the gate, and the release steps. |
-| [Licence](licence.md) | The terms for the engine and the skill. |
+| [Licence](licence.md) | The terms for Kibtab and the skill. |
 | [Third Party Notices](THIRD_PARTY_NOTICES.md) | The licences of the dependencies. |
 | [Credits](CREDITS.md) | The people, the projects, and the sources. |
 | [Changelog rules](changelogs/README.md) | The format for each release file. |
@@ -33,7 +33,7 @@ Read it before you start a task.
 
 ## Releases
 
-Each release has one file in the [changelogs](changelogs/) folder.
+Each release has one file in [the changelog folder](changelogs/).
 The file name holds the version number.
 No release file exists yet.
 The plan in `plan.md` holds the scope for each version.
@@ -75,7 +75,7 @@ Each one updates when its release arrives.
 | `docs/ste100/` | v0.1.0 | The approved Technical Names and the rejected words. |
 | `docs/testing.md` | v0.1.0 | The kinds of test and the coverage rules. |
 | `docs/releasing.md` | v0.1.0 | The version number, the gate, and the release steps. |
-| `docs/licence.md` | v0.1.0 | The terms for the engine and the skill. |
+| `docs/licence.md` | v0.1.0 | The terms for Kibtab and the skill. |
 | `docs/openapi.yaml` | v0.5.0 | The REST interface definition. |
 | `docs/self-hosting/` | v0.8.0 | The section for running Kibtab on a server. |
 | `docs/runbook.md` | v0.9.0 | The steps for an operator. |
@@ -87,8 +87,8 @@ Write each document in two styles at the same time.
 The first style is Simplified Technical English.
 The second style is British English.
 The full rules are in `../AGENTS.md` section 3.
-The detail is in [conventions.md](conventions.md).
-The approved technical names are in [ste100/index.md](ste100/index.md).
+The detail is in [the conventions guide](conventions.md).
+The approved technical names are in [the catalogue](ste100/index.md).
 
 Run the check before you open a pull request.
 
@@ -131,7 +131,7 @@ The rules for this file are in the section above.
 | `air.toml` | The hot reload settings for a local run. |
 | `Makefile` | The build, the test, the lint, and the release targets. |
 | `.goreleaser.yaml` | The release build for each target. |
-| `docker-compose.yml` | The local stack with Caddy, the engine, and PostgreSQL. |
+| `docker-compose.yml` | The local stack with Caddy, Kibtab, and PostgreSQL. |
 | `Dockerfile` | The multi-stage build. It uses a `scratch` base. |
 | `.gitignore` | The build, coverage, and profile output. |
 

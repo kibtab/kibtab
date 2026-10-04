@@ -8,7 +8,7 @@ Report a vulnerability in private.
 Do not open a public issue.
 
 Read [the documentation index](docs/index.md) for every guide.
-Read [AGENTS.md](AGENTS.md) before you change code for a report.
+Read [the agent rules](AGENTS.md) before you change code for a report.
 
 ## How To Report
 
@@ -61,7 +61,7 @@ These reports do not qualify.
 * A report from an automated scan with no proof.
 
 Read [the architecture guide](docs/architecture.md) for the trust boundary.
-Read [the security rules](docs/conventions.md) for the code rules.
+Read [the conventions guide](docs/conventions.md) for the code rules.
 Read [the licence guide](docs/licence.md) for the terms.
 
 ## After A Report
