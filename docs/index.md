@@ -35,12 +35,12 @@ Read it before you start a task.
 
 Each release has one file in [the changelog folder](changelogs/).
 The file name holds the version number.
-No release file exists yet.
+The first release file is [the v0.1.0 changelog](changelogs/v0.1.0.md).
 The plan in `plan.md` holds the scope for each version.
 
 | Version | Theme | Changelog file |
 | --- | --- | --- |
-| v0.1.0 | Skeleton | Not written yet |
+| v0.1.0 | Skeleton | [v0.1.0.md](changelogs/v0.1.0.md) |
 | v0.2.0 | Domain and ports | Not written yet |
 | v0.3.0 | PostgreSQL adapter | Not written yet |
 | v0.4.0 | Write path | Not written yet |

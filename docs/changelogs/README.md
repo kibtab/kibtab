@@ -7,7 +7,7 @@ The file for the release `v0.5.0` is `v0.5.0.md`.
 Do not add a prefix, a suffix, or a date.
 Do not create a file called `latest.md`.
 
-No release file exists yet.
+The first release file is `v0.1.0.md`.
 
 ## The Format
 

@@ -22,3 +22,5 @@ new-bench.txt
 # Python bytecode from the scripts
 __pycache__/
 *.pyc
+
+.headroom
