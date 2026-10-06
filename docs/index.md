@@ -136,6 +136,7 @@ The rules for this file are in the section above.
 | `.gitignore` | The build, coverage, and profile output. |
 | `.github/workflows/ci.yml` | The build, vet, and test workflow. |
 | `.readthedocs.yaml` | The Read the Docs build configuration. |
+| `docs/conf.py` | The Sphinx configuration for the documentation. |
 | `requirements.txt` | The documentation build dependencies. |
 
 Kibtab sets `CGO_ENABLED=0` in every build.

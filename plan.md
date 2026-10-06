@@ -51,9 +51,9 @@ The gate for a release lives in `AGENTS.md` section 5.
 
 ### Scope
 
-* [ ] Create `go.mod`. Set the module path and Go 1.22.
-* [ ] Set `go 1.22` in `go.mod`. Never raise the Go version.
-* [ ] Create `cmd/kibtab/main.go`. It reads `PORT` and `DATABASE_URL`.
+* [x] Create `go.mod`. Set the module path and Go 1.22.
+* [x] Set `go 1.22` in `go.mod`. Never raise the Go version.
+* [x] Create `cmd/kibtab/main.go`. It reads `PORT` and `DATABASE_URL`.
 * [x] Keep `README.md` as a landing page. Link to each guide under `docs/`.
 * [x] Keep `CONTRIBUTING.md`. It holds the steps to send a change.
 * [x] Keep `CODE_OF_CONDUCT.md`. It holds the terms for taking part.
@@ -69,11 +69,11 @@ The gate for a release lives in `AGENTS.md` section 5.
 * [x] Add `scripts/docs-check.py`. It runs under `make docs-check`.
 * [x] Add `docs/ste100/index.md`. It holds the approved Technical Names.
 * [x] Add each lexicon under `docs/ste100/`. It holds one category.
-* [ ] Create the folder `internal/core/` with `domain`, `ports`, `services`.
-* [ ] Create the folder `internal/adapters/driven/` for the engines.
-* [ ] Create the folder `internal/adapters/driver/` for the transports.
-* [ ] Create the folder `client/` for the spreadsheet clients.
-* [ ] Add the route `GET /healthz`. It returns the status and the version.
+* [x] Create the folder `internal/core/` with `domain`, `ports`, `services`.
+* [x] Create the folder `internal/adapters/driven/` for the engines.
+* [x] Create the folder `internal/adapters/driver/` for the transports.
+* [x] Create the folder `client/` for the spreadsheet clients.
+* [x] Add the route `GET /healthz`. It returns the status and the version.
 * [x] Add `air.toml`. Air rebuilds on a change in `internal/` or `cmd/`.
 * [x] Add the `Makefile`. It holds `build`, `install`, `run`, `test`, `vet`,
       and `lint`. It holds `fmt`, `tidy`, `watch`, `cover`, and `bench`.
@@ -83,7 +83,7 @@ The gate for a release lives in `AGENTS.md` section 5.
       output.
 * [x] Add `scripts/docs-check.py`. It checks the sentence length and the
       banned words. It does not need the ASD word lists.
-* [ ] Add `scripts/notice-check.py`. It compares `go.mod` with the tables in
+* [x] Add `scripts/notice-check.py`. It compares `go.mod` with the tables in
       `docs/THIRD_PARTY_NOTICES.md`.
 * [x] Add `.github/workflows/ci.yml`. It builds, vets, and tests the Go
       code. It runs no documentation check.
@@ -101,9 +101,9 @@ This release holds no write path.
 
 ### Done When
 
-* [ ] `CGO_ENABLED=0 go build ./...` succeeds on Linux, macOS, and Windows.
-* [ ] `air` starts the instance and reloads it on a code change.
-* [ ] `curl localhost:8080/healthz` returns the version.
+* [x] `CGO_ENABLED=0 go build ./...` succeeds on Linux, macOS, and Windows.
+* [x] `air` starts the instance and reloads it on a code change.
+* [x] `curl localhost:8080/healthz` returns the version.
 * [x] `docs/changelogs/v0.1.0.md` exists.
 
 ## 3. Release v0.2.0 - Domain And Ports

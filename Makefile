@@ -69,7 +69,7 @@ tidy: ## Tidy the Go module files
 	$(GO) mod tidy
 
 watch: ## Hot-reload cmd/kibtab on save (needs air)
-	air
+	air -c air.toml
 
 docs-check: ## Check the documentation for sentence length and banned words
 	python3 scripts/docs-check.py plan.md AGENTS.md README.md docs CONTRIBUTING.md SECURITY.md

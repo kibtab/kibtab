@@ -1,5 +1,7 @@
 # air configuration for Kibtab development.
-# Run `air` in the repository root to rebuild and rerun cmd/kibtab on save.
+# Run `make watch` (or `air -c air.toml`) in the repository root to rebuild
+# and rerun cmd/kibtab on save. Air reads .air.toml by default, so the flag
+# names this file.
 root = "."
 testdata_dir = "testdata"
 tmp_dir = "bin"
