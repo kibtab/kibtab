@@ -155,7 +155,9 @@ Give each file, each package, each commit, and each guide one job.
 * Follow `plan.md` for scope. Never build a feature that a later version
   holds.
 * Every task in `plan.md` uses a check box. Mark it done when the code and
-  the release note exist. Delete the line when the release ships.
+  the release note exist.
+* Remove the checked boxes when the changelog states each item. Put one
+  line in their place that links the changelog of the release.
 * Commit no secret, no `.env` file, and no build output.
 * Keep the module path as `github.com/kibtab/kibtab`.
 

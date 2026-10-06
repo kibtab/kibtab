@@ -14,16 +14,22 @@ Every task in this plan is a markdown check box.
 A check box holds work that is not done.
 
 * Mark a box with `- [x]` when the code and the release note exist.
-* Delete a line when the release ships.
 * Never mark a box done before the code compiles and the test passes.
+* Remove the checked boxes when the changelog for the version states each
+  item and each deliverable exists.
+* Put one line in the place of the boxes.
+
+```markdown
+Implemented, see [vX.Y.Z changelog](docs/changelogs/vX.Y.Z.md).
+```
 
 The plan holds no status field.
-The check box holds the status.
+The check box holds the status of open work.
+The replacement line holds the status of a shipped release.
 
 Each release needs a file at `docs/changelogs/vX.Y.Z.md`.
 The format is in `docs/changelogs/README.md`.
 The template is in `docs/changelogs/TEMPLATE.md`.
-No release file exists yet.
 
 ## 1. Release Milestones
 
@@ -51,60 +57,12 @@ The gate for a release lives in `AGENTS.md` section 5.
 
 ### Scope
 
-* [x] Create `go.mod`. Set the module path and Go 1.22.
-* [x] Set `go 1.22` in `go.mod`. Never raise the Go version.
-* [x] Create `cmd/kibtab/main.go`. It reads `PORT` and `DATABASE_URL`.
-* [x] Keep `README.md` as a landing page. Link to each guide under `docs/`.
-* [x] Keep `CONTRIBUTING.md`. It holds the steps to send a change.
-* [x] Keep `CODE_OF_CONDUCT.md`. It holds the terms for taking part.
-* [x] Keep `SECURITY.md`. It holds the private route for a vulnerability.
-* [x] Keep `.github/ISSUE_TEMPLATE/`. It holds the forms for an issue.
-* [x] Keep `docs/install.md`. It holds the install and build steps.
-* [x] Keep `docs/licence.md`. It holds the terms for Kibtab and the skill.
-* [x] Add `docs/conventions.md`. It holds the code, the documentation, and the
-      scope rules.
-* [x] Add `docs/testing.md`. It holds the kinds of test and the coverage rules.
-* [x] Add `docs/releasing.md`. It holds the version, the gate, and the release
-      steps.
-* [x] Add `scripts/docs-check.py`. It runs under `make docs-check`.
-* [x] Add `docs/ste100/index.md`. It holds the approved Technical Names.
-* [x] Add each lexicon under `docs/ste100/`. It holds one category.
-* [x] Create the folder `internal/core/` with `domain`, `ports`, `services`.
-* [x] Create the folder `internal/adapters/driven/` for the engines.
-* [x] Create the folder `internal/adapters/driver/` for the transports.
-* [x] Create the folder `client/` for the spreadsheet clients.
-* [x] Add the route `GET /healthz`. It returns the status and the version.
-* [x] Add `air.toml`. Air rebuilds on a change in `internal/` or `cmd/`.
-* [x] Add the `Makefile`. It holds `build`, `install`, `run`, `test`, `vet`,
-      and `lint`. It holds `fmt`, `tidy`, `watch`, `cover`, and `bench`.
-      It holds `docs-check`, `notice-check`, `check`, `release-check`,
-      `tag`, and `tools`.
-* [x] Add `.gitignore`. It covers the build, the coverage, and the profile
-      output.
-* [x] Add `scripts/docs-check.py`. It checks the sentence length and the
-      banned words. It does not need the ASD word lists.
-* [x] Add `scripts/notice-check.py`. It compares `go.mod` with the tables in
-      `docs/THIRD_PARTY_NOTICES.md`.
-* [x] Add `.github/workflows/ci.yml`. It builds, vets, and tests the Go
-      code. It runs no documentation check.
-* [x] Set `CGO_ENABLED=0` in every step of the workflow.
-* [x] Add `.readthedocs.yaml`. It builds the documentation on Read the Docs.
-* [x] Add `docs/conf.py`. It configures the Sphinx build of `docs/`.
-* [x] Add `requirements.txt`. It holds the documentation dependencies.
-* [x] Add the `docs-deps` and `docs-serve` targets. `uv` installs the
-      documentation dependencies and `make docs-serve` serves them locally.
+Implemented, see [v0.1.0 changelog](docs/changelogs/v0.1.0.md).
 
 ### Out Of Scope
 
 This release holds no database access.
 This release holds no write path.
-
-### Done When
-
-* [x] `CGO_ENABLED=0 go build ./...` succeeds on Linux, macOS, and Windows.
-* [x] `air` starts the instance and reloads it on a code change.
-* [x] `curl localhost:8080/healthz` returns the version.
-* [x] `docs/changelogs/v0.1.0.md` exists.
 
 ## 3. Release v0.2.0 - Domain And Ports
 
