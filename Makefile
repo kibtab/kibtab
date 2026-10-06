@@ -14,7 +14,7 @@ CHANGELOG_URL_BASE := https://github.com/kibtab/kibtab/blob/main/docs/changelogs
         vet lint fmt tidy watch release-test release-check snapshot \
         bench bench-all bench-save bench-compare \
         profile-cpu profile-trace \
-        docs-check notice-check check \
+        docs-check notice-check docs-deps docs-serve check \
         tag clean tools
 
 help: ## Show this help
@@ -73,6 +73,14 @@ watch: ## Hot-reload cmd/kibtab on save (needs air)
 
 docs-check: ## Check the documentation for sentence length and banned words
 	python3 scripts/docs-check.py plan.md AGENTS.md README.md docs CONTRIBUTING.md SECURITY.md
+
+docs-deps: ## Install the documentation dependencies into .venv with uv
+	uv venv .venv
+	uv pip install -r requirements.txt
+
+docs-serve: docs-deps ## Build the docs and serve them at localhost:8000
+	.venv/bin/python -m sphinx -b html docs docs/_build/html
+	.venv/bin/python -m http.server 8000 --directory docs/_build/html
 
 notice-check: ## Compare go.mod with the dependency table in the notices
 	python3 scripts/notice-check.py

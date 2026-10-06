@@ -144,9 +144,10 @@ Use the name of the folder in the repository.
 
 ### The Rules For A Scope
 
-* Keep the subject under 50 characters. Start with a verb.
+* Keep the subject up to 72 characters. Start with a verb.
 * Do not end the subject with a full stop.
 * Name the one component that the change serves.
+* Do not repeat the type as the scope. Omit a scope that is plainly obvious.
 * Use no scope when the change touches the whole repository.
 * Never write a bare engine name such as `postgres` as the scope.
   Write `db-postgres`.

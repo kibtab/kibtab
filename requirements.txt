@@ -1,0 +1,9 @@
+# Read the Docs build dependencies for the Kibtab documentation.
+#
+# The documentation lives under docs/ as Markdown. Sphinx builds it with
+# the MyST parser and the Furo theme, so each .md page compiles unchanged.
+# Read the Docs installs these (see .readthedocs.yaml) to run sphinx-build.
+# A local build installs the same file through `make docs-deps` with uv.
+sphinx
+myst-parser
+furo

@@ -1,0 +1,36 @@
+# Continuous integration for Kibtab.
+#
+# The workflow builds, vets, and tests the Go code. It runs no
+# documentation check; Read the Docs builds the documentation instead
+# (see .readthedocs.yaml).
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-vet-test:
+    runs-on: ubuntu-latest
+    env:
+      # Every step of the job runs without a C compiler.
+      CGO_ENABLED: "0"
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+          # No go.sum exists yet. Turn the cache on when the module lands.
+          cache: false
+      - name: Build
+        run: go build ./...
+      - name: Vet
+        run: go vet ./...
+      - name: Test
+        run: go test ./...

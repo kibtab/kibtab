@@ -23,4 +23,8 @@ new-bench.txt
 __pycache__/
 *.pyc
 
+# Documentation build (make docs-serve) and its virtual environment
+.venv/
+docs/_build/
+
 .headroom

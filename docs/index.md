@@ -134,6 +134,9 @@ The rules for this file are in the section above.
 | `docker-compose.yml` | The local stack with Caddy, Kibtab, and PostgreSQL. |
 | `Dockerfile` | The multi-stage build. It uses a `scratch` base. |
 | `.gitignore` | The build, coverage, and profile output. |
+| `.github/workflows/ci.yml` | The build, vet, and test workflow. |
+| `.readthedocs.yaml` | The Read the Docs build configuration. |
+| `requirements.txt` | The documentation build dependencies. |
 
 Kibtab sets `CGO_ENABLED=0` in every build.
 No dependency needs a C compiler.

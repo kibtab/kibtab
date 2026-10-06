@@ -119,11 +119,12 @@ Read [the releasing guide](docs/releasing.md) for the gate and the steps.
 Kibtab uses Conventional Commits. The format is
 `<type>(<scope>): <description>`.
 
-* Keep the subject under 50 characters. Start with a verb.
+* Keep the subject up to 72 characters. Start with a verb.
 * Do not end the subject with a full stop. Use British English.
 * Name the scope of the component that the change serves.
   Use `db-postgres`, `client-excel`, or `transport-http`.
   Never use a bare engine name or a bare client name.
+* Do not repeat the type as the scope. Omit a scope that is plainly obvious.
 * Use no scope when the change touches the whole repository.
 * Split a change that touches two components into two commits.
 * Never invent a scope. Add it to the table in `CONTRIBUTING.md` first.

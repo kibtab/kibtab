@@ -1,0 +1,18 @@
+# Read the Docs configuration for the Kibtab documentation.
+#
+# Adapted from adacovex. The documentation lives under docs/ as Markdown.
+# Sphinx builds each page with the MyST parser (see docs/conf.py), and the
+# dependencies come from requirements.txt.
+version: 2
+
+build:
+  os: ubuntu-24.04
+  tools:
+    python: "3"
+
+sphinx:
+  configuration: docs/conf.py
+
+python:
+  install:
+    - requirements: requirements.txt

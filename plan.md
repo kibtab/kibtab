@@ -59,8 +59,6 @@ The gate for a release lives in `AGENTS.md` section 5.
 * [x] Keep `CODE_OF_CONDUCT.md`. It holds the terms for taking part.
 * [x] Keep `SECURITY.md`. It holds the private route for a vulnerability.
 * [x] Keep `.github/ISSUE_TEMPLATE/`. It holds the forms for an issue.
-* [ ] Add the CI step. It fails the build when a module has no licence row
-      in `docs/THIRD_PARTY_NOTICES.md`.
 * [x] Keep `docs/install.md`. It holds the install and build steps.
 * [x] Keep `docs/licence.md`. It holds the terms for Kibtab and the skill.
 * [x] Add `docs/conventions.md`. It holds the code, the documentation, and the
@@ -87,9 +85,14 @@ The gate for a release lives in `AGENTS.md` section 5.
       banned words. It does not need the ASD word lists.
 * [ ] Add `scripts/notice-check.py`. It compares `go.mod` with the tables in
       `docs/THIRD_PARTY_NOTICES.md`.
-* [ ] Add `.github/workflows/ci.yml`. It builds, vets, tests, and checks the
-      documentation.
-* [ ] Set `CGO_ENABLED=0` in every step of the workflow.
+* [x] Add `.github/workflows/ci.yml`. It builds, vets, and tests the Go
+      code. It runs no documentation check.
+* [x] Set `CGO_ENABLED=0` in every step of the workflow.
+* [x] Add `.readthedocs.yaml`. It builds the documentation on Read the Docs.
+* [x] Add `docs/conf.py`. It configures the Sphinx build of `docs/`.
+* [x] Add `requirements.txt`. It holds the documentation dependencies.
+* [x] Add the `docs-deps` and `docs-serve` targets. `uv` installs the
+      documentation dependencies and `make docs-serve` serves them locally.
 
 ### Out Of Scope
 
