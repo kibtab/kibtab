@@ -4,7 +4,7 @@ Version 0.0.0-docs. This document holds the design of Kibtab.
 It holds the layer rules and the port contract.
 
 This document holds the canonical layout and the canonical port table.
-Read [the agent rules](../AGENTS.md) section 1 for the rules for agents.
+Read section 1 of [the agent rules](https://github.com/kibtab/kibtab/blob/main/AGENTS.md) for the rules for agents.
 
 ## The Goal
 
@@ -137,6 +137,6 @@ A contract test holds each adapter to the port.
 
 ## Next Steps
 
-* Read [the plan](../plan.md) for the version that adds each adapter.
-* Read [the agent rules](../AGENTS.md) section 1 for the rules.
+* Read [the plan](https://github.com/kibtab/kibtab/blob/main/plan.md) for the version that adds each adapter.
+* Read section 1 of [the agent rules](https://github.com/kibtab/kibtab/blob/main/AGENTS.md) for the rules.
 * Read [the install guide](install.md) to build Kibtab.

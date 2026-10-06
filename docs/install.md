@@ -105,5 +105,5 @@ The health route returns the status and the version.
 
 * Read [the self-hosting guides](self-hosting/README.md) for the server stack.
 * Read [the architecture guide](architecture.md) for the code layout.
-* Read [the plan](../plan.md) for the scope of each version.
+* Read [the plan](https://github.com/kibtab/kibtab/blob/main/plan.md) for the scope of each version.
 * Read [the licence guide](licence.md) for the terms.

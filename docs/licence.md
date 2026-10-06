@@ -2,7 +2,7 @@
 
 Version 0.0.0-docs. This document holds the licence terms for Kibtab.
 
-Read [the licence text](../LICENSE) for the Apache License 2.0.
+Read [the licence text](https://github.com/kibtab/kibtab/blob/main/LICENSE) for the Apache License 2.0.
 Read [the third party notices](THIRD_PARTY_NOTICES.md) for each dependency.
 
 ## The Engine
@@ -48,7 +48,7 @@ It does not change at any version.
 
 The add-in for Microsoft Office uses the same terms.
 A client under `client/` ships in the same archive as Kibtab.
-Read [the plan](../plan.md) section 7 for the add-in.
+Read section 7 of [the plan](https://github.com/kibtab/kibtab/blob/main/plan.md) for the add-in.
 
 ## The Canonical Documents
 
@@ -113,10 +113,10 @@ Do not edit the copied work under `skills/simple-english/`.
 A change to that folder needs a new pinned commit.
 Read `skills/simple-english/VENDOR.md` for the refresh steps.
 
-Read [the agent rules](../AGENTS.md) before you contribute.
+Read [the agent rules](https://github.com/kibtab/kibtab/blob/main/AGENTS.md) before you contribute.
 
 ## Next Steps
 
-* Read [the licence text](../LICENSE) for the full terms.
+* Read [the licence text](https://github.com/kibtab/kibtab/blob/main/LICENSE) for the full terms.
 * Read [the third party notices](THIRD_PARTY_NOTICES.md) for each dependency.
-* Read [the plan](../plan.md) for the licence at each version.
+* Read [the plan](https://github.com/kibtab/kibtab/blob/main/plan.md) for the licence at each version.

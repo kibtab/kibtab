@@ -10,9 +10,9 @@ It rejects a write from an old client.
 
 | Document | Purpose |
 | --- | --- |
-| [Readme](../README.md) | The project summary. It is the front page. |
-| [Plan](../plan.md) | The release plan. It splits the work by version. |
-| [Agent Rules](../AGENTS.md) | The rules for AI coding agents. |
+| [Readme](https://github.com/kibtab/kibtab/blob/main/README.md) | The project summary. It is the front page. |
+| [Plan](https://github.com/kibtab/kibtab/blob/main/plan.md) | The release plan. It splits the work by version. |
+| [Agent Rules](https://github.com/kibtab/kibtab/blob/main/AGENTS.md) | The rules for AI coding agents. |
 | [Install](install.md) | The install steps for a binary or a source build. |
 | [Self-hosting](self-hosting/README.md) | The section for running Kibtab on a server. |
 | [Architecture](architecture.md) | The layers, the ports, and the extension steps. |
@@ -24,17 +24,18 @@ It rejects a write from an old client.
 | [Third Party Notices](THIRD_PARTY_NOTICES.md) | The licences of the dependencies. |
 | [Credits](CREDITS.md) | The people, the projects, and the sources. |
 | [Changelog rules](changelogs/README.md) | The format for each release file. |
-| [Contributing](../CONTRIBUTING.md) | The steps to send a change. |
-| [Code of Conduct](../CODE_OF_CONDUCT.md) | The terms for taking part. |
-| [Security](../SECURITY.md) | The private route for a vulnerability. |
+| [Contributing](https://github.com/kibtab/kibtab/blob/main/CONTRIBUTING.md) | The steps to send a change. |
+| [Code of Conduct](https://github.com/kibtab/kibtab/blob/main/CODE_OF_CONDUCT.md) | The terms for taking part. |
+| [Security](https://github.com/kibtab/kibtab/blob/main/SECURITY.md) | The private route for a vulnerability. |
 
 The plan in `plan.md` holds the scope for each release.
 Read it before you start a task.
 
 ## Releases
 
-Each release has one file in [the changelog folder](changelogs/).
-The file name holds the version number.
+Each release has one file in the changelog folder.
+Read [the changelog format guide](changelogs/README.md) for the file name
+and the sections.
 The first release file is [the v0.1.0 changelog](changelogs/v0.1.0.md).
 The plan in `plan.md` holds the scope for each version.
 
@@ -123,6 +124,33 @@ Each guide owns one task. Do not copy a step into a second file.
 | [licence.md](licence.md) | The licence terms and the obligations. |
 
 The rules for this file are in the section above.
+
+## Where A Guide Starts
+
+Each entry below is the front page of its guide. Start a read there.
+
+```{toctree}
+:caption: Read this first
+:maxdepth: 1
+:hidden:
+
+install
+self-hosting/README
+architecture
+conventions
+ste100/index
+testing
+releasing
+licence
+```
+
+```{toctree}
+:caption: Take part
+:maxdepth: 1
+:hidden:
+
+changelogs/README
+```
 
 ## Build And Toolchain Documents
 

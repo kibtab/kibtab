@@ -27,7 +27,8 @@ Every cell change is recorded.
 Kibtab is pre-release.
 The first release is v0.1.0.
 No binary is published yet.
-Read [the plan](plan.md) for the scope of each version.
+Read [the plan](https://kibtab.readthedocs.io/en/latest/#releases) for the scope of each version.
+Or read [the plan file](plan.md) in the repository.
 
 ## The Name
 
@@ -50,10 +51,10 @@ Read the guide for your task.
 
 | Task | Guide |
 | --- | --- |
-| Install a binary or build from source | [docs/install.md](docs/install.md) |
-| Run the stack on a server | [docs/self-hosting/](docs/self-hosting/README.md) |
-| Read the layers and the port contract | [docs/architecture.md](docs/architecture.md) |
-| Read the terms | [docs/licence.md](docs/licence.md) |
+| Install a binary or build from source | [the install guide](https://kibtab.readthedocs.io/en/latest/install.html) |
+| Run the stack on a server | [the self-hosting guides](https://kibtab.readthedocs.io/en/latest/self-hosting/README.html) |
+| Read the layers and the port contract | [the architecture guide](https://kibtab.readthedocs.io/en/latest/architecture.html) |
+| Read the terms | [the licence guide](https://kibtab.readthedocs.io/en/latest/licence.html) |
 
 ## Architecture
 
@@ -75,23 +76,23 @@ A new database means one new package under `adapters/driven/`.
 A new spreadsheet means one new client folder.
 Neither changes a file under `internal/core/`.
 
-Read [the architecture guide](docs/architecture.md) for the full design.
+Read [the architecture guide](https://kibtab.readthedocs.io/en/latest/architecture.html) for the full design.
 
 ## Documentation
 
 | Document | Purpose |
 | --- | --- |
-| [Plan](plan.md) | The release plan. It splits the work by version. |
-| [Documentation index](docs/index.md) | The list of every document. |
+| [Plan](https://kibtab.readthedocs.io/en/latest/#releases) | The release plan. It splits the work by version. |
+| [Documentation index](https://kibtab.readthedocs.io/en/latest/) | The list of every document. |
 | [Agent rules](AGENTS.md) | The rules for AI coding agents. |
-| [Conventions](docs/conventions.md) | The code, the documentation, and the scope rules. |
-| [Technical names](docs/ste100/index.md) | The approved technical names for Kibtab. |
-| [Testing](docs/testing.md) | The kinds of test and the coverage rules. |
-| [Releasing](docs/releasing.md) | The version number, the gate, and the release steps. |
-| [Licence](docs/licence.md) | The terms for Kibtab and the skill. |
-| [Third party notices](docs/THIRD_PARTY_NOTICES.md) | The licences of each dependency. |
-| [Changelog format](docs/changelogs/README.md) | The format for each release file. |
-| [Credits](docs/CREDITS.md) | The people, the projects, and the sources. |
+| [Conventions](https://kibtab.readthedocs.io/en/latest/conventions.html) | The code, the documentation, and the scope rules. |
+| [Technical names](https://kibtab.readthedocs.io/en/latest/ste100/index.html) | The approved technical names for Kibtab. |
+| [Testing](https://kibtab.readthedocs.io/en/latest/testing.html) | The kinds of test and the coverage rules. |
+| [Releasing](https://kibtab.readthedocs.io/en/latest/releasing.html) | The version number, the gate, and the release steps. |
+| [Licence](https://kibtab.readthedocs.io/en/latest/licence.html) | The terms for Kibtab and the skill. |
+| [Third party notices](https://kibtab.readthedocs.io/en/latest/THIRD_PARTY_NOTICES.html) | The licences of each dependency. |
+| [Changelog format](https://kibtab.readthedocs.io/en/latest/changelogs/README.html) | The format for each release file. |
+| [Credits](https://kibtab.readthedocs.io/en/latest/CREDITS.html) | The people, the projects, and the sources. |
 | [Contributing](CONTRIBUTING.md) | The steps to send a change. |
 | [Code of Conduct](CODE_OF_CONDUCT.md) | The terms for taking part. |
 | [Security](SECURITY.md) | The private route for a vulnerability. |
@@ -99,20 +100,20 @@ Read [the architecture guide](docs/architecture.md) for the full design.
 Documentation follows two styles at the same time.
 The first style is Simplified Technical English.
 The second style is British English.
-Read [the agent rules](AGENTS.md) section 3 for both.
+Read section 3 of [the agent rules](AGENTS.md) for both.
 
 ## Contributing
 
 Read [the agent rules](AGENTS.md) before you write code.
-Read [the plan](plan.md) before you start a task.
+Read [the plan](https://kibtab.readthedocs.io/en/latest/#releases) before you start a task.
 Each task in the plan is a markdown check box.
 Read [the contributing guide](CONTRIBUTING.md) for the full steps.
 
 Every commit uses Conventional Commits.
-Read [the agent rules](AGENTS.md) section 6 for the format and the scopes.
+Read section 6 of [the agent rules](AGENTS.md) for the format and the scopes.
 
 ## Acknowledgements
 
-Built on the ideas in [the credits](docs/CREDITS.md).
+Built on the ideas in [the credits](https://kibtab.readthedocs.io/en/latest/CREDITS.html).
 The documentation rules come from the vendored
 [SimpleEnglish](https://github.com/AminBlg/SimpleEnglish) skill.

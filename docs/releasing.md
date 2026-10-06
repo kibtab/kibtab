@@ -2,9 +2,9 @@
 
 Version 0.0.0-docs. This document holds the versioning and the release steps.
 
-Read [the agent rules](../AGENTS.md) section 5 for the rules that bind an agent.
+Read section 5 of [the agent rules](https://github.com/kibtab/kibtab/blob/main/AGENTS.md) for the rules that bind an agent.
 Read [the changelog format](changelogs/README.md) for the file layout.
-Read [the plan](../plan.md) for the scope of each version.
+Read [the plan](https://github.com/kibtab/kibtab/blob/main/plan.md) for the scope of each version.
 
 ## The Version Number
 
@@ -30,7 +30,7 @@ Every release passes each check below.
 * `make docs-check` and `make notice-check` report no problem.
 * The module has no dependency that needs a C compiler.
 * The code follows [the conventions guide](conventions.md).
-* The commits follow [the contributing guide](../CONTRIBUTING.md).
+* The commits follow [the contributing guide](https://github.com/kibtab/kibtab/blob/main/CONTRIBUTING.md).
 
 ## The Gate For A Ship
 
@@ -49,7 +49,7 @@ Every release passes each check below.
 * Copy [the changelog template](changelogs/TEMPLATE.md) for the file.
 * Follow [the changelog format](changelogs/README.md) for the sections.
 * Use the commit scope of the component. Read
-  [the contributing guide](../CONTRIBUTING.md) for the scope table.
+  [the contributing guide](https://github.com/kibtab/kibtab/blob/main/CONTRIBUTING.md) for the scope table.
 * Update `docs/index.md` and `docs/CREDITS.md` with the release notes.
 * Update `docs/THIRD_PARTY_NOTICES.md` when a dependency changes.
 
@@ -61,7 +61,7 @@ Sign off each commit with the Developer Certificate of Origin.
 git commit -s -m "feat(db-postgres): add the batch delta validation"
 ```
 
-Read [the contributing guide](../CONTRIBUTING.md) for the full DCO section.
+Read [the contributing guide](https://github.com/kibtab/kibtab/blob/main/CONTRIBUTING.md) for the full DCO section.
 
 ## Cut The Release
 
@@ -92,10 +92,10 @@ It never moves a published tag.
 
 * Publish the announcement.
 * Sign the release artefact.
-* Update [the plan](../plan.md) when the next version opens.
+* Update [the plan](https://github.com/kibtab/kibtab/blob/main/plan.md) when the next version opens.
 
 ## Next Steps
 
 * Read [the changelog format](changelogs/README.md) for the file layout.
 * Read [the upgrade guide](self-hosting/upgrade.md) for an upgrade.
-* Read [the contributing guide](../CONTRIBUTING.md) to send a change.
+* Read [the contributing guide](https://github.com/kibtab/kibtab/blob/main/CONTRIBUTING.md) to send a change.

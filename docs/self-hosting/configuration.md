@@ -9,7 +9,7 @@ Read [the deployment guide](deployment.md) for the first start.
 
 Kibtab is pre-release.
 The settings below arrive with each release.
-Read [the plan](../../plan.md) for the version that adds each setting.
+Read [the plan](https://github.com/kibtab/kibtab/blob/main/plan.md) for the version that adds each setting.
 
 ## The Variables
 

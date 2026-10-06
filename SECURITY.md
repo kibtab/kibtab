@@ -7,7 +7,7 @@ The maintainers take a security issue seriously.
 Report a vulnerability in private.
 Do not open a public issue.
 
-Read [the documentation index](docs/index.md) for every guide.
+Read [the documentation index](https://kibtab.readthedocs.io/en/latest/) for every guide.
 Read [the agent rules](AGENTS.md) before you change code for a report.
 
 ## How To Report
@@ -60,9 +60,9 @@ These reports do not qualify.
 * A brute force attempt against a deployment with no rate limit.
 * A report from an automated scan with no proof.
 
-Read [the architecture guide](docs/architecture.md) for the trust boundary.
-Read [the conventions guide](docs/conventions.md) for the code rules.
-Read [the licence guide](docs/licence.md) for the terms.
+Read [the architecture guide](https://kibtab.readthedocs.io/en/latest/architecture.html) for the trust boundary.
+Read [the conventions guide](https://kibtab.readthedocs.io/en/latest/conventions.html) for the code rules.
+Read [the licence guide](https://kibtab.readthedocs.io/en/latest/licence.html) for the terms.
 
 ## After A Report
 

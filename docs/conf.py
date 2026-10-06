@@ -30,8 +30,10 @@ myst_heading_anchors = 3
 # The build output never counts as a source page.
 exclude_patterns = ["_build"]
 
-# Every page sits outside a toctree at the moment. The warning is expected
-# for now, and each page still builds and stays reachable by link and search.
+# The root document holds the toctree for the guides and the reference
+# pages. The changelog release files, the notices, and the credits sit
+# outside it, so Sphinx warns for each of those. The warning is silenced;
+# each page still builds and stays reachable by link and search.
 suppress_warnings = ["toc.not_included"]
 
 # -- HTML output (Furo theme) ------------------------------------------------

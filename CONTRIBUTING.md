@@ -14,16 +14,16 @@ Each document holds its own rules. Do not work from this guide alone.
 
 | Reader | Read |
 | --- | --- |
-| A person | [the documentation index](docs/index.md). It lists every guide. |
+| A person | [the documentation index](https://kibtab.readthedocs.io/en/latest/). It lists every guide. |
 | An AI agent | [the agent rules](AGENTS.md). They bind an agent. |
 | A person who commits | [the commit format](#the-commit-message) below. |
-| A person who tests | [the testing guide](docs/testing.md). |
-| A person who releases | [the releasing guide](docs/releasing.md). |
-| A person who writes words | [the conventions guide](docs/conventions.md). |
-| A person who adds a term | [the catalogue](docs/ste100/index.md). |
+| A person who tests | [the testing guide](https://kibtab.readthedocs.io/en/latest/testing.html). |
+| A person who releases | [the releasing guide](https://kibtab.readthedocs.io/en/latest/releasing.html). |
+| A person who writes words | [the conventions guide](https://kibtab.readthedocs.io/en/latest/conventions.html). |
+| A person who adds a term | [the catalogue](https://kibtab.readthedocs.io/en/latest/ste100/index.html). |
 
 This guide holds the steps to send a change.
-The [documentation index](docs/index.md) holds the detail of each topic.
+The [documentation index](https://kibtab.readthedocs.io/en/latest/) holds the detail of each topic.
 The [agent rules](AGENTS.md) hold the rules that bind an AI agent.
 
 ## Ways To Contribute
@@ -40,13 +40,13 @@ These contributions all matter.
 
 ## Before You Start
 
-Read [the plan](plan.md). It holds the scope of each version.
+Read [the plan](https://kibtab.readthedocs.io/en/latest/#releases). It holds the scope of each version.
 
 Every task in the plan is a markdown check box.
 Pick an open box. Read the version that owns it.
 Stay inside that version.
 
-Read [the architecture guide](docs/architecture.md) before you move code.
+Read [the architecture guide](https://kibtab.readthedocs.io/en/latest/architecture.html) before you move code.
 It holds the layer rules and the port contract.
 
 ## Set Up
@@ -83,8 +83,8 @@ Search the open and closed issues before you open a new one.
 ## The Changelog
 
 Each release has one file at `docs/changelogs/vX.Y.Z.md`.
-Read [the changelog format](docs/changelogs/README.md) before you write one.
-Copy [the changelog template](docs/changelogs/TEMPLATE.md) first.
+Read [the changelog format](https://kibtab.readthedocs.io/en/latest/changelogs/README.html) before you write one.
+Copy [the changelog template file](docs/changelogs/TEMPLATE.md) first.
 
 ## The Commit Message
 
@@ -188,7 +188,7 @@ Read docs/changelogs/v2.0.0.md before you upgrade.
 
 The module aims for 100% coverage. Every line and every branch needs a test.
 
-Read [the testing guide](docs/testing.md) for the full rules.
+Read [the testing guide](https://kibtab.readthedocs.io/en/latest/testing.html) for the full rules.
 It holds the kinds of test, the suites, and the coverage rules.
 
 Read the coverage before you send the change.
@@ -203,11 +203,11 @@ The floor is 100.
 Never lower the floor to make a build pass.
 Never skip a test to make a build pass.
 
-Read [the agent rules](AGENTS.md) section 4 for the rules that bind an agent.
+Read section 4 of [the agent rules](AGENTS.md) for the rules that bind an agent.
 
 ## The Rules For A Change
 
-Read [the conventions guide](docs/conventions.md) for the full rules.
+Read [the conventions guide](https://kibtab.readthedocs.io/en/latest/conventions.html) for the full rules.
 It holds the code rules, the layer rules, and the database rules.
 
 The rules that most often catch a change:
@@ -219,9 +219,9 @@ The rules that most often catch a change:
 * Wrap a multi-cell update in one transaction.
 * Set `CGO_ENABLED=0` in every build and test command.
 * Write the documentation in Simplified Technical English and British English.
-  Read [the agent rules](AGENTS.md) section 3 for both.
+  Read section 3 of [the agent rules](AGENTS.md) for both.
 
-Read [the agent rules](AGENTS.md) section 7 for the scope rules.
+Read section 7 of [the agent rules](AGENTS.md) for the scope rules.
 
 ## Run The Checks
 
@@ -244,7 +244,7 @@ make notice-check
 ```
 
 Read `make help` for the full list of targets.
-Read the gate rules in [the agent rules](AGENTS.md) section 5.
+Read the gate rules in section 5 of [the agent rules](AGENTS.md).
 
 ## Pull Requests
 
@@ -291,9 +291,9 @@ Each guide owns one task.
 A step lives in one file only.
 A section of many files has an index that links each file.
 
-Read [the conventions guide](docs/conventions.md) for the documentation rules.
+Read [the conventions guide](https://kibtab.readthedocs.io/en/latest/conventions.html) for the documentation rules.
 It holds the documentation layout and the writing styles.
-Read [the documentation index](docs/index.md) for the list of each guide.
+Read [the documentation index](https://kibtab.readthedocs.io/en/latest/) for the list of each guide.
 
 * Add a guide beside the task that it covers.
 * Add the link to the index in the same commit.
@@ -315,4 +315,4 @@ Read [the security policy](SECURITY.md) for the private route.
 
 A contribution uses the Apache License 2.0.
 Do not send a licence change.
-Read [the licence guide](docs/licence.md) for the terms.
+Read [the licence guide](https://kibtab.readthedocs.io/en/latest/licence.html) for the terms.

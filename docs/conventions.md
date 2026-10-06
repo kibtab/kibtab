@@ -2,8 +2,8 @@
 
 Version 0.0.0-docs. This document holds the conventions for the Kibtab codebase.
 
-Read [the agent rules](../AGENTS.md) for the rules that bind an agent.
-Read [the contributing guide](../CONTRIBUTING.md) for the steps to send a change.
+Read [the agent rules](https://github.com/kibtab/kibtab/blob/main/AGENTS.md) for the rules that bind an agent.
+Read [the contributing guide](https://github.com/kibtab/kibtab/blob/main/CONTRIBUTING.md) for the steps to send a change.
 Read [the architecture guide](architecture.md) for the tree and the ports.
 
 ## Writing Code
@@ -146,14 +146,14 @@ Run this before you send a change for review.
 
 1. Name the one thing the change does. Stop when you need a second verb.
 2. Name the layer that owns the change. Stop when you need a second layer.
-3. Name the version in [the plan](../plan.md) that holds the change.
+3. Name the version in [the plan](https://github.com/kibtab/kibtab/blob/main/plan.md) that holds the change.
 4. Read the diff. Remove each hunk that serves a second purpose.
 5. Check that the commit message names that one thing.
 
 ## The RTFM Rules
 
 * Read the file before you change it. Read the whole file.
-* Read [the plan](../plan.md) before you start.
+* Read [the plan](https://github.com/kibtab/kibtab/blob/main/plan.md) before you start.
 * Search for the answer before you ask. Then search for the question.
 * When a rule has no answer in the repository, write the rule first.
 
@@ -174,4 +174,4 @@ Run this before you send a change for review.
 * Read [the architecture guide](architecture.md) for the tree and the ports.
 * Read [the testing guide](testing.md) for the tests and the coverage.
 * Read [the releasing guide](releasing.md) for the version and the gate.
-* Read [the contributing guide](../CONTRIBUTING.md) to send a change.
+* Read [the contributing guide](https://github.com/kibtab/kibtab/blob/main/CONTRIBUTING.md) to send a change.

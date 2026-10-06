@@ -2,8 +2,8 @@
 
 Version 0.0.0-docs. This document holds the rules for tests and for coverage.
 
-Read [the agent rules](../AGENTS.md) section 4 for the rules that bind an agent.
-Read [the contributing guide](../CONTRIBUTING.md) for the steps to send a change.
+Read section 4 of [the agent rules](https://github.com/kibtab/kibtab/blob/main/AGENTS.md) for the rules that bind an agent.
+Read [the contributing guide](https://github.com/kibtab/kibtab/blob/main/CONTRIBUTING.md) for the steps to send a change.
 
 ## The Coverage Aim
 
@@ -90,4 +90,4 @@ Keep them thin so the gap stays small.
 
 * Read [the conventions guide](conventions.md) for the code rules.
 * Read [the architecture guide](architecture.md) for the tree and the ports.
-* Read [the contributing guide](../CONTRIBUTING.md) to send a change.
+* Read [the contributing guide](https://github.com/kibtab/kibtab/blob/main/CONTRIBUTING.md) to send a change.
