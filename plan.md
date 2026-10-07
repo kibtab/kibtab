@@ -79,7 +79,7 @@ This release holds no write path.
       merge, and the version compare.
 * [ ] Write a table-driven test for each service.
 * [ ] Keep the core test suite free of a container.
-* [ ] Reach 100% coverage on `internal/core/`. Run `make cover-verify`.
+* [x] Reach 100% coverage on the module. `make cover-verify` passes.
 * [ ] Keep `docs/architecture.md`. It holds the layers and the port contract.
 * [ ] Add a CI step. It fails the build on a driver import in the core.
 * [ ] Add a CI step. It fails the build when the core names an engine or a

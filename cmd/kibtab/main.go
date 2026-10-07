@@ -10,7 +10,9 @@ package main
 
 import (
 	"encoding/json"
+	"io"
 	"log"
+	"net"
 	"net/http"
 	"os"
 	"strconv"
@@ -81,22 +83,41 @@ func (e errMissingDatabaseURL) Error() string {
 	return "DATABASE_URL is not set"
 }
 
-func main() {
-	getenv := os.Getenv
-	if _, err := listenAddress(getenv); err != nil {
-		log.Fatalf("config: %v", err)
+// newMux builds the HTTP routes of the instance.
+func newMux() *http.ServeMux {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/healthz", healthzHandler)
+	return mux
+}
+
+// run wires the adapters and it serves the instance. It returns the error
+// from serve. The command logs the error and it exits.
+func run(getenv func(string) string, stderr io.Writer) error {
+	log.SetOutput(stderr)
+	address, err := listenAddress(getenv)
+	if err != nil {
+		return err
 	}
 	if err := checkDatabaseURL(getenv); err != nil {
 		log.Printf("config: %v", err)
 	}
-	mux := http.NewServeMux()
-	mux.HandleFunc("/healthz", healthzHandler)
-	address, err := listenAddress(getenv)
+	listener, err := net.Listen("tcp", address)
 	if err != nil {
-		log.Fatalf("config: %v", err)
+		return err
 	}
-	log.Printf("kibtab %s listens on http://%s", version, address)
-	if err := http.ListenAndServe(address, mux); err != nil {
-		log.Fatalf("serve: %v", err)
+	log.Printf("kibtab %s listens on http://%s", version, listener.Addr().String())
+	return serve(listener, newMux())
+}
+
+// serve holds the serve call of the standard library. The test replaces it.
+var serve = http.Serve
+
+// exit ends the process. The test replaces it.
+var exit = os.Exit
+
+func main() {
+	if err := run(os.Getenv, os.Stderr); err != nil {
+		log.Printf("serve: %v", err)
+		exit(1)
 	}
 }
