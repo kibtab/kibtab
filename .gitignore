@@ -1,6 +1,7 @@
 # Build output
 bin/
 dist/
+kibtab
 
 # Test and coverage output
 coverage.out

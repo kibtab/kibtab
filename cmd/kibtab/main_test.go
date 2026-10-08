@@ -141,20 +141,28 @@ func (w failingWriter) Write([]byte) (int, error) {
 }
 
 func TestNewMuxServesHealthz(t *testing.T) {
-	server := httptest.NewServer(newMux())
-	t.Cleanup(server.Close)
+	ts := httptest.NewServer(newMux())
+	t.Cleanup(ts.Close)
 
-	response, err := http.Get(server.URL + "/healthz")
+	response, err := http.Get(ts.URL + "/healthz")
 	if err != nil {
 		t.Fatalf("get /healthz: %v", err)
 	}
-	defer response.Body.Close()
 	if response.StatusCode != http.StatusOK {
+		if err := response.Body.Close(); err != nil {
+			t.Fatalf("close response body: %v", err)
+		}
 		t.Fatalf("status code: got %d, want %d", response.StatusCode, http.StatusOK)
 	}
-	var body healthResponse
+	body := healthResponse{}
 	if err := json.NewDecoder(response.Body).Decode(&body); err != nil {
+		if err := response.Body.Close(); err != nil {
+			t.Fatalf("close response body: %v", err)
+		}
 		t.Fatalf("decode body: %v", err)
+	}
+	if err := response.Body.Close(); err != nil {
+		t.Fatalf("close response body: %v", err)
 	}
 	if body.Status != "ok" || body.Version != version {
 		t.Fatalf("body: got %+v, want status ok and version %q", body, version)
@@ -168,7 +176,9 @@ func TestRunServesHealthCheck(t *testing.T) {
 	}
 	address := listener.Addr().String()
 	port := strings.TrimPrefix(address, "127.0.0.1:")
-	listener.Close()
+	if err := listener.Close(); err != nil {
+		t.Fatalf("close the reserved port: %v", err)
+	}
 
 	getenv := func(key string) string {
 		if key == "PORT" {
@@ -205,15 +215,21 @@ func TestRunServesHealthCheck(t *testing.T) {
 		t.Fatalf("get /healthz from the bound port: %v", err)
 	}
 	if response.StatusCode != http.StatusOK {
-		response.Body.Close()
+		if err := response.Body.Close(); err != nil {
+			t.Fatalf("close response body: %v", err)
+		}
 		t.Fatalf("status code: got %d, want %d", response.StatusCode, http.StatusOK)
 	}
 	var body healthResponse
 	if err := json.NewDecoder(response.Body).Decode(&body); err != nil {
-		response.Body.Close()
+		if err := response.Body.Close(); err != nil {
+			t.Fatalf("close response body: %v", err)
+		}
 		t.Fatalf("decode body: %v", err)
 	}
-	response.Body.Close()
+	if err := response.Body.Close(); err != nil {
+		t.Fatalf("close response body: %v", err)
+	}
 	if body.Status != "ok" || body.Version != version {
 		t.Fatalf("body: got %+v, want status ok and version %q", body, version)
 	}
@@ -248,24 +264,43 @@ func TestRunRejectsBadConfig(t *testing.T) {
 }
 
 func TestRunRejectsBindConflict(t *testing.T) {
-	held, err := net.Listen("tcp", "127.0.0.1:0")
-	if err != nil {
+	if port, err := listenAddressPortOnly(); err != nil {
+		t.Fatalf("reserve a port: %v", err)
+	} else if err := occupyPort(t, port); err != nil {
 		t.Fatalf("hold a port: %v", err)
-	}
-	defer held.Close()
-	address := held.Addr().String()
-	port := strings.TrimPrefix(address, "127.0.0.1:")
-
-	getenv := func(key string) string {
-		if key == "PORT" {
-			return port
+	} else {
+		getenv := func(_ string) string { return port }
+		if err := run(getenv, io.Discard); err == nil {
+			t.Fatal("a held port: got no error, want a bind conflict")
 		}
-		return ""
 	}
-	err = run(getenv, io.Discard)
-	if err == nil {
-		t.Fatal("a held port: got no error, want a bind conflict")
+}
+
+// listenAddressPortOnly opens a temporary port and returns the port number
+// without holding the listener open.
+func listenAddressPortOnly() (string, error) {
+	l, err := net.Listen("tcp", "127.0.0.1:0")
+	if err != nil {
+		return "", err
 	}
+	port := strings.TrimPrefix(l.Addr().String(), "127.0.0.1:")
+	if err := l.Close(); err != nil {
+		return "", err
+	}
+	return port, nil
+}
+
+// occupyPort starts a short-lived listener on the test port so run sees a
+// bind conflict. The listener lives for the rest of the function because a
+// closed port can be re-bound before run calls net.Listen.
+func occupyPort(t testing.TB, port string) error {
+	t.Helper()
+	l, err := net.Listen("tcp", "127.0.0.1:"+port)
+	if err != nil {
+		return err
+	}
+	t.Cleanup(func() { _ = l.Close() })
+	return nil
 }
 
 // TestMainProvesTheWiringExitsOnAServeFailure. The test replaces the exit
@@ -281,7 +316,9 @@ func TestRunReturnsTheServeError(t *testing.T) {
 		t.Fatalf("reserve a port: %v", err)
 	}
 	port := strings.TrimPrefix(listener.Addr().String(), "127.0.0.1:")
-	listener.Close()
+	if err := listener.Close(); err != nil {
+		t.Fatalf("close the reserved port: %v", err)
+	}
 
 	getenv := func(key string) string {
 		if key == "PORT" {
@@ -304,7 +341,9 @@ func TestRunReturnsNoErrorAfterAServedSession(t *testing.T) {
 		t.Fatalf("reserve a port: %v", err)
 	}
 	port := strings.TrimPrefix(listener.Addr().String(), "127.0.0.1:")
-	listener.Close()
+	if err := listener.Close(); err != nil {
+		t.Fatalf("close the reserved port: %v", err)
+	}
 
 	getenv := func(key string) string {
 		if key == "PORT" {
