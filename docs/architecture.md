@@ -1,6 +1,6 @@
 # Architecture
 
-Version 0.0.0-docs. This document holds the design of Kibtab.
+Version 0.2.0. This document holds the design of Kibtab.
 It holds the layer rules and the port contract.
 
 This document holds the canonical layout and the canonical port table.

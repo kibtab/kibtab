@@ -70,20 +70,7 @@ This release holds no write path.
 
 ### Scope
 
-* [ ] Add `internal/core/domain/`. It holds `TableMetadata`, `CellValue`,
-      `CellDelta`, `SyncPayload`, `SyncResult`, and `ValidationError`.
-* [ ] Add `internal/core/ports/`. It holds `RowRepository`, `TableRegistry`,
-      `AuditWriter`, `Dialect`, `TransactionRunner`, `Clock`, and
-      `SyncService`.
-* [ ] Add `internal/core/services/`. It holds the validation, the batch
-      merge, and the version compare.
-* [ ] Write a table-driven test for each service.
-* [ ] Keep the core test suite free of a container.
-* [x] Reach 100% coverage on the module. `make cover-verify` passes.
-* [ ] Keep `docs/architecture.md`. It holds the layers and the port contract.
-* [ ] Add a CI step. It fails the build on a driver import in the core.
-* [ ] Add a CI step. It fails the build when the core names an engine or a
-      client.
+Implemented, see [v0.2.0 changelog](docs/changelogs/v0.2.0.md).
 
 ### Out Of Scope
 
@@ -92,9 +79,9 @@ This release holds no HTTP.
 
 ### Done When
 
-* [ ] `CGO_ENABLED=0 go test ./internal/core/...` passes with no database.
-* [ ] The CI step finds no driver import in `internal/core/`.
-* [ ] `docs/changelogs/v0.2.0.md` exists.
+* [x] `CGO_ENABLED=0 go test ./internal/core/...` passes with no database.
+* [x] The CI step finds no driver import in `internal/core/`.
+* [x] `docs/changelogs/v0.2.0.md` exists.
 
 ## 4. Release v0.3.0 - PostgreSQL Adapter
 
