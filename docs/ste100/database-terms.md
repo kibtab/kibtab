@@ -78,6 +78,15 @@ Read [the catalogue](index.md) first.
 - **Correct Example:** *Each **engine** runs in its own adapter package.*
 - **Incorrect Example:** *Each database runs in its own adapter package.*
 
+## Technical Name: ValidationError
+- **Part of Speech:** Noun
+- **Category:** Database Term
+- **Definition:** A domain error that names a rejected cell value.
+- **Approved Form:** ValidationError (singular), ValidationErrors (plural)
+- **Do Not Use:** CellError, WriteError, BadValue
+- **Correct Example:** *The service returns a **ValidationError** for an invalid cell.*
+- **Incorrect Example:** *The service returns a cell error for an invalid cell.*
+
 ## Technical Name: Dialect
 - **Part of Speech:** Noun
 - **Category:** Database Term
@@ -95,6 +104,42 @@ Read [the catalogue](index.md) first.
 - **Do Not Use:** History Row, Log Entry, Journal Entry, Trace
 - **Correct Example:** *The instance writes one **audit row** for each cell change.*
 - **Incorrect Example:** *The instance writes one history row for each cell change.*
+
+## Technical Name: Delta
+- **Part of Speech:** Noun
+- **Category:** Database Term
+- **Definition:** The set of cell changes that a client sends to the instance.
+- **Approved Form:** Delta (singular), Deltas (plural)
+- **Do Not Use:** Batch, Change Set, Patch, Mutation
+- **Correct Example:** *The instance validates each **delta** before it writes.*
+- **Incorrect Example:** *The instance validates each change set before it writes.*
+
+## Technical Name: Cell Value
+- **Part of Speech:** Noun
+- **Category:** Database Term
+- **Definition:** One stored value in a cell. It belongs to a row and a field.
+- **Approved Form:** Cell Value (singular), Cell Values (plural)
+- **Do Not Use:** Field Value, Column Value, Payload Value
+- **Correct Example:** *The repository returns each **cell value** as a string.*
+- **Incorrect Example:** *The repository returns each field value as a string.*
+
+## Technical Name: Table Metadata
+- **Part of Speech:** Noun
+- **Category:** Database Term
+- **Definition:** The name, field list, and current version of one table.
+- **Approved Form:** Table Metadata (singular), Table Metadata (plural)
+- **Do Not Use:** Table Schema, Table Description, Table Info
+- **Correct Example:** *The registry returns the **table metadata** for one table.*
+- **Incorrect Example:** *The registry returns the table schema for one table.*
+
+## Technical Name: Sync Result
+- **Part of Speech:** Noun
+- **Category:** Database Term
+- **Definition:** The result that the instance returns after a sync.
+- **Approved Form:** Sync Result (singular), Sync Results (plural)
+- **Do Not Use:** Sync Reply, Sync Response, Sync Status
+- **Correct Example:** *The sync result holds the new **version** for each row.*
+- **Incorrect Example:** *The sync reply holds the new revision for each row.*
 
 ## Next Steps
 

@@ -34,3 +34,15 @@ jobs:
         run: go vet ./...
       - name: Test
         run: go test ./...
+      - name: Fail when the core imports a driver
+        run: |
+          if grep -Rn "internal/adapters" internal/core/; then
+            echo "internal/core/ must not import an adapter" >&2
+            exit 1
+          fi
+      - name: Fail when the core names an engine or a client
+        run: |
+          if grep -En "\b(postgres|duckdb|excel|sheets|local|http)\b" internal/core/; then
+            echo "internal/core/ must not name a database engine or a spreadsheet client" >&2
+            exit 1
+          fi

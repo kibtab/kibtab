@@ -65,8 +65,17 @@ Read [the catalogue](index.md) first.
 - **Definition:** The difference between two versions of a range.
 - **Approved Form:** Delta (singular), Deltas (plural)
 - **Do Not Use:** Change, Difference, Patch, Edit
-- **Correct Example:** *The instance rejects a **delta** from an old version.*
-- **Incorrect Example:** *The instance rejects a change from an old version.*
+- **Correct Example:** *The client sends the **delta** that the user changed.*
+- **Incorrect Example:** *The client sends the change that the user changed.*
+
+## Technical Name: Sync Payload
+- **Part of Speech:** Noun
+- **Category:** Spreadsheet Term
+- **Definition:** The delta and the table name that a client sends in one request.
+- **Approved Form:** Sync Payload (singular), Sync Payloads (plural)
+- **Do Not Use:** Sync Body, Sync Request, Sync Message
+- **Correct Example:** *The client sends one **sync payload** per change batch.*
+- **Incorrect Example:** *The client sends one sync body per change batch.*
 
 ## Technical Name: Client
 - **Part of Speech:** Noun

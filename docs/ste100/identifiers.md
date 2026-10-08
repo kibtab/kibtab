@@ -69,6 +69,60 @@ Read [the catalogue](index.md) first.
 - **Correct Example:** *The core declares `SyncService` in `services/`.*
 - **Incorrect Example:** *The core declares `SyncHandler` in `services/`.*
 
+## Technical Name: TableMetadata
+- **Part of Speech:** Noun
+- **Category:** Identifier
+- **Definition:** The domain model that holds the name, fields, and version of one table.
+- **Approved Form:** TableMetadata
+- **Do Not Use:** TableMeta, TableInfo, TableDescription
+- **Correct Example:** *The core declares `TableMetadata` in `domain/`.*
+- **Incorrect Example:** *The core declares `TableMeta` in `domain/`.*
+
+## Technical Name: CellValue
+- **Part of Speech:** Noun
+- **Category:** Identifier
+- **Definition:** The domain model that holds one cell value and its field name.
+- **Approved Form:** CellValue
+- **Do Not Use:** Cell, FieldValue, CellData
+- **Correct Example:** *The core declares `CellValue` in `domain/`.*
+- **Incorrect Example:** *The core declares `Cell` in `domain/`.*
+
+## Technical Name: CellDelta
+- **Part of Speech:** Noun
+- **Category:** Identifier
+- **Definition:** The domain model that holds one cell change in a sync payload.
+- **Approved Form:** CellDelta
+- **Do Not Use:** CellChange, CellEdit, CellPatch
+- **Correct Example:** *The core declares `CellDelta` in `domain/`.*
+- **Incorrect Example:** *The core declares `CellChange` in `domain/`.*
+
+## Technical Name: SyncPayload
+- **Part of Speech:** Noun
+- **Category:** Identifier
+- **Definition:** The domain model that holds a table name and a delta from a client.
+- **Approved Form:** SyncPayload
+- **Do Not Use:** SyncRequest, DeltaPayload, TableDelta
+- **Correct Example:** *The core declares `SyncPayload` in `domain/`.*
+- **Incorrect Example:** *The core declares `SyncRequest` in `domain/`.*
+
+## Technical Name: SyncResult
+- **Part of Speech:** Noun
+- **Category:** Identifier
+- **Definition:** The domain model that holds the result after a sync.
+- **Approved Form:** SyncResult
+- **Do Not Use:** SyncResponse, SyncReply, SyncStatus
+- **Correct Example:** *The core declares `SyncResult` in `domain/`.*
+- **Incorrect Example:** *The core declares `SyncResponse` in `domain/`.*
+
+## Technical Name: ValidationError
+- **Part of Speech:** Noun
+- **Category:** Identifier
+- **Definition:** The domain error that names a rejected cell value.
+- **Approved Form:** ValidationError
+- **Do Not Use:** CellError, WriteError, BadValueError
+- **Correct Example:** *The core declares `ValidationError` in `domain/`.*
+- **Incorrect Example:** *The core declares `CellError` in `domain/`.*
+
 ## Technical Name: kibtab
 - **Part of Speech:** Noun
 - **Category:** Identifier

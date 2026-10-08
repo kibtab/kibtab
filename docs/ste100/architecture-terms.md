@@ -68,6 +68,15 @@ Read [the catalogue](index.md) first.
 - **Correct Example:** *The sync **service** checks the version before it writes.*
 - **Incorrect Example:** *The sync use case checks the version before it writes.*
 
+## Technical Name: Domain Model
+- **Part of Speech:** Noun
+- **Category:** Architecture Term
+- **Definition:** A pure Go type in the core. It names no engine and no client.
+- **Approved Form:** Domain Model (singular), Domain Models (plural)
+- **Do Not Use:** Domain Object, Entity, Value Object
+- **Correct Example:** *The core holds a **domain model** for a table.*
+- **Incorrect Example:** *The core holds a domain object for a table.*
+
 ## Technical Name: Repository
 - **Part of Speech:** Noun
 - **Category:** Architecture Term
