@@ -41,23 +41,6 @@ archives:
       - docs/THIRD_PARTY_NOTICES.md
       - docs/licence.md
 
-dockers:
-  - id: kibtab
-    goos: linux
-    goarch: amd64
-    dockerfile: Dockerfile
-    image_templates:
-      - "kibtab/kibtab:{{ .Version }}-amd64"
-      - "kibtab/kibtab:latest"
-    # The build stage sets CGO_ENABLED=0, so the image needs no libc.
-    use: buildx
-    build_flag_templates:
-      - "--platform=linux/amd64"
-      - "--label=org.opencontainers.image.title={{ .ProjectName }}"
-      - "--label=org.opencontainers.image.version={{ .Version }}"
-      - "--label=org.opencontainers.image.revision={{ .FullCommit }}"
-      - "--label=org.opencontainers.image.licenses=Apache-2.0"
-
 source:
   enabled: true
 

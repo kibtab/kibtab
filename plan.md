@@ -107,6 +107,8 @@ This release holds no HTTP.
 * [ ] Add an integration test. It writes a row and reads it back.
 * [ ] Cover every error path in the adapter. Cover each boundary case.
 * [ ] Add the row for `pgx/v5` to `docs/THIRD_PARTY_NOTICES.md`.
+* [x] Remove the `dockers` build from `.goreleaser.yaml`. The `Dockerfile`
+      lands in v0.8.0.
 
 ### Out Of Scope
 
