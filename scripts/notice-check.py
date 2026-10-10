@@ -3,7 +3,11 @@
 
 The script parses the require blocks of go.mod and the Go Dependencies
 table of the notices. It fails when a module misses a row, when a row
-misses a version, or when the versions disagree.
+names no release, or when a row has too few cells.
+
+The notices table names the release that first ships each dependency. The
+`go.mod` file holds the exact module version, so the script does not
+compare module versions.
 
 Usage:
 
@@ -15,6 +19,9 @@ import sys
 
 GO_MOD = "go.mod"
 NOTICES = "docs/THIRD_PARTY_NOTICES.md"
+
+# A Kibtab release version, such as v0.3.0.
+RELEASE = re.compile(r"^v\d+\.\d+\.\d+$")
 
 # One require line of go.mod, without the indirect marker.
 REQUIRE = re.compile(r"^\s+([A-Za-z0-9._/-]+)\s+(v\d[^ \t]*)\s*//\s*indirect")
@@ -36,11 +43,11 @@ def read_go_mod():
 
 
 def read_notices():
-    """Return the module rows of the notices as {module: version}.
+    """Return the module rows of the notices as {module: release}.
 
-    The version sits in the First version column. It reads vX.Y.Z for a
+    The release sits in the First version column. It reads vX.Y.Z for a
     release. A row for a dependency that no release holds yet is allowed
-    and carries no module version, so it maps to None.
+    and carries no release, so it maps to None.
     """
     rows = {}
     in_go_table = False
@@ -74,22 +81,19 @@ def main():
     go_mod = read_go_mod()
     notices = read_notices()
     problems = 0
-    for module, version in sorted(go_mod.items()):
+    # Each module in go.mod needs a row in the notices.
+    for module in sorted(go_mod):
         if module not in notices:
             print(f"{GO_MOD}: {module} has no row in {NOTICES}")
             problems += 1
-    for module, first_version in sorted(notices.items()):
-        if first_version in (None, "", "None"):
-            continue
+    # A row for a shipped module must name the release that first ships it.
+    for module, release in sorted(notices.items()):
         if module not in go_mod:
-            # The row names a dependency of a later release. The table
-            # holds the plan for v0.1.0 to v1.0.0, so this is expected.
+            # The row names a dependency of a later release.
             continue
-        current = go_mod[module]
-        if current != first_version and not first_version.startswith("v0.0.0"):
+        if not RELEASE.match(release):
             print(
-                f"{NOTICES}: {module} row states {first_version}, "
-                f"go.mod states {current}"
+                f"{NOTICES}: {module} row must name the release, got {release!r}"
             )
             problems += 1
     print(f"checked {len(go_mod)} go.mod module(s) against "
