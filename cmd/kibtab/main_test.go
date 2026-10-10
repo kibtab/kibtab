@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"io"
@@ -332,6 +333,37 @@ func TestRunReturnsTheServeError(t *testing.T) {
 	}
 }
 
+func TestRunReturnsNetListenError(t *testing.T) {
+	original := newEngine
+	t.Cleanup(func() { newEngine = original })
+
+	newEngine = func(_ context.Context, _ func(string) string) (dbEngine, error) {
+		return &fakeEngine{}, nil
+	}
+
+	listener, err := net.Listen("tcp", "127.0.0.1:0")
+	if err != nil {
+		t.Fatalf("reserve a port: %v", err)
+	}
+	t.Cleanup(func() { _ = listener.Close() })
+	port := strings.TrimPrefix(listener.Addr().String(), "127.0.0.1:")
+
+	getenv := func(key string) string {
+		if key == "PORT" {
+			return port
+		}
+		if key == "DATABASE_URL" {
+			return "postgres://localhost/kibtab"
+		}
+		return ""
+	}
+
+	err = run(getenv, io.Discard)
+	if err == nil {
+		t.Fatal("a held port: got no error, want a bind conflict")
+	}
+}
+
 func TestRunReturnsNoErrorAfterAServedSession(t *testing.T) {
 	serve = func(net.Listener, http.Handler) error { return nil }
 	t.Cleanup(func() { serve = http.Serve })
@@ -391,5 +423,114 @@ func TestCheckDatabaseURL(t *testing.T) {
 				t.Fatalf("set DATABASE_URL: unexpected error: %v", err)
 			}
 		})
+	}
+}
+
+// fakeEngine is a test double for dbEngine.
+type fakeEngine struct {
+	migrateErr error
+	closeErr   error
+	migrated   bool
+	closed     bool
+}
+
+func (f *fakeEngine) Migrate(_ context.Context) error {
+	f.migrated = true
+	return f.migrateErr
+}
+
+func (f *fakeEngine) Close() error {
+	f.closed = true
+	return f.closeErr
+}
+
+func TestRunCreatesEngineAndMigrates(t *testing.T) {
+	serve = func(net.Listener, http.Handler) error { return nil }
+	t.Cleanup(func() { serve = http.Serve })
+
+	original := newEngine
+	t.Cleanup(func() { newEngine = original })
+
+	fake := &fakeEngine{}
+	newEngine = func(_ context.Context, _ func(string) string) (dbEngine, error) {
+		return fake, nil
+	}
+
+	listener, err := net.Listen("tcp", "127.0.0.1:0")
+	if err != nil {
+		t.Fatalf("reserve a port: %v", err)
+	}
+	port := strings.TrimPrefix(listener.Addr().String(), "127.0.0.1:")
+	if err := listener.Close(); err != nil {
+		t.Fatalf("close the reserved port: %v", err)
+	}
+
+	getenv := func(key string) string {
+		if key == "PORT" {
+			return port
+		}
+		if key == "DATABASE_URL" {
+			return "postgres://localhost/kibtab"
+		}
+		return ""
+	}
+
+	var logBuffer bytes.Buffer
+	err = run(getenv, &logBuffer)
+	if err != nil {
+		t.Fatalf("run with DATABASE_URL: unexpected error: %v", err)
+	}
+	if !fake.migrated {
+		t.Fatal("engine was not migrated")
+	}
+	if !fake.closed {
+		t.Fatal("engine was not closed")
+	}
+}
+
+func TestRunReturnsMigrationError(t *testing.T) {
+	original := newEngine
+	t.Cleanup(func() { newEngine = original })
+
+	migrationErr := errors.New("migration failed")
+	newEngine = func(_ context.Context, _ func(string) string) (dbEngine, error) {
+		return &fakeEngine{migrateErr: migrationErr}, nil
+	}
+
+	getenv := func(key string) string {
+		if key == "DATABASE_URL" {
+			return "postgres://localhost/kibtab"
+		}
+		return ""
+	}
+
+	err := run(getenv, io.Discard)
+	if !errors.Is(err, migrationErr) {
+		t.Fatalf("run with migration error: got %v, want %v", err, migrationErr)
+	}
+}
+
+func TestRunReturnsEngineCreationError(t *testing.T) {
+	original := newEngine
+	t.Cleanup(func() { newEngine = original })
+
+	creationErr := errors.New("engine creation failed")
+	newEngine = func(_ context.Context, _ func(string) string) (dbEngine, error) {
+		return nil, creationErr
+	}
+
+	getenv := func(key string) string {
+		if key == "PORT" {
+			return "8080"
+		}
+		if key == "DATABASE_URL" {
+			return "postgres://localhost/kibtab"
+		}
+		return ""
+	}
+
+	err := run(getenv, io.Discard)
+	if !errors.Is(err, creationErr) {
+		t.Fatalf("run with engine error: got %v, want %v", err, creationErr)
 	}
 }

@@ -4,18 +4,22 @@
 // Release v0.1.0 starts the instance and it answers a health check.
 //
 // The command reads PORT for the listen address and DATABASE_URL for the
-// database. Release v0.3.0 connects to the database. This release reads
-// the address and it reports when the address is empty.
+// database. Release v0.3.0 connects to the database. It reads the address,
+// it creates the PostgreSQL engine, and it runs the migrations at start.
 package main
 
 import (
+	"context"
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"net"
 	"net/http"
 	"os"
 	"strconv"
+
+	"github.com/kibtab/kibtab/internal/adapters/driven/postgres"
 )
 
 // version is the Kibtab version. The plan in plan.md holds the releases.
@@ -83,6 +87,18 @@ func (e errMissingDatabaseURL) Error() string {
 	return "DATABASE_URL is not set"
 }
 
+// dbEngine is the minimal interface that run needs from the database engine.
+type dbEngine interface {
+	Migrate(ctx context.Context) error
+	Close() error
+}
+
+// newEngine is the seam for creating the PostgreSQL engine.
+// The test replaces it with a fake.
+var newEngine = func(ctx context.Context, getenv func(string) string) (dbEngine, error) {
+	return postgres.NewEngine(ctx, getenv)
+}
+
 // newMux builds the HTTP routes of the instance.
 func newMux() *http.ServeMux {
 	mux := http.NewServeMux()
@@ -100,6 +116,17 @@ func run(getenv func(string) string, stderr io.Writer) error {
 	}
 	if err := checkDatabaseURL(getenv); err != nil {
 		log.Printf("config: %v", err)
+	} else {
+		ctx := context.Background()
+		engine, err := newEngine(ctx, getenv)
+		if err != nil {
+			return err
+		}
+		defer engine.Close()
+		if err := engine.Migrate(ctx); err != nil {
+			return fmt.Errorf("migrate: %w", err)
+		}
+		log.Printf("kibtab %s connected to the database", version)
 	}
 	listener, err := net.Listen("tcp", address)
 	if err != nil {

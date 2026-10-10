@@ -25,9 +25,11 @@ The `go.mod` file holds the exact version.
 | Module | Licence | Use in Kibtab | First version |
 | --- | --- | --- | --- |
 | `github.com/jackc/pgx/v5` | MIT | The PostgreSQL driver. | v0.3.0 |
+| `github.com/jackc/puddle/v2` | MIT | The connection pool for pgx. | v0.3.0 |
 | `github.com/jackc/pgpassfile` | MIT | The password file lookup for pgx. | v0.3.0 |
 | `github.com/jackc/pgservicefile` | MIT | The service file lookup for pgx. | v0.3.0 |
 | `golang.org/x/crypto` | BSD-3-Clause | The SSH and password hashing for pgx. | v0.3.0 |
+| `golang.org/x/sync` | BSD-3-Clause | The concurrency primitives for pgx. | v0.3.0 |
 | `golang.org/x/text` | BSD-3-Clause | The locale data for pgx. | v0.3.0 |
 | `github.com/go-chi/chi/v5` | MIT | The HTTP router. | v0.5.0 |
 | `github.com/google/uuid` | BSD-3-Clause | The request and change identifiers. | v0.5.0 |
