@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/kibtab/kibtab/internal/adapters/driven/contracttest"
 	"github.com/kibtab/kibtab/internal/core/domain"
 )
 
@@ -31,7 +32,15 @@ func TestIntegration(t *testing.T) {
 	dialect := Dialect{}
 	repo := NewRowRepository(pool, dialect)
 
-	runRowRepositoryContract(t, repo, tableName, fields)
+	fixture := contracttest.Fixture{
+		Repo:  repo,
+		Table: tableName,
+		Key:   pkColumn,
+		Reset: func() { truncateTable(t, pool, tableName) },
+	}
+	for _, err := range contracttest.RowRepository(fixture) {
+		t.Error(err)
+	}
 }
 
 // TestIntegrationTableRegistry tests the TableRegistry against a real database.
