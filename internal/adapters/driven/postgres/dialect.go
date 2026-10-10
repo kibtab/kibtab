@@ -2,13 +2,15 @@ package postgres
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/kibtab/kibtab/internal/core/ports"
 )
 
-// Dialect quotes an identifier and maps a value to a text type for PostgreSQL.
+// Dialect quotes an identifier, maps a value to a text type for
+// PostgreSQL, and pages a query.
 type Dialect struct{}
 
 // Compile-time proof that Dialect satisfies the Dialect port.
@@ -29,4 +31,10 @@ func (Dialect) MapValue(field string, value string) (string, error) {
 		return "", errors.New("postgres: value contains a NUL byte")
 	}
 	return value, nil
+}
+
+// Page returns the PostgreSQL paging clause and its argument. PostgreSQL
+// names each placeholder with a dollar sign and the placeholder number.
+func (Dialect) Page(limit int, first int) (string, []any) {
+	return fmt.Sprintf(" LIMIT $%d", first), []any{limit}
 }

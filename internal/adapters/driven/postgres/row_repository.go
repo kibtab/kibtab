@@ -48,12 +48,13 @@ func (r *RowRepository) Read(table string) ([]domain.CellValue, error) {
 	}
 	selectCols := strings.Join(columns, ", ")
 
+	clause, pageArgs := r.dialect.Page(pageSize, 1)
 	query := fmt.Sprintf(
-		"SELECT %s FROM %s ORDER BY %s LIMIT $1",
-		selectCols, quoted, quotedPK,
+		"SELECT %s FROM %s ORDER BY %s%s",
+		selectCols, quoted, quotedPK, clause,
 	)
 
-	rows, err := r.pool.Query(ctx, query, pageSize)
+	rows, err := r.pool.Query(ctx, query, pageArgs...)
 	if err != nil {
 		return nil, fmt.Errorf("query rows: %w", err)
 	}

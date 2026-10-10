@@ -31,6 +31,10 @@ func (f *fakeDialect) MapValue(field string, value string) (string, error) {
 	return value, nil
 }
 
+func (f *fakeDialect) Page(limit int, first int) (string, []any) {
+	return " LIMIT ?", []any{limit}
+}
+
 func newFakeRowRepository() RowRepository {
 	return &fakeRowRepository{}
 }
@@ -125,7 +129,6 @@ func (f *fakeTransactionRunner) Run(fn func() error) error {
 func newFakeClock() Clock {
 	return &fakeClock{}
 }
-
 
 type fakeClock struct{}
 

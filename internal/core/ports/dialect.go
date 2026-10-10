@@ -11,4 +11,9 @@ type Dialect interface {
 
 	// MapValue returns the engine form of a cell value for one field.
 	MapValue(field string, value string) (string, error)
+
+	// Page returns the paging clause for one page and the arguments for
+	// the clause. The first placeholder in the clause has the number
+	// first. The clause sits at the end of a query.
+	Page(limit int, first int) (string, []any)
 }

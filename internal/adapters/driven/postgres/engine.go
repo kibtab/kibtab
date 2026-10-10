@@ -19,6 +19,10 @@ const EnvKeyMaxConns = "KIBTAB_DB_MAX_CONNS"
 // EnvKeyMinConns is the environment variable that holds the pool minimum.
 const EnvKeyMinConns = "KIBTAB_DB_MIN_CONNS"
 
+// EnvKeyTestDatabaseURL is the environment variable that points the
+// integration tests at a PostgreSQL instance.
+const EnvKeyTestDatabaseURL = "KIBTAB_TEST_DATABASE_URL"
+
 // Engine holds the PostgreSQL connection pool and the table list.
 type Engine struct {
 	pool       *pgxpool.Pool
