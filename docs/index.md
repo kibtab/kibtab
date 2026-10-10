@@ -80,7 +80,6 @@ Each one updates when its release arrives.
 | `docs/openapi.yaml` | v0.5.0 | The REST interface definition. |
 | `docs/self-hosting/` | v0.8.0 | The section for running Kibtab on a server. |
 | `docs/runbook.md` | v0.9.0 | The steps for an operator. |
-| `docs/licences/` | v0.8.0 | A copy of each dependency licence. |
 
 ## Documentation Rules
 
