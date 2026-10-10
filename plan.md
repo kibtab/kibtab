@@ -89,24 +89,24 @@ This release holds no HTTP.
 
 ### Scope
 
-* [ ] Add `internal/adapters/driven/postgres/`. It uses `pgx/v5`.
-* [ ] Create the schema `_kibtab_meta`.
-* [ ] Create the table `_kibtab_meta.table_versions`.
-* [ ] Create the table `_kibtab_meta.audit_log`.
-* [ ] Add the migrations. They run at start. They use an advisory lock.
-* [ ] Implement the `Dialect` port for PostgreSQL. It quotes with
+* [x] Add `internal/adapters/driven/postgres/`. It uses `pgx/v5`.
+* [x] Create the schema `_kibtab_meta`.
+* [x] Create the table `_kibtab_meta.table_versions`.
+* [x] Create the table `_kibtab_meta.audit_log`.
+* [x] Add the migrations. They run at start. They use an advisory lock.
+* [x] Implement the `Dialect` port for PostgreSQL. It quotes with
       `pgx.Identifier`. It maps each type. It pages a query.
-* [ ] Implement `TableRegistry`. It reads the table list from the
+* [x] Implement `TableRegistry`. It reads the table list from the
       environment.
-* [ ] Implement `RowRepository`. It reads a page of rows. It writes one row.
-* [ ] Implement `TransactionRunner`. It opens a transaction.
-* [ ] Use a parameterized query for each statement.
-* [ ] Write the contract test suite for `RowRepository`. Run it for each
+* [x] Implement `RowRepository`. It reads a page of rows. It writes one row.
+* [x] Implement `TransactionRunner`. It opens a transaction.
+* [x] Use a parameterized query for each statement.
+* [x] Write the contract test suite for `RowRepository`. Run it for each
       engine.
-* [ ] Run the integration suite against a real database container.
-* [ ] Add an integration test. It writes a row and reads it back.
-* [ ] Cover every error path in the adapter. Cover each boundary case.
-* [ ] Add the row for `pgx/v5` to `docs/THIRD_PARTY_NOTICES.md`.
+* [x] Run the integration suite against a real database container.
+* [x] Add an integration test. It writes a row and reads it back.
+* [x] Cover every error path in the adapter. Cover each boundary case.
+* [x] Add the row for `pgx/v5` to `docs/THIRD_PARTY_NOTICES.md`.
 * [x] Remove the `dockers` build from `.goreleaser.yaml`. The `Dockerfile`
       lands in v0.8.0.
 
@@ -116,11 +116,11 @@ This release holds no cell write path.
 
 ### Done When
 
-* [ ] The integration test writes a row and reads it back.
-* [ ] A second start runs the migrations again with no error.
-* [ ] No query in the adapter uses a string concatenation for a value.
-* [ ] `make notice-check` passes.
-* [ ] `docs/changelogs/v0.3.0.md` exists.
+* [x] The integration test writes a row and reads it back.
+* [x] A second start runs the migrations again with no error.
+* [x] No query in the adapter uses a string concatenation for a value.
+* [x] `make notice-check` passes.
+* [x] `docs/changelogs/v0.3.0.md` exists.
 
 ## 5. Release v0.4.0 - Write Path
 
