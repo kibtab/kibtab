@@ -23,9 +23,14 @@ NOTICES = "docs/THIRD_PARTY_NOTICES.md"
 # A Kibtab release version, such as v0.3.0.
 RELEASE = re.compile(r"^v\d+\.\d+\.\d+$")
 
-# One require line of go.mod, without the indirect marker.
-REQUIRE = re.compile(r"^\s+([A-Za-z0-9._/-]+)\s+(v\d[^ \t]*)\s*//\s*indirect")
-REQUIRE_DIRECT = re.compile(r"^\s+([A-Za-z0-9._/-]+)\s+(v\d[^ \t]*)\s*$")
+# One require line of go.mod, without the indirect marker. The version
+# stops at any space, so the pattern must exclude every kind of space.
+REQUIRE = re.compile(r"^\s+([A-Za-z0-9._/-]+)\s+(v\d[^\s]*)\s*//\s*indirect")
+REQUIRE_DIRECT = re.compile(r"^\s+([A-Za-z0-9._/-]+)\s+(v\d[^\s]*)\s*$")
+
+# One single-line require of go.mod. Go writes a lone direct dependency
+# on one line, so the indented patterns above never match it.
+REQUIRE_SINGLE = re.compile(r"^require\s+([A-Za-z0-9._/-]+)\s+(v\d[^\s]*)\s*$")
 
 # One table row of the notices. The first cell names the module in backticks.
 ROW = re.compile(r"^\|\s*`([^`]+)`\s*\|")
@@ -36,7 +41,11 @@ def read_go_mod():
     modules = {}
     with open(GO_MOD, encoding="utf-8") as handle:
         for line in handle:
-            match = REQUIRE_DIRECT.match(line) or REQUIRE.match(line)
+            match = (
+                REQUIRE_SINGLE.match(line)
+                or REQUIRE_DIRECT.match(line)
+                or REQUIRE.match(line)
+            )
             if match:
                 modules[match.group(1)] = match.group(2)
     return modules

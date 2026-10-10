@@ -7,20 +7,50 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-// testEnvURL returns the connection string for the test database.
-// It reads from KIBTAB_TEST_DATABASE_URL or builds one from local defaults.
+// defaultTestDSN is the connection string for a developer run. It uses the
+// local socket of a development PostgreSQL.
+const defaultTestDSN = "host=/tmp/pgsocket port=5433 user=postgres sslmode=disable"
+
+// testEnvURL returns the connection string for the named database.
+// It reads KIBTAB_TEST_DATABASE_URL for the host and the credentials.
+// It falls back to defaultTestDSN for a developer run.
 func testEnvURL(t *testing.T, dbName string) string {
 	t.Helper()
-	if url := os.Getenv("KIBTAB_TEST_DATABASE_URL"); url != "" {
-		return url
+	raw := os.Getenv(EnvKeyTestDatabaseURL)
+	if raw == "" {
+		raw = defaultTestDSN
 	}
-	return fmt.Sprintf(
-		"host=/tmp/pgsocket port=5433 user=postgres dbname=%s sslmode=disable",
-		dbName,
-	)
+	config, err := pgxpool.ParseConfig(raw)
+	if err != nil {
+		t.Fatalf("parse %s: %v", EnvKeyTestDatabaseURL, err)
+	}
+	// Each test needs its own database. The name must replace the name in
+	// the environment value, not sit beside it. pgx keeps the original
+	// string in ConnString, so the helper writes a new one.
+	config.ConnConfig.Database = dbName
+	return buildDSN(&config.ConnConfig.Config)
+}
+
+// buildDSN writes a keyword connection string for one parsed config. It
+// turns off TLS when the parsed config holds no TLS setting.
+func buildDSN(c *pgconn.Config) string {
+	parts := []string{
+		"host=" + c.Host,
+		fmt.Sprintf("port=%d", c.Port),
+		"user=" + c.User,
+		"dbname=" + c.Database,
+	}
+	if c.Password != "" {
+		parts = append(parts, "password="+c.Password)
+	}
+	if c.TLSConfig == nil {
+		parts = append(parts, "sslmode=disable")
+	}
+	return strings.Join(parts, " ")
 }
 
 // testPool creates a connection pool for the named database.
