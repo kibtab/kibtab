@@ -140,6 +140,7 @@ Use the name of the folder in the repository.
 | `docs` | Every file under `docs/`, plus `README.md` and `AGENTS.md`. |
 | `deps` | `go.mod` and `go.sum`. |
 | `ci` | The workflow files. |
+| `scripts` | The check scripts under `scripts/`. |
 | `skills` | The vendored skill in `skills/simple-english/`. |
 
 ### The Rules For A Scope
