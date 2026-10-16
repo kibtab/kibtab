@@ -6,8 +6,8 @@ package domain
 
 // CellDelta names one cell change in a sync payload.
 type CellDelta struct {
-	Row    string
-	Field  string
-	Value  string
+	Row     string
+	Field   string
+	Value   string
 	Version int64
 }

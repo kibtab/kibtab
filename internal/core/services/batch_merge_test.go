@@ -20,9 +20,9 @@ func TestMergeByRow(t *testing.T) {
 		{
 			name: "single row",
 			deltas: []domain.CellDelta{{
-				Row:    "r1",
-				Field:  "f1",
-				Value:  "v1",
+				Row:     "r1",
+				Field:   "f1",
+				Value:   "v1",
 				Version: 1,
 			}},
 			want: map[string]int64{"r1": 1},
@@ -30,14 +30,14 @@ func TestMergeByRow(t *testing.T) {
 		{
 			name: "multiple rows",
 			deltas: []domain.CellDelta{{
-				Row:    "r1",
-				Field:  "f1",
-				Value:  "v1",
+				Row:     "r1",
+				Field:   "f1",
+				Value:   "v1",
 				Version: 1,
 			}, {
-				Row:    "r2",
-				Field:  "f1",
-				Value:  "v1",
+				Row:     "r2",
+				Field:   "f1",
+				Value:   "v1",
 				Version: 2,
 			}},
 			want: map[string]int64{"r1": 1, "r2": 2},
@@ -45,14 +45,14 @@ func TestMergeByRow(t *testing.T) {
 		{
 			name: "latest version wins",
 			deltas: []domain.CellDelta{{
-				Row:    "r1",
-				Field:  "f1",
-				Value:  "v1",
+				Row:     "r1",
+				Field:   "f1",
+				Value:   "v1",
 				Version: 1,
 			}, {
-				Row:    "r1",
-				Field:  "f2",
-				Value:  "v2",
+				Row:     "r1",
+				Field:   "f2",
+				Value:   "v2",
 				Version: 3,
 			}},
 			want: map[string]int64{"r1": 3},
@@ -60,14 +60,14 @@ func TestMergeByRow(t *testing.T) {
 		{
 			name: "equal versions keep first in map logic but latest wins on tie",
 			deltas: []domain.CellDelta{{
-				Row:    "r1",
-				Field:  "f1",
-				Value:  "v1",
+				Row:     "r1",
+				Field:   "f1",
+				Value:   "v1",
 				Version: 2,
 			}, {
-				Row:    "r1",
-				Field:  "f2",
-				Value:  "v2",
+				Row:     "r1",
+				Field:   "f2",
+				Value:   "v2",
 				Version: 2,
 			}},
 			want: map[string]int64{"r1": 2},

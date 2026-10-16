@@ -18,9 +18,9 @@ func TestValidatePayload(t *testing.T) {
 			payload: domain.SyncPayload{
 				Table: "",
 				Delta: []domain.CellDelta{{
-					Row:    "r1",
-					Field:  "f1",
-					Value:  "v1",
+					Row:     "r1",
+					Field:   "f1",
+					Value:   "v1",
 					Version: 1,
 				}},
 			},
@@ -41,9 +41,9 @@ func TestValidatePayload(t *testing.T) {
 			payload: domain.SyncPayload{
 				Table: "t1",
 				Delta: []domain.CellDelta{{
-					Row:    "",
-					Field:  "f1",
-					Value:  "v1",
+					Row:     "",
+					Field:   "f1",
+					Value:   "v1",
 					Version: 1,
 				}},
 			},
@@ -55,9 +55,9 @@ func TestValidatePayload(t *testing.T) {
 			payload: domain.SyncPayload{
 				Table: "t1",
 				Delta: []domain.CellDelta{{
-					Row:    "r1",
-					Field:  "",
-					Value:  "v1",
+					Row:     "r1",
+					Field:   "",
+					Value:   "v1",
 					Version: 1,
 				}},
 			},
@@ -69,9 +69,9 @@ func TestValidatePayload(t *testing.T) {
 			payload: domain.SyncPayload{
 				Table: "t1",
 				Delta: []domain.CellDelta{{
-					Row:    "r1",
-					Field:  "f1",
-					Value:  "",
+					Row:     "r1",
+					Field:   "f1",
+					Value:   "",
 					Version: 1,
 				}},
 			},
@@ -83,9 +83,9 @@ func TestValidatePayload(t *testing.T) {
 			payload: domain.SyncPayload{
 				Table: "t1",
 				Delta: []domain.CellDelta{{
-					Row:    "r1",
-					Field:  "f1",
-					Value:  "v1",
+					Row:     "r1",
+					Field:   "f1",
+					Value:   "v1",
 					Version: 0,
 				}},
 			},
@@ -97,9 +97,9 @@ func TestValidatePayload(t *testing.T) {
 			payload: domain.SyncPayload{
 				Table: "t1",
 				Delta: []domain.CellDelta{{
-					Row:    "r1",
-					Field:  "f1",
-					Value:  "v1",
+					Row:     "r1",
+					Field:   "f1",
+					Value:   "v1",
 					Version: -1,
 				}},
 			},
@@ -111,9 +111,9 @@ func TestValidatePayload(t *testing.T) {
 			payload: domain.SyncPayload{
 				Table: "t1",
 				Delta: []domain.CellDelta{{
-					Row:    "r1",
-					Field:  "f1",
-					Value:  "v1",
+					Row:     "r1",
+					Field:   "f1",
+					Value:   "v1",
 					Version: 1,
 				}},
 			},
@@ -127,9 +127,9 @@ func TestValidatePayload(t *testing.T) {
 				if err == nil {
 					t.Fatalf("got no error, want one")
 				}
-			if !contains(err.Error(), test.want) {
-				t.Fatalf("error: got %q, want a message like %q", err.Error(), test.want)
-			}
+				if !contains(err.Error(), test.want) {
+					t.Fatalf("error: got %q, want a message like %q", err.Error(), test.want)
+				}
 				return
 			}
 			if err != nil {
