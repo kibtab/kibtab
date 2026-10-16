@@ -62,8 +62,9 @@ vet: ## Run go vet over all packages
 lint: ## Run the Go linter over all packages
 	golangci-lint run ./...
 
-fmt: ## Format all Go source with gofmt
+fmt: ## Format all Go source with gofmt and golangci-lint
 	gofmt -w .
+	golangci-lint fmt
 
 tidy: ## Tidy the Go module files
 	$(GO) mod tidy
