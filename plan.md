@@ -144,6 +144,13 @@ This release holds no REST API.
       client.
 * [ ] Add the rows for the router and the UUID library to
       `docs/THIRD_PARTY_NOTICES.md`.
+* [x] Reach 100% coverage on the whole module. Run the tests against a
+      real database.
+* [x] Run the coverage gate in CI. It uses the PostgreSQL service.
+* [x] Add the coverage gate to the target `check`. Keep
+      `COVERAGE_FLOOR` at 100. Never lower it.
+* [x] Keep the floor at 100 for each release after v0.5.0. A drop fails
+      the gate.
 
 ### Out Of Scope
 
@@ -153,6 +160,8 @@ This release holds no Office.js taskpane.
 
 * [ ] Each route has a passing contract test.
 * [ ] The OpenAPI file matches each handler.
+* [x] `make cover-verify` reports 100% for the whole module.
+* [x] A change that lowers the coverage fails the gate.
 * [ ] `docs/changelogs/v0.5.0.md` exists.
 
 ## 7. Release v0.6.0 - Office.js Client
