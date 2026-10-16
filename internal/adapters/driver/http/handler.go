@@ -31,6 +31,7 @@ func NewHandler(tables ports.TableRegistry, rows ports.RowRepository,
 	router.Get("/v1/tables", h.listTables)
 	router.Get("/v1/tables/{table}/rows", h.listRows)
 	router.Post("/v1/tables/{table}/rows", h.addRow)
+	router.Post("/v1/tables/{table}/cells", h.addCells)
 	return router
 }
 
