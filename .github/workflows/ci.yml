@@ -1,8 +1,8 @@
 # Continuous integration for Kibtab.
 #
-# The workflow builds, vets, and tests the Go code. It runs no
-# documentation check; Read the Docs builds the documentation instead
-# (see .readthedocs.yaml).
+# The workflow builds, vets, tests, and checks the coverage of the Go
+# code. It runs no documentation check; Read the Docs builds the
+# documentation instead (see .readthedocs.yaml).
 name: CI
 
 on:
@@ -52,6 +52,8 @@ jobs:
         run: go vet ./...
       - name: Test
         run: go test ./...
+      - name: Coverage
+        run: make cover-verify
       - name: Fail when the core imports a driver
         run: |
           if grep -Rn "internal/adapters" internal/core/; then
