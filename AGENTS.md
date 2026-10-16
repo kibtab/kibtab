@@ -167,6 +167,8 @@ Give each file, each package, each commit, and each guide one job.
   holds.
 * Every task in `plan.md` uses a check box. Mark it done when the code and
   the release note exist.
+* Mark the plan box in the same commit as the work that it records.
+  Never move the plan, the catalogue, or the notices to a second commit.
 * Remove the checked boxes when the changelog states each item. Put one
   line in their place that links the changelog of the release.
 * Commit no secret, no `.env` file, and no build output.
