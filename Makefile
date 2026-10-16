@@ -52,7 +52,7 @@ cover-verify: ## Fail when module coverage sits below the floor
 	@total=$$($(GO) tool cover -func=coverage.out | awk '/^total:/ {gsub("%",""); print $$3}'); \
 	echo "total coverage: $$total% (floor $(COVERAGE_FLOOR)%)"; \
 	rm -f coverage.out; \
-	if [ "$$(echo "$$total < $(COVERAGE_FLOOR)" | bc -l)" = "1" ]; then \
+	if awk "BEGIN {exit !($$total < $(COVERAGE_FLOOR))}"; then \
 		echo "coverage below the $(COVERAGE_FLOOR)% floor" >&2; exit 1; \
 	fi
 
@@ -85,7 +85,7 @@ docs-serve: docs-deps ## Build the docs and serve them at localhost:8000
 notice-check: ## Compare go.mod with the dependency table in the notices
 	python3 scripts/notice-check.py
 
-check: build vet test docs-check notice-check ## Run every gate before a commit
+check: build vet cover-verify docs-check notice-check ## Run every gate before a commit
 
 release-test: ## Dry-run the release: build every target into dist/ (no upload)
 	$(MAKE) build
