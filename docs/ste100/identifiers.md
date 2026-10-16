@@ -132,6 +132,15 @@ Read [the catalogue](index.md) first.
 - **Correct Example:** *The core declares `ConflictError` in `domain/`.*
 - **Incorrect Example:** *The core declares `VersionError` in `domain/`.*
 
+## Technical Name: ErrorResponse
+- **Part of Speech:** Noun
+- **Category:** Identifier
+- **Definition:** The JSON body that the transport sends for a failed request.
+- **Approved Form:** ErrorResponse
+- **Do Not Use:** APIError, ErrorBody, ErrorPayload
+- **Correct Example:** *The transport sends an `ErrorResponse` with a code and a message.*
+- **Incorrect Example:** *The transport sends an APIError with a code and a message.*
+
 ## Technical Name: kibtab
 - **Part of Speech:** Noun
 - **Category:** Identifier

@@ -68,6 +68,15 @@ Read [the catalogue](index.md) first.
 - **Correct Example:** *The sync **service** checks the version before it writes.*
 - **Incorrect Example:** *The sync use case checks the version before it writes.*
 
+## Technical Name: Codec
+- **Part of Speech:** Noun
+- **Category:** Architecture Term
+- **Definition:** The functions that read a request body and write a response body as JSON.
+- **Approved Form:** Codec (singular), Codecs (plural)
+- **Do Not Use:** Serialiser, Transcoder, Marshaller
+- **Correct Example:** *The **codec** writes the JSON body of the response.*
+- **Incorrect Example:** *The serialiser writes the JSON body of the response.*
+
 ## Technical Name: Domain Model
 - **Part of Speech:** Noun
 - **Category:** Architecture Term
