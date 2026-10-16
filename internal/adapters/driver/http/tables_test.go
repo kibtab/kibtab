@@ -12,8 +12,10 @@ import (
 
 // fakeRegistry is a TableRegistry for the transport tests.
 type fakeRegistry struct {
-	tables []domain.TableMetadata
-	err    error
+	tables      []domain.TableMetadata
+	err         error
+	meta        domain.TableMetadata
+	metadataErr error
 }
 
 func (f fakeRegistry) List() ([]domain.TableMetadata, error) {
@@ -21,7 +23,7 @@ func (f fakeRegistry) List() ([]domain.TableMetadata, error) {
 }
 
 func (f fakeRegistry) Metadata(string) (domain.TableMetadata, error) {
-	return domain.TableMetadata{}, nil
+	return f.meta, f.metadataErr
 }
 
 func TestListTables(t *testing.T) {
@@ -29,7 +31,7 @@ func TestListTables(t *testing.T) {
 		{Name: "users", Fields: []string{"id", "name"}, Version: 3},
 		{Name: "orders", Fields: []string{"id"}, Version: 1},
 	}}
-	handler := NewHandler(registry, discardLogger())
+	handler := NewHandler(registry, fakeRows{}, discardLogger())
 
 	recorder := httptest.NewRecorder()
 	handler.ServeHTTP(recorder,
@@ -55,7 +57,7 @@ func TestListTables(t *testing.T) {
 }
 
 func TestListTablesEmpty(t *testing.T) {
-	handler := NewHandler(fakeRegistry{}, discardLogger())
+	handler := NewHandler(fakeRegistry{}, fakeRows{}, discardLogger())
 
 	recorder := httptest.NewRecorder()
 	handler.ServeHTTP(recorder,
@@ -70,7 +72,8 @@ func TestListTablesEmpty(t *testing.T) {
 }
 
 func TestListTablesError(t *testing.T) {
-	handler := NewHandler(fakeRegistry{err: errors.New("boom")}, discardLogger())
+	handler := NewHandler(fakeRegistry{err: errors.New("boom")}, fakeRows{},
+		discardLogger())
 
 	recorder := httptest.NewRecorder()
 	handler.ServeHTTP(recorder,

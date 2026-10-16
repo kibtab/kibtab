@@ -12,15 +12,18 @@ import (
 // handlers holds the ports and the logger of the HTTP transport.
 type handlers struct {
 	tables ports.TableRegistry
+	rows   ports.RowRepository
 	log    *slog.Logger
 }
 
 // NewHandler builds the HTTP routes of the transport.
-func NewHandler(tables ports.TableRegistry, log *slog.Logger) nethttp.Handler {
-	h := handlers{tables: tables, log: log}
+func NewHandler(tables ports.TableRegistry, rows ports.RowRepository,
+	log *slog.Logger) nethttp.Handler {
+	h := handlers{tables: tables, rows: rows, log: log}
 
 	router := chi.NewRouter()
 	router.Get("/v1/tables", h.listTables)
+	router.Get("/v1/tables/{table}/rows", h.listRows)
 	return router
 }
 
