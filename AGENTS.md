@@ -138,6 +138,8 @@ Do not run the commit yourself unless the user asks for it.
 Give the message in a fenced block. State why the scope fits the change.
 Name the version in `plan.md` that the change belongs to.
 Say whether the change needs a MAJOR version.
+Stop when the scoped work is done. Do not start the next task.
+Wait for the user before you continue.
 
 [the contributing guide](CONTRIBUTING.md) holds the type table and the scope table.
 [the conventions guide](https://kibtab.readthedocs.io/en/latest/conventions.html) holds the full scope rules.
