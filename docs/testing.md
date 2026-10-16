@@ -28,6 +28,8 @@ make cover-verify
 
 `make cover` prints the per-function breakdown.
 `make cover-verify` fails below the floor.
+The gate needs a real database. The integration tests skip without one.
+A skipped test lowers the coverage. The gate then fails.
 
 Read the output before you send a change.
 A file below the floor names the functions that need a test.
@@ -76,7 +78,7 @@ The `SyncService` suite arrives at v0.5.0.
 | --- | --- |
 | v0.2.0 | 100% on `internal/core/`. |
 | v0.3.0 | 100% on the PostgreSQL adapter. |
-| v1.0.0 | 100% on the whole module. |
+| v0.5.0 | 100% on the whole module. |
 
 ## What Is Not Covered
 

@@ -227,7 +227,8 @@ Read section 7 of [the agent rules](AGENTS.md) for the scope rules.
 ## Run The Checks
 
 Run `make check` before you open a pull request.
-It runs the build, the vet, the tests, and both documentation gates.
+It runs the build, the vet, the tests, the coverage gate, and both
+documentation gates.
 
 ```bash
 make check
