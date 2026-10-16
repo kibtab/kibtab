@@ -131,7 +131,7 @@ This release holds no REST API.
 * [x] Add the handlers in `internal/adapters/driver/http/`.
 * [x] Add the route `GET /v1/tables`.
 * [x] Add the route `GET /v1/tables/{table}/rows`.
-* [ ] Add the route `POST /v1/tables/{table}/rows`.
+* [x] Add the route `POST /v1/tables/{table}/rows`.
 * [ ] Add the route `POST /v1/tables/{table}/cells`.
 * [x] Add the JSON codec. It lives beside the handlers.
 * [ ] Add the request size limit. Reject a body above the limit.

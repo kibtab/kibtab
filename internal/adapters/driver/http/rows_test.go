@@ -5,6 +5,7 @@ import (
 	"errors"
 	nethttp "net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/kibtab/kibtab/internal/core/domain"
@@ -21,7 +22,7 @@ func (f fakeRows) Read(string) ([]domain.CellValue, error) {
 }
 
 func (f fakeRows) Write(string, string, []domain.CellValue) error {
-	return nil
+	return f.err
 }
 
 func TestListRows(t *testing.T) {
@@ -149,5 +150,113 @@ func TestGroupRowsNoFields(t *testing.T) {
 	}
 	if len(rows[0].Cells) != 0 {
 		t.Fatalf("cells: got %+v", rows[0].Cells)
+	}
+}
+
+// postRow sends one row to the add route.
+func postRow(t *testing.T, registry fakeRegistry, rows fakeRows, body string) *httptest.ResponseRecorder {
+	t.Helper()
+
+	handler := NewHandler(registry, rows, discardLogger())
+	recorder := httptest.NewRecorder()
+	handler.ServeHTTP(recorder, httptest.NewRequest(
+		nethttp.MethodPost, "/v1/tables/users/rows", strings.NewReader(body)))
+	return recorder
+}
+
+func TestAddRow(t *testing.T) {
+	registry := fakeRegistry{meta: domain.TableMetadata{
+		Name:   "users",
+		Fields: []string{"name"},
+	}}
+	body := `{"key":"1","cells":[{"field":"name","value":"alice"}]}`
+
+	recorder := postRow(t, registry, fakeRows{}, body)
+
+	if recorder.Code != nethttp.StatusOK {
+		t.Fatalf("status: got %d, want %d", recorder.Code, nethttp.StatusOK)
+	}
+	if got := recorder.Body.String(); got != body {
+		t.Fatalf("body: got %q, want %q", got, body)
+	}
+}
+
+func TestAddRowEmptyKey(t *testing.T) {
+	recorder := postRow(t, fakeRegistry{}, fakeRows{},
+		`{"cells":[{"field":"name","value":"alice"}]}`)
+
+	if recorder.Code != nethttp.StatusBadRequest {
+		t.Fatalf("status: got %d, want %d", recorder.Code,
+			nethttp.StatusBadRequest)
+	}
+	checkError(t, recorder, codeInvalidRequest, "the row key is empty")
+}
+
+func TestAddRowInvalidJSON(t *testing.T) {
+	recorder := postRow(t, fakeRegistry{}, fakeRows{}, "{")
+
+	if recorder.Code != nethttp.StatusBadRequest {
+		t.Fatalf("status: got %d, want %d", recorder.Code,
+			nethttp.StatusBadRequest)
+	}
+	checkError(t, recorder, codeInvalidRequest, "the JSON body is invalid")
+}
+
+func TestAddRowMetadataError(t *testing.T) {
+	recorder := postRow(t, fakeRegistry{metadataErr: errors.New("boom")},
+		fakeRows{}, `{"key":"1"}`)
+
+	if recorder.Code != nethttp.StatusInternalServerError {
+		t.Fatalf("status: got %d, want %d", recorder.Code,
+			nethttp.StatusInternalServerError)
+	}
+	checkError(t, recorder, codeInternal, "the table metadata failed")
+}
+
+func TestAddRowUnknownField(t *testing.T) {
+	registry := fakeRegistry{meta: domain.TableMetadata{
+		Name:   "users",
+		Fields: []string{"name"},
+	}}
+	body := `{"key":"1","cells":[{"field":"nope","value":"alice"}]}`
+
+	recorder := postRow(t, registry, fakeRows{}, body)
+
+	if recorder.Code != nethttp.StatusBadRequest {
+		t.Fatalf("status: got %d, want %d", recorder.Code,
+			nethttp.StatusBadRequest)
+	}
+	checkError(t, recorder, codeInvalidRequest,
+		`the field "nope" is not in the table`)
+}
+
+func TestAddRowWriteError(t *testing.T) {
+	registry := fakeRegistry{meta: domain.TableMetadata{
+		Name:   "users",
+		Fields: []string{"name"},
+	}}
+	recorder := postRow(t, registry, fakeRows{err: errors.New("boom")},
+		`{"key":"1","cells":[{"field":"name","value":"alice"}]}`)
+
+	if recorder.Code != nethttp.StatusInternalServerError {
+		t.Fatalf("status: got %d, want %d", recorder.Code,
+			nethttp.StatusInternalServerError)
+	}
+	checkError(t, recorder, codeInternal, "the row write failed")
+}
+
+// checkError asserts the code and the message of an ErrorResponse body.
+func checkError(t *testing.T, recorder *httptest.ResponseRecorder, code, message string) {
+	t.Helper()
+
+	var got ErrorResponse
+	if err := json.Unmarshal(recorder.Body.Bytes(), &got); err != nil {
+		t.Fatalf("decode the body: %v", err)
+	}
+	if got.Code != code {
+		t.Fatalf("code: got %q, want %q", got.Code, code)
+	}
+	if got.Message != message {
+		t.Fatalf("message: got %q, want %q", got.Message, message)
 	}
 }

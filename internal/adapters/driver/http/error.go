@@ -5,6 +5,9 @@ import nethttp "net/http"
 // codeInternal is the code of a failure inside the instance.
 const codeInternal = "internal_error"
 
+// codeInvalidRequest is the code of a request that Kibtab rejects.
+const codeInvalidRequest = "invalid_request"
+
 // ErrorResponse is the JSON body that Kibtab sends for a failed request.
 type ErrorResponse struct {
 	Code    string `json:"code"`
