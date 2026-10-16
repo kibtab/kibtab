@@ -109,13 +109,7 @@ This release holds no cell write path.
 
 ### Scope
 
-* [x] Add the multi-cell write service. It groups the changes by row.
-* [x] Wrap each group in a transaction. Use `BEGIN` and `COMMIT`.
-* [x] Add the optimistic lock. Compare the version before the write.
-* [x] Add the value coercion. It maps a string to the column type.
-* [x] Return a conflict when the version does not match.
-* [x] Add a race test. Two changes use one version. One write wins.
-* [x] Add a rollback test. A failed group does not stop the other groups.
+Implemented, see [v0.4.0 changelog](docs/changelogs/v0.4.0.md).
 
 ### Out Of Scope
 
