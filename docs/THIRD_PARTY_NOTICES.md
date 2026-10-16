@@ -46,7 +46,7 @@ The `go.mod` file holds the exact version.
 | `golang.org/x/crypto` | BSD-3-Clause | The SSH and password hashing for pgx. | v0.3.0 | [LICENSE](https://cs.opensource.google/go/x/crypto/+/refs/tags/v0.17.0:LICENSE) |
 | `golang.org/x/sync` | BSD-3-Clause | The concurrency primitives for pgx. | v0.3.0 | [LICENSE](https://cs.opensource.google/go/x/sync/+/refs/tags/v0.1.0:LICENSE) |
 | `golang.org/x/text` | BSD-3-Clause | The locale data for pgx. | v0.3.0 | [LICENSE](https://cs.opensource.google/go/x/text/+/refs/tags/v0.14.0:LICENSE) |
-| `github.com/go-chi/chi/v5` | MIT | The HTTP router. | v0.5.0 | [LICENSE](https://github.com/go-chi/chi/blob/master/LICENSE) |
+| `github.com/go-chi/chi/v5` | MIT | The HTTP router. | v0.5.0 | [LICENSE](https://github.com/go-chi/chi/blob/v5.2.5/LICENSE) |
 | `github.com/google/uuid` | BSD-3-Clause | The request and change identifiers. | v0.5.0 | [LICENSE](https://github.com/google/uuid/blob/master/LICENSE) |
 | `github.com/prometheus/client_golang` | Apache-2.0 | The metrics endpoint. | v0.9.0 | [LICENSE](https://github.com/prometheus/client_golang/blob/main/LICENSE) |
 

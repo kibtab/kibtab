@@ -128,8 +128,8 @@ This release holds no REST API.
 
 ### Scope
 
-* [ ] Add the handlers in `internal/adapters/driver/http/`.
-* [ ] Add the route `GET /v1/tables`.
+* [x] Add the handlers in `internal/adapters/driver/http/`.
+* [x] Add the route `GET /v1/tables`.
 * [ ] Add the route `GET /v1/tables/{table}/rows`.
 * [ ] Add the route `POST /v1/tables/{table}/rows`.
 * [ ] Add the route `POST /v1/tables/{table}/cells`.
