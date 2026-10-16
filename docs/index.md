@@ -44,7 +44,7 @@ The plan in `plan.md` holds the scope for each version.
 | v0.1.0 | Skeleton | [v0.1.0.md](changelogs/v0.1.0.md) |
 | v0.2.0 | Domain and ports | [v0.2.0.md](changelogs/v0.2.0.md) |
 | v0.3.0 | PostgreSQL adapter | [v0.3.0.md](changelogs/v0.3.0.md) |
-| v0.4.0 | Write path | Not written yet |
+| v0.4.0 | Write path | [v0.4.0.md](changelogs/v0.4.0.md) |
 | v0.5.0 | HTTP API | Not written yet |
 | v0.6.0 | Office.js client | Not written yet |
 | v0.7.0 | Audit and locking | Not written yet |

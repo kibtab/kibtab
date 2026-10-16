@@ -89,26 +89,7 @@ This release holds no HTTP.
 
 ### Scope
 
-* [x] Add `internal/adapters/driven/postgres/`. It uses `pgx/v5`.
-* [x] Create the schema `_kibtab_meta`.
-* [x] Create the table `_kibtab_meta.table_versions`.
-* [x] Create the table `_kibtab_meta.audit_log`.
-* [x] Add the migrations. They run at start. They use an advisory lock.
-* [x] Implement the `Dialect` port for PostgreSQL. It quotes with
-      `pgx.Identifier`. It maps each type. It pages a query.
-* [x] Implement `TableRegistry`. It reads the table list from the
-      environment.
-* [x] Implement `RowRepository`. It reads a page of rows. It writes one row.
-* [x] Implement `TransactionRunner`. It opens a transaction.
-* [x] Use a parameterized query for each statement.
-* [x] Write the contract test suite for `RowRepository`. Run it for each
-      engine.
-* [x] Run the integration suite against a real database container.
-* [x] Add an integration test. It writes a row and reads it back.
-* [x] Cover every error path in the adapter. Cover each boundary case.
-* [x] Add the row for `pgx/v5` to `docs/THIRD_PARTY_NOTICES.md`.
-* [x] Remove the `dockers` build from `.goreleaser.yaml`. The `Dockerfile`
-      lands in v0.8.0.
+Implemented, see [v0.3.0 changelog](docs/changelogs/v0.3.0.md).
 
 ### Out Of Scope
 
@@ -128,13 +109,13 @@ This release holds no cell write path.
 
 ### Scope
 
-* [ ] Add the multi-cell write service. It groups the changes by row.
-* [ ] Wrap each group in a transaction. Use `BEGIN` and `COMMIT`.
-* [ ] Add the optimistic lock. Compare the version before the write.
-* [ ] Add the value coercion. It maps a string to the column type.
-* [ ] Return a conflict when the version does not match.
-* [ ] Add a race test. Two changes use one version. One write wins.
-* [ ] Add a rollback test. A failed group does not stop the other groups.
+* [x] Add the multi-cell write service. It groups the changes by row.
+* [x] Wrap each group in a transaction. Use `BEGIN` and `COMMIT`.
+* [x] Add the optimistic lock. Compare the version before the write.
+* [x] Add the value coercion. It maps a string to the column type.
+* [x] Return a conflict when the version does not match.
+* [x] Add a race test. Two changes use one version. One write wins.
+* [x] Add a rollback test. A failed group does not stop the other groups.
 
 ### Out Of Scope
 
@@ -143,9 +124,9 @@ This release holds no REST API.
 
 ### Done When
 
-* [ ] The race test passes. One write wins.
-* [ ] The rollback test passes. The other groups stay.
-* [ ] `docs/changelogs/v0.4.0.md` exists.
+* [x] The race test passes. One write wins.
+* [x] The rollback test passes. The other groups stay.
+* [x] `docs/changelogs/v0.4.0.md` exists.
 
 ## 6. Release v0.5.0 - HTTP API
 

@@ -5,6 +5,16 @@ package services
 
 import "github.com/kibtab/kibtab/internal/core/domain"
 
+// GroupByRow groups deltas by row key. It keeps the delta order in each
+// group.
+func GroupByRow(deltas []domain.CellDelta) map[string][]domain.CellDelta {
+	groups := make(map[string][]domain.CellDelta)
+	for _, delta := range deltas {
+		groups[delta.Row] = append(groups[delta.Row], delta)
+	}
+	return groups
+}
+
 // MergeByRow groups deltas by row and keeps the latest version per row.
 func MergeByRow(deltas []domain.CellDelta) map[string]int64 {
 	latest := make(map[string]int64)

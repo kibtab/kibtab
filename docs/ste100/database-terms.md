@@ -68,6 +68,15 @@ Read [the catalogue](index.md) first.
 - **Correct Example:** *The instance makes a **rollback** when one write fails.*
 - **Incorrect Example:** *The instance makes an undo when one write fails.*
 
+## Technical Name: Conflict
+- **Part of Speech:** Noun
+- **Category:** Database Term
+- **Definition:** A write that used a version older than the stored version.
+- **Approved Form:** Conflict (singular), Conflicts (plural)
+- **Do Not Use:** Clash, Collision, Stale Write, Race Result
+- **Correct Example:** *The service returns a **conflict** when the version is stale.*
+- **Incorrect Example:** *The service returns a clash when the version is stale.*
+
 ## Technical Name: Engine
 - **Part of Speech:** Noun
 - **Category:** Database Term

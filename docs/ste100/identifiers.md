@@ -123,6 +123,15 @@ Read [the catalogue](index.md) first.
 - **Correct Example:** *The core declares `ValidationError` in `domain/`.*
 - **Incorrect Example:** *The core declares `CellError` in `domain/`.*
 
+## Technical Name: ConflictError
+- **Part of Speech:** Noun
+- **Category:** Identifier
+- **Definition:** The domain error that names a write with a stale version.
+- **Approved Form:** ConflictError
+- **Do Not Use:** StaleWriteError, VersionError, LockError
+- **Correct Example:** *The core declares `ConflictError` in `domain/`.*
+- **Incorrect Example:** *The core declares `VersionError` in `domain/`.*
+
 ## Technical Name: kibtab
 - **Part of Speech:** Noun
 - **Category:** Identifier

@@ -70,3 +70,16 @@ func TestValidationErrorFormat(t *testing.T) {
 		t.Fatalf("ValidationError.Error() = %q, want %q", got, want)
 	}
 }
+
+func TestConflictErrorFormat(t *testing.T) {
+	err := ConflictError{
+		Table: "t1",
+		Row:   "r1",
+		Want:  3,
+		Got:   4,
+	}
+	want := "table t1 row r1: version conflict, got 4, want 3"
+	if got := err.Error(); got != want {
+		t.Fatalf("ConflictError.Error() = %q, want %q", got, want)
+	}
+}
