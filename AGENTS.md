@@ -145,6 +145,9 @@ Sign off each commit. Read [the contributing guide](CONTRIBUTING.md) for the DCO
 After you finish a change, suggest a commit message.
 Do not run the commit yourself unless the user asks for it.
 Give the message in a fenced block. State why the scope fits the change.
+When the change needs more than one commit, give a shell one-liner that
+chains the commits in order. Give the one-liner in a fenced block. Join
+each commit with `&&`.
 Name the version in `plan.md` that the change belongs to.
 Say whether the change needs a MAJOR version.
 Stop when the scoped work is done. Do not start the next task.
