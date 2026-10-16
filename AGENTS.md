@@ -21,6 +21,15 @@ This document holds the rules that bind you. It points at the detail.
 
 Read the linked document before you act. Do not work from this file alone.
 
+## 0. One Commit At A Time
+
+Do the work for one commit only.
+Stop when that work is complete.
+Give the commit message in a fenced block.
+Name the version in `plan.md`.
+State whether the change needs a MAJOR version.
+Wait for the user before you start the next change.
+
 ## 1. Architecture
 
 `internal/core/` holds pure Go domain logic and ports. It has no I/O.
