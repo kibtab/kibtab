@@ -8,6 +8,9 @@ const codeInternal = "internal_error"
 // codeInvalidRequest is the code of a request that Kibtab rejects.
 const codeInvalidRequest = "invalid_request"
 
+// codeConflict is the code of a write that used a stale version.
+const codeConflict = "conflict"
+
 // ErrorResponse is the JSON body that Kibtab sends for a failed request.
 type ErrorResponse struct {
 	Code    string `json:"code"`

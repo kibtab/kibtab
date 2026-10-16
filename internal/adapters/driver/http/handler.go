@@ -11,15 +11,21 @@ import (
 
 // handlers holds the ports and the logger of the HTTP transport.
 type handlers struct {
-	tables ports.TableRegistry
-	rows   ports.RowRepository
-	log    *slog.Logger
+	tables      ports.TableRegistry
+	rows        ports.RowRepository
+	syncService ports.SyncService
+	log         *slog.Logger
 }
 
 // NewHandler builds the HTTP routes of the transport.
 func NewHandler(tables ports.TableRegistry, rows ports.RowRepository,
-	log *slog.Logger) nethttp.Handler {
-	h := handlers{tables: tables, rows: rows, log: log}
+	syncService ports.SyncService, log *slog.Logger) nethttp.Handler {
+	h := handlers{
+		tables:      tables,
+		rows:        rows,
+		syncService: syncService,
+		log:         log,
+	}
 
 	router := chi.NewRouter()
 	router.Get("/v1/tables", h.listTables)

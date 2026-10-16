@@ -31,7 +31,7 @@ func TestListTables(t *testing.T) {
 		{Name: "users", Fields: []string{"id", "name"}, Version: 3},
 		{Name: "orders", Fields: []string{"id"}, Version: 1},
 	}}
-	handler := NewHandler(registry, fakeRows{}, discardLogger())
+	handler := NewHandler(registry, fakeRows{}, &fakeSync{}, discardLogger())
 
 	recorder := httptest.NewRecorder()
 	handler.ServeHTTP(recorder,
@@ -57,7 +57,8 @@ func TestListTables(t *testing.T) {
 }
 
 func TestListTablesEmpty(t *testing.T) {
-	handler := NewHandler(fakeRegistry{}, fakeRows{}, discardLogger())
+	handler := NewHandler(fakeRegistry{}, fakeRows{}, &fakeSync{},
+		discardLogger())
 
 	recorder := httptest.NewRecorder()
 	handler.ServeHTTP(recorder,
@@ -73,7 +74,7 @@ func TestListTablesEmpty(t *testing.T) {
 
 func TestListTablesError(t *testing.T) {
 	handler := NewHandler(fakeRegistry{err: errors.New("boom")}, fakeRows{},
-		discardLogger())
+		&fakeSync{}, discardLogger())
 
 	recorder := httptest.NewRecorder()
 	handler.ServeHTTP(recorder,

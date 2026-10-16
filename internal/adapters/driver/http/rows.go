@@ -1,6 +1,7 @@
 package http
 
 import (
+	"errors"
 	"fmt"
 	nethttp "net/http"
 
@@ -16,7 +17,7 @@ type cellJSON struct {
 	Value string `json:"value"`
 }
 
-// rowJSON is one row in the JSON of a row request or a row response.
+// rowJSON is one row in the JSON of the row list.
 type rowJSON struct {
 	Key   string     `json:"key"`
 	Cells []cellJSON `json:"cells"`
@@ -25,6 +26,24 @@ type rowJSON struct {
 // rowList is the JSON body of GET /v1/tables/{table}/rows.
 type rowList struct {
 	Rows []rowJSON `json:"rows"`
+}
+
+// rowWrite is the JSON body of POST /v1/tables/{table}/rows.
+type rowWrite struct {
+	Version int64      `json:"version"`
+	Key     string     `json:"key"`
+	Cells   []cellJSON `json:"cells"`
+}
+
+// syncRowJSON is one row result in the JSON of a write response.
+type syncRowJSON struct {
+	Key     string `json:"key"`
+	Version int64  `json:"version"`
+}
+
+// syncJSON is the JSON body of a write response.
+type syncJSON struct {
+	Rows []syncRowJSON `json:"rows"`
 }
 
 // listRows answers GET /v1/tables/{table}/rows.
@@ -55,7 +74,7 @@ func (h handlers) listRows(w nethttp.ResponseWriter, r *nethttp.Request) {
 func (h handlers) addRow(w nethttp.ResponseWriter, r *nethttp.Request) {
 	table := chi.URLParam(r, "table")
 
-	var body rowJSON
+	var body rowWrite
 	if err := decodeJSON(r, &body); err != nil {
 		h.writeError(w, nethttp.StatusBadRequest, codeInvalidRequest,
 			"the JSON body is invalid")
@@ -74,7 +93,6 @@ func (h handlers) addRow(w nethttp.ResponseWriter, r *nethttp.Request) {
 			"the table metadata failed")
 		return
 	}
-
 	field, known := unknownField(body.Cells, meta.Fields)
 	if !known {
 		h.writeError(w, nethttp.StatusBadRequest, codeInvalidRequest,
@@ -82,14 +100,37 @@ func (h handlers) addRow(w nethttp.ResponseWriter, r *nethttp.Request) {
 		return
 	}
 
-	if err := h.rows.Write(table, body.Key, toCellValues(body.Cells)); err != nil {
-		h.log.Error("write the row", "error", err)
-		h.writeError(w, nethttp.StatusInternalServerError, codeInternal,
-			"the row write failed")
+	result, err := h.syncService.Sync(toSyncPayload(table, body))
+	if err != nil {
+		h.writeSyncError(w, err)
+		return
+	}
+	if err := rowError(result); err != nil {
+		h.writeSyncError(w, err)
 		return
 	}
 
-	h.writeJSON(w, nethttp.StatusOK, body)
+	h.writeJSON(w, nethttp.StatusOK, toSyncJSON(result))
+}
+
+// writeSyncError writes the response for a failed sync.
+func (h handlers) writeSyncError(w nethttp.ResponseWriter, err error) {
+	var conflict domain.ConflictError
+	if errors.As(err, &conflict) {
+		h.writeError(w, nethttp.StatusConflict, codeConflict, err.Error())
+		return
+	}
+
+	var invalid domain.ValidationError
+	if errors.As(err, &invalid) {
+		h.writeError(w, nethttp.StatusBadRequest, codeInvalidRequest,
+			err.Error())
+		return
+	}
+
+	h.log.Error("run the sync", "error", err)
+	h.writeError(w, nethttp.StatusInternalServerError, codeInternal,
+		"the row write failed")
 }
 
 // groupRows groups the cells of one table into rows. A cell outside the
@@ -127,16 +168,40 @@ func unknownField(cells []cellJSON, fields []string) (string, bool) {
 	return "", true
 }
 
-// toCellValues maps the JSON cells to domain values.
-func toCellValues(cells []cellJSON) []domain.CellValue {
-	values := make([]domain.CellValue, 0, len(cells))
-	for _, cell := range cells {
-		values = append(values, domain.CellValue{
-			Field: cell.Field,
-			Value: cell.Value,
+// toSyncPayload maps one row write to a sync payload.
+func toSyncPayload(table string, body rowWrite) domain.SyncPayload {
+	delta := make([]domain.CellDelta, 0, len(body.Cells))
+	for _, cell := range body.Cells {
+		delta = append(delta, domain.CellDelta{
+			Row:     body.Key,
+			Field:   cell.Field,
+			Value:   cell.Value,
+			Version: body.Version,
 		})
 	}
-	return values
+	return domain.SyncPayload{Table: table, Delta: delta}
+}
+
+// toSyncJSON maps a sync result to the JSON of a write response.
+func toSyncJSON(result domain.SyncResult) syncJSON {
+	body := syncJSON{Rows: make([]syncRowJSON, 0, len(result.RowResults))}
+	for _, row := range result.RowResults {
+		body.Rows = append(body.Rows, syncRowJSON{
+			Key:     row.Row,
+			Version: row.Version,
+		})
+	}
+	return body
+}
+
+// rowError returns the first row error of a sync result.
+func rowError(result domain.SyncResult) error {
+	for _, row := range result.RowResults {
+		if row.Error != nil {
+			return row.Error
+		}
+	}
+	return nil
 }
 
 // fieldSet returns the set of the field names of one table.

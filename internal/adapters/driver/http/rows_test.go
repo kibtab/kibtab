@@ -25,6 +25,19 @@ func (f fakeRows) Write(string, string, []domain.CellValue) error {
 	return f.err
 }
 
+// fakeSync is a SyncService for the transport tests. It records the
+// payload that the transport sends.
+type fakeSync struct {
+	result  domain.SyncResult
+	err     error
+	payload domain.SyncPayload
+}
+
+func (f *fakeSync) Sync(payload domain.SyncPayload) (domain.SyncResult, error) {
+	f.payload = payload
+	return f.result, f.err
+}
+
 func TestListRows(t *testing.T) {
 	registry := fakeRegistry{meta: domain.TableMetadata{
 		Name:   "users",
@@ -36,7 +49,7 @@ func TestListRows(t *testing.T) {
 		{Field: "k", Value: "2"},
 		{Field: "name", Value: "bob"},
 	}}
-	handler := NewHandler(registry, rows, discardLogger())
+	handler := NewHandler(registry, rows, &fakeSync{}, discardLogger())
 
 	recorder := httptest.NewRecorder()
 	handler.ServeHTTP(recorder,
@@ -62,7 +75,7 @@ func TestListRows(t *testing.T) {
 }
 
 func TestListRowsEmpty(t *testing.T) {
-	handler := NewHandler(fakeRegistry{}, fakeRows{}, discardLogger())
+	handler := NewHandler(fakeRegistry{}, fakeRows{}, &fakeSync{}, discardLogger())
 
 	recorder := httptest.NewRecorder()
 	handler.ServeHTTP(recorder,
@@ -78,7 +91,7 @@ func TestListRowsEmpty(t *testing.T) {
 
 func TestListRowsMetadataError(t *testing.T) {
 	handler := NewHandler(fakeRegistry{metadataErr: errors.New("boom")},
-		fakeRows{}, discardLogger())
+		fakeRows{}, &fakeSync{}, discardLogger())
 
 	recorder := httptest.NewRecorder()
 	handler.ServeHTTP(recorder,
@@ -88,19 +101,12 @@ func TestListRowsMetadataError(t *testing.T) {
 		t.Fatalf("status: got %d, want %d", recorder.Code,
 			nethttp.StatusInternalServerError)
 	}
-
-	var got ErrorResponse
-	if err := json.Unmarshal(recorder.Body.Bytes(), &got); err != nil {
-		t.Fatalf("decode the body: %v", err)
-	}
-	if got.Message != "the table metadata failed" {
-		t.Fatalf("message: got %q", got.Message)
-	}
+	checkError(t, recorder, codeInternal, "the table metadata failed")
 }
 
 func TestListRowsReadError(t *testing.T) {
 	handler := NewHandler(fakeRegistry{}, fakeRows{err: errors.New("boom")},
-		discardLogger())
+		&fakeSync{}, discardLogger())
 
 	recorder := httptest.NewRecorder()
 	handler.ServeHTTP(recorder,
@@ -110,14 +116,7 @@ func TestListRowsReadError(t *testing.T) {
 		t.Fatalf("status: got %d, want %d", recorder.Code,
 			nethttp.StatusInternalServerError)
 	}
-
-	var got ErrorResponse
-	if err := json.Unmarshal(recorder.Body.Bytes(), &got); err != nil {
-		t.Fatalf("decode the body: %v", err)
-	}
-	if got.Message != "the row list failed" {
-		t.Fatalf("message: got %q", got.Message)
-	}
+	checkError(t, recorder, codeInternal, "the row list failed")
 }
 
 func TestListRowsWriteError(t *testing.T) {
@@ -153,11 +152,19 @@ func TestGroupRowsNoFields(t *testing.T) {
 	}
 }
 
+// usersTable returns a registry that holds one table with one field.
+func usersTable() fakeRegistry {
+	return fakeRegistry{meta: domain.TableMetadata{
+		Name:   "users",
+		Fields: []string{"name"},
+	}}
+}
+
 // postRow sends one row to the add route.
-func postRow(t *testing.T, registry fakeRegistry, rows fakeRows, body string) *httptest.ResponseRecorder {
+func postRow(t *testing.T, registry fakeRegistry, syncService *fakeSync, body string) *httptest.ResponseRecorder {
 	t.Helper()
 
-	handler := NewHandler(registry, rows, discardLogger())
+	handler := NewHandler(registry, fakeRows{}, syncService, discardLogger())
 	recorder := httptest.NewRecorder()
 	handler.ServeHTTP(recorder, httptest.NewRequest(
 		nethttp.MethodPost, "/v1/tables/users/rows", strings.NewReader(body)))
@@ -165,25 +172,35 @@ func postRow(t *testing.T, registry fakeRegistry, rows fakeRows, body string) *h
 }
 
 func TestAddRow(t *testing.T) {
-	registry := fakeRegistry{meta: domain.TableMetadata{
-		Name:   "users",
-		Fields: []string{"name"},
+	syncService := &fakeSync{result: domain.SyncResult{
+		RowResults: []domain.RowResult{{Row: "1", Version: 3}},
 	}}
-	body := `{"key":"1","cells":[{"field":"name","value":"alice"}]}`
+	body := `{"version":3,"key":"1","cells":[{"field":"name","value":"alice"}]}`
 
-	recorder := postRow(t, registry, fakeRows{}, body)
+	recorder := postRow(t, usersTable(), syncService, body)
 
 	if recorder.Code != nethttp.StatusOK {
 		t.Fatalf("status: got %d, want %d", recorder.Code, nethttp.StatusOK)
 	}
-	if got := recorder.Body.String(); got != body {
-		t.Fatalf("body: got %q, want %q", got, body)
+	if got, want := recorder.Body.String(), `{"rows":[{"key":"1","version":3}]}`; got != want {
+		t.Fatalf("body: got %q, want %q", got, want)
+	}
+	if syncService.payload.Table != "users" {
+		t.Fatalf("table: got %q, want %q", syncService.payload.Table, "users")
+	}
+	if len(syncService.payload.Delta) != 1 {
+		t.Fatalf("delta: got %+v", syncService.payload.Delta)
+	}
+	delta := syncService.payload.Delta[0]
+	if delta.Row != "1" || delta.Field != "name" ||
+		delta.Value != "alice" || delta.Version != 3 {
+		t.Fatalf("delta: got %+v", delta)
 	}
 }
 
 func TestAddRowEmptyKey(t *testing.T) {
-	recorder := postRow(t, fakeRegistry{}, fakeRows{},
-		`{"cells":[{"field":"name","value":"alice"}]}`)
+	recorder := postRow(t, fakeRegistry{}, &fakeSync{},
+		`{"version":3,"cells":[{"field":"name","value":"alice"}]}`)
 
 	if recorder.Code != nethttp.StatusBadRequest {
 		t.Fatalf("status: got %d, want %d", recorder.Code,
@@ -193,7 +210,7 @@ func TestAddRowEmptyKey(t *testing.T) {
 }
 
 func TestAddRowInvalidJSON(t *testing.T) {
-	recorder := postRow(t, fakeRegistry{}, fakeRows{}, "{")
+	recorder := postRow(t, fakeRegistry{}, &fakeSync{}, "{")
 
 	if recorder.Code != nethttp.StatusBadRequest {
 		t.Fatalf("status: got %d, want %d", recorder.Code,
@@ -204,7 +221,7 @@ func TestAddRowInvalidJSON(t *testing.T) {
 
 func TestAddRowMetadataError(t *testing.T) {
 	recorder := postRow(t, fakeRegistry{metadataErr: errors.New("boom")},
-		fakeRows{}, `{"key":"1"}`)
+		&fakeSync{}, `{"version":3,"key":"1"}`)
 
 	if recorder.Code != nethttp.StatusInternalServerError {
 		t.Fatalf("status: got %d, want %d", recorder.Code,
@@ -214,13 +231,8 @@ func TestAddRowMetadataError(t *testing.T) {
 }
 
 func TestAddRowUnknownField(t *testing.T) {
-	registry := fakeRegistry{meta: domain.TableMetadata{
-		Name:   "users",
-		Fields: []string{"name"},
-	}}
-	body := `{"key":"1","cells":[{"field":"nope","value":"alice"}]}`
-
-	recorder := postRow(t, registry, fakeRows{}, body)
+	recorder := postRow(t, usersTable(), &fakeSync{},
+		`{"version":3,"key":"1","cells":[{"field":"nope","value":"alice"}]}`)
 
 	if recorder.Code != nethttp.StatusBadRequest {
 		t.Fatalf("status: got %d, want %d", recorder.Code,
@@ -230,13 +242,70 @@ func TestAddRowUnknownField(t *testing.T) {
 		`the field "nope" is not in the table`)
 }
 
-func TestAddRowWriteError(t *testing.T) {
-	registry := fakeRegistry{meta: domain.TableMetadata{
-		Name:   "users",
-		Fields: []string{"name"},
+func TestAddRowSyncError(t *testing.T) {
+	invalid := domain.ValidationError{
+		Row: "1", Field: "name", Value: "alice", Reason: "the value is bad",
+	}
+
+	recorder := postRow(t, usersTable(), &fakeSync{err: invalid},
+		`{"version":3,"key":"1"}`)
+
+	if recorder.Code != nethttp.StatusBadRequest {
+		t.Fatalf("status: got %d, want %d", recorder.Code,
+			nethttp.StatusBadRequest)
+	}
+	checkError(t, recorder, codeInvalidRequest, invalid.Error())
+}
+
+func TestAddRowSyncInternalError(t *testing.T) {
+	recorder := postRow(t, usersTable(), &fakeSync{err: errors.New("boom")},
+		`{"version":3,"key":"1"}`)
+
+	if recorder.Code != nethttp.StatusInternalServerError {
+		t.Fatalf("status: got %d, want %d", recorder.Code,
+			nethttp.StatusInternalServerError)
+	}
+	checkError(t, recorder, codeInternal, "the row write failed")
+}
+
+func TestAddRowConflict(t *testing.T) {
+	conflict := domain.ConflictError{Table: "users", Row: "1", Want: 3, Got: 2}
+	syncService := &fakeSync{result: domain.SyncResult{
+		RowResults: []domain.RowResult{{Row: "1", Version: 3, Error: conflict}},
 	}}
-	recorder := postRow(t, registry, fakeRows{err: errors.New("boom")},
-		`{"key":"1","cells":[{"field":"name","value":"alice"}]}`)
+
+	recorder := postRow(t, usersTable(), syncService, `{"version":3,"key":"1"}`)
+
+	if recorder.Code != nethttp.StatusConflict {
+		t.Fatalf("status: got %d, want %d", recorder.Code,
+			nethttp.StatusConflict)
+	}
+	checkError(t, recorder, codeConflict, conflict.Error())
+}
+
+func TestAddRowRowValidationError(t *testing.T) {
+	invalid := domain.ValidationError{
+		Row: "1", Field: "name", Value: "alice", Reason: "the value is bad",
+	}
+	syncService := &fakeSync{result: domain.SyncResult{
+		RowResults: []domain.RowResult{{Row: "1", Version: 3, Error: invalid}},
+	}}
+
+	recorder := postRow(t, usersTable(), syncService, `{"version":3,"key":"1"}`)
+
+	if recorder.Code != nethttp.StatusBadRequest {
+		t.Fatalf("status: got %d, want %d", recorder.Code,
+			nethttp.StatusBadRequest)
+	}
+	checkError(t, recorder, codeInvalidRequest, invalid.Error())
+}
+
+func TestAddRowRowInternalError(t *testing.T) {
+	syncService := &fakeSync{result: domain.SyncResult{
+		RowResults: []domain.RowResult{{Row: "1", Version: 3, Error: errors.New("boom")}},
+	}}
+
+	recorder := postRow(t, usersTable(), syncService, `{"version":3,"key":"1"}`)
 
 	if recorder.Code != nethttp.StatusInternalServerError {
 		t.Fatalf("status: got %d, want %d", recorder.Code,
