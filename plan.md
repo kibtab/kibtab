@@ -133,11 +133,11 @@ This release holds no REST API.
 * [ ] Add the route `GET /v1/tables/{table}/rows`.
 * [ ] Add the route `POST /v1/tables/{table}/rows`.
 * [ ] Add the route `POST /v1/tables/{table}/cells`.
-* [ ] Add the JSON codec. It lives beside the handlers.
+* [x] Add the JSON codec. It lives beside the handlers.
 * [ ] Add the request size limit. Reject a body above the limit.
 * [ ] Add the CORS policy for the Office.js origin.
 * [ ] Add the structured log. Write one line per request.
-* [ ] Add the error type. It holds a code and a message.
+* [x] Add the error type. It holds a code and a message.
 * [ ] Add `docs/openapi.yaml`. It holds the REST interface definition.
 * [ ] Add a contract test for each route.
 * [ ] Write the contract test suite for `SyncService`. Run it for each
