@@ -28,6 +28,7 @@ func NewHandler(tables ports.TableRegistry, rows ports.RowRepository,
 	}
 
 	router := chi.NewRouter()
+	router.Use(h.requestLog)
 	router.Use(cors)
 	router.Get("/v1/tables", h.listTables)
 	router.Get("/v1/tables/{table}/rows", h.listRows)

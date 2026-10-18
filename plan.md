@@ -136,13 +136,13 @@ This release holds no REST API.
 * [x] Add the JSON codec. It lives beside the handlers.
 * [x] Add the request size limit. Reject a body above the limit.
 * [x] Add the CORS policy for the Office.js origin.
-* [ ] Add the structured log. Write one line per request.
+* [x] Add the structured log. Write one line per request.
 * [x] Add the error type. It holds a code and a message.
 * [ ] Add `docs/openapi.yaml`. It holds the REST interface definition.
 * [ ] Add a contract test for each route.
 * [ ] Write the contract test suite for `SyncService`. Run it for each
       client.
-* [ ] Add the rows for the router and the UUID library to
+* [x] Add the rows for the router and the UUID library to
       `docs/THIRD_PARTY_NOTICES.md`.
 * [x] Reach 100% coverage on the whole module. Run the tests against a
       real database.
