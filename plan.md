@@ -139,7 +139,7 @@ This release holds no REST API.
 * [x] Add the structured log. Write one line per request.
 * [x] Add the error type. It holds a code and a message.
 * [x] Add `docs/openapi.yaml`. It holds the REST interface definition.
-* [ ] Add a contract test for each route.
+* [x] Add a contract test for each route.
 * [ ] Write the contract test suite for `SyncService`. Run it for each
       client.
 * [x] Add the rows for the router and the UUID library to
@@ -158,7 +158,7 @@ This release holds no Office.js taskpane.
 
 ### Done When
 
-* [ ] Each route has a passing contract test.
+* [x] Each route has a passing contract test.
 * [x] The OpenAPI file matches each handler.
 * [x] `make cover-verify` reports 100% for the whole module.
 * [x] A change that lowers the coverage fails the gate.
