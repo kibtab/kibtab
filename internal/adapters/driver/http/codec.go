@@ -9,6 +9,9 @@ import (
 // contentTypeJSON is the content type of a JSON body.
 const contentTypeJSON = "application/json"
 
+// maxBodyBytes is the largest request body that the transport reads.
+const maxBodyBytes = 1 << 20
+
 // encodeJSON writes value as a JSON response with the given status.
 func encodeJSON(w nethttp.ResponseWriter, status int, value any) error {
 	body, err := json.Marshal(value)
@@ -23,9 +26,11 @@ func encodeJSON(w nethttp.ResponseWriter, status int, value any) error {
 	return nil
 }
 
-// decodeJSON reads a JSON request body into value.
-func decodeJSON(r *nethttp.Request, value any) error {
-	if err := json.NewDecoder(r.Body).Decode(value); err != nil {
+// decodeJSON reads a JSON request body into value. It reads at most
+// maxBodyBytes. A larger body fails with a nethttp.MaxBytesError.
+func decodeJSON(w nethttp.ResponseWriter, r *nethttp.Request, value any) error {
+	body := nethttp.MaxBytesReader(w, r.Body, maxBodyBytes)
+	if err := json.NewDecoder(body).Decode(value); err != nil {
 		return fmt.Errorf("decode JSON: %w", err)
 	}
 	return nil

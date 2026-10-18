@@ -62,9 +62,8 @@ func (h handlers) addRow(w nethttp.ResponseWriter, r *nethttp.Request) {
 	table := chi.URLParam(r, "table")
 
 	var body rowWrite
-	if err := decodeJSON(r, &body); err != nil {
-		h.writeError(w, nethttp.StatusBadRequest, codeInvalidRequest,
-			"the JSON body is invalid")
+	if err := decodeJSON(w, r, &body); err != nil {
+		h.writeDecodeError(w, err)
 		return
 	}
 	if body.Key == "" {

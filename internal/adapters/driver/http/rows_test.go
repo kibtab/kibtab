@@ -219,6 +219,18 @@ func TestAddRowInvalidJSON(t *testing.T) {
 	checkError(t, recorder, codeInvalidRequest, "the JSON body is invalid")
 }
 
+func TestAddRowBodyTooLarge(t *testing.T) {
+	body := `{"version":3,"key":"` + strings.Repeat("a", maxBodyBytes) + `"}`
+
+	recorder := postRow(t, fakeRegistry{}, &fakeSync{}, body)
+
+	if recorder.Code != nethttp.StatusRequestEntityTooLarge {
+		t.Fatalf("status: got %d, want %d", recorder.Code,
+			nethttp.StatusRequestEntityTooLarge)
+	}
+	checkError(t, recorder, codePayloadTooLarge, "the JSON body is too large")
+}
+
 func TestAddRowMetadataError(t *testing.T) {
 	recorder := postRow(t, fakeRegistry{metadataErr: errors.New("boom")},
 		&fakeSync{}, `{"version":3,"key":"1"}`)

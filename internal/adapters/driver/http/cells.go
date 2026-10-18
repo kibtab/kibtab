@@ -16,9 +16,8 @@ func (h handlers) addCells(w nethttp.ResponseWriter, r *nethttp.Request) {
 	table := chi.URLParam(r, "table")
 
 	var body cellsRequest
-	if err := decodeJSON(r, &body); err != nil {
-		h.writeError(w, nethttp.StatusBadRequest, codeInvalidRequest,
-			"the JSON body is invalid")
+	if err := decodeJSON(w, r, &body); err != nil {
+		h.writeDecodeError(w, err)
 		return
 	}
 

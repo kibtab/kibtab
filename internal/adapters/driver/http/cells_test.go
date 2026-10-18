@@ -62,6 +62,18 @@ func TestAddCellsInvalidJSON(t *testing.T) {
 	checkError(t, recorder, codeInvalidRequest, "the JSON body is invalid")
 }
 
+func TestAddCellsBodyTooLarge(t *testing.T) {
+	body := `{"delta":[{"row":"` + strings.Repeat("a", maxBodyBytes) + `"}]}`
+
+	recorder := postCells(t, usersTable(), &fakeSync{}, body)
+
+	if recorder.Code != nethttp.StatusRequestEntityTooLarge {
+		t.Fatalf("status: got %d, want %d", recorder.Code,
+			nethttp.StatusRequestEntityTooLarge)
+	}
+	checkError(t, recorder, codePayloadTooLarge, "the JSON body is too large")
+}
+
 func TestAddCellsConflict(t *testing.T) {
 	conflict := domain.ConflictError{Table: "users", Row: "1", Want: 3, Got: 2}
 	syncService := &fakeSync{result: domain.SyncResult{

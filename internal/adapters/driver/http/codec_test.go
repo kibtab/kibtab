@@ -65,7 +65,7 @@ func TestDecodeJSON(t *testing.T) {
 		strings.NewReader(`{"code":"c","message":"m"}`))
 
 	var got ErrorResponse
-	if err := decodeJSON(request, &got); err != nil {
+	if err := decodeJSON(httptest.NewRecorder(), request, &got); err != nil {
 		t.Fatalf("decodeJSON: %v", err)
 	}
 	if got.Code != "c" || got.Message != "m" {
@@ -78,7 +78,38 @@ func TestDecodeJSONError(t *testing.T) {
 		strings.NewReader("{"))
 
 	var got ErrorResponse
-	if err := decodeJSON(request, &got); err == nil {
+	if err := decodeJSON(httptest.NewRecorder(), request, &got); err == nil {
 		t.Fatal("decodeJSON: want an error for malformed JSON")
+	}
+}
+
+func TestDecodeJSONBodyAboveLimit(t *testing.T) {
+	body := `{"code":"` + strings.Repeat("a", maxBodyBytes) + `"}`
+	request := httptest.NewRequest(nethttp.MethodPost, "/v1/tables",
+		strings.NewReader(body))
+
+	var got ErrorResponse
+	err := decodeJSON(httptest.NewRecorder(), request, &got)
+	var tooLarge *nethttp.MaxBytesError
+	if !errors.As(err, &tooLarge) {
+		t.Fatalf("decodeJSON: got %v, want a MaxBytesError", err)
+	}
+}
+
+func TestDecodeJSONBodyAtLimit(t *testing.T) {
+	pad := maxBodyBytes - len(`{"code":"`) - len(`"}`)
+	body := `{"code":"` + strings.Repeat("a", pad) + `"}`
+	if len(body) != maxBodyBytes {
+		t.Fatalf("body: got %d bytes, want %d", len(body), maxBodyBytes)
+	}
+	request := httptest.NewRequest(nethttp.MethodPost, "/v1/tables",
+		strings.NewReader(body))
+
+	var got ErrorResponse
+	if err := decodeJSON(httptest.NewRecorder(), request, &got); err != nil {
+		t.Fatalf("decodeJSON at the limit: %v", err)
+	}
+	if got.Code != strings.Repeat("a", pad) {
+		t.Fatalf("decodeJSON at the limit: got %q", got.Code)
 	}
 }
