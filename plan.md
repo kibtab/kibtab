@@ -162,7 +162,7 @@ This release holds no Office.js taskpane.
 * [ ] The OpenAPI file matches each handler.
 * [x] `make cover-verify` reports 100% for the whole module.
 * [x] A change that lowers the coverage fails the gate.
-* [ ] `docs/changelogs/v0.5.0.md` exists.
+* [x] `docs/changelogs/v0.5.0.md` exists.
 
 ## 7. Release v0.6.0 - Office.js Client
 
