@@ -138,7 +138,7 @@ This release holds no REST API.
 * [x] Add the CORS policy for the Office.js origin.
 * [x] Add the structured log. Write one line per request.
 * [x] Add the error type. It holds a code and a message.
-* [ ] Add `docs/openapi.yaml`. It holds the REST interface definition.
+* [x] Add `docs/openapi.yaml`. It holds the REST interface definition.
 * [ ] Add a contract test for each route.
 * [ ] Write the contract test suite for `SyncService`. Run it for each
       client.
@@ -159,7 +159,7 @@ This release holds no Office.js taskpane.
 ### Done When
 
 * [ ] Each route has a passing contract test.
-* [ ] The OpenAPI file matches each handler.
+* [x] The OpenAPI file matches each handler.
 * [x] `make cover-verify` reports 100% for the whole module.
 * [x] A change that lowers the coverage fails the gate.
 * [x] `docs/changelogs/v0.5.0.md` exists.

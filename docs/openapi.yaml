@@ -1,0 +1,335 @@
+openapi: 3.0.3
+
+info:
+  title: Kibtab API
+  version: 0.5.0
+  description: >
+    Kibtab turns a spreadsheet into a client for a relational database.
+    This file holds the REST interface of the HTTP transport at v0.5.0.
+    The transport answers each request with one structured log line, and it
+    sets the `X-Request-Id` response header. The CORS policy reflects the
+    origin of an Office.js taskpane.
+
+servers:
+  - url: http://localhost:8080
+
+paths:
+  /v1/tables:
+    get:
+      operationId: listTables
+      summary: List each table in the registry.
+      responses:
+        "200":
+          description: The table list.
+          headers:
+            X-Request-Id:
+              $ref: "#/components/headers/RequestID"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TableList"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /v1/tables/{table}/rows:
+    get:
+      operationId: listRows
+      summary: List the rows of one table.
+      parameters:
+        - $ref: "#/components/parameters/Table"
+      responses:
+        "200":
+          description: The row list.
+          headers:
+            X-Request-Id:
+              $ref: "#/components/headers/RequestID"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RowList"
+        "500":
+          $ref: "#/components/responses/InternalError"
+    post:
+      operationId: addRow
+      summary: Write one row through the sync service.
+      description: >
+        The route maps each cell to one cell change. The version applies to
+        every cell of the row.
+      parameters:
+        - $ref: "#/components/parameters/Table"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RowWrite"
+      responses:
+        "200":
+          description: The version of each written row.
+          headers:
+            X-Request-Id:
+              $ref: "#/components/headers/RequestID"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SyncResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "413":
+          $ref: "#/components/responses/PayloadTooLarge"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+  /v1/tables/{table}/cells:
+    post:
+      operationId: addCells
+      summary: Write a group of cells through the sync service.
+      parameters:
+        - $ref: "#/components/parameters/Table"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CellsRequest"
+      responses:
+        "200":
+          description: The version of each written row.
+          headers:
+            X-Request-Id:
+              $ref: "#/components/headers/RequestID"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SyncResult"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "413":
+          $ref: "#/components/responses/PayloadTooLarge"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
+components:
+  parameters:
+    Table:
+      name: table
+      in: path
+      required: true
+      description: The table name. The registry must hold it.
+      schema:
+        type: string
+
+  headers:
+    RequestID:
+      description: The identifier that the log line of the request holds.
+      schema:
+        type: string
+
+  responses:
+    BadRequest:
+      description: >
+        The request fails. The code is `invalid_request`, and the message
+        holds the reason.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    Conflict:
+      description: >
+        The write used a stale version. The code is `conflict`, and the
+        message holds the versions.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    PayloadTooLarge:
+      description: >
+        The body is above the request size limit of one mebibyte. The code
+        is `payload_too_large`.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    InternalError:
+      description: >
+        The instance fails inside. The code is `internal_error`, and the
+        message holds no detail.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+  schemas:
+    ErrorResponse:
+      type: object
+      description: The body of a failed request.
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          description: >
+            The failure code. The values are `internal_error`,
+            `invalid_request`, `conflict`, and `payload_too_large`.
+          examples:
+            - invalid_request
+        message:
+          type: string
+          description: The reason that a person can read.
+      additionalProperties: false
+
+    TableList:
+      type: object
+      description: The body of GET /v1/tables.
+      required:
+        - tables
+      properties:
+        tables:
+          type: array
+          items:
+            $ref: "#/components/schemas/Table"
+      additionalProperties: false
+
+    Table:
+      type: object
+      description: One table of the registry.
+      required:
+        - name
+        - fields
+        - version
+      properties:
+        name:
+          type: string
+        fields:
+          type: array
+          items:
+            type: string
+        version:
+          type: integer
+          format: int64
+      additionalProperties: false
+
+    RowList:
+      type: object
+      description: The body of GET /v1/tables/{table}/rows.
+      required:
+        - rows
+      properties:
+        rows:
+          type: array
+          items:
+            $ref: "#/components/schemas/Row"
+      additionalProperties: false
+
+    Row:
+      type: object
+      description: One row with its cells.
+      required:
+        - key
+        - cells
+      properties:
+        key:
+          type: string
+        cells:
+          type: array
+          items:
+            $ref: "#/components/schemas/Cell"
+      additionalProperties: false
+
+    Cell:
+      type: object
+      description: One cell of a row.
+      required:
+        - field
+        - value
+      properties:
+        field:
+          type: string
+        value:
+          type: string
+      additionalProperties: false
+
+    RowWrite:
+      type: object
+      description: The body of POST /v1/tables/{table}/rows.
+      required:
+        - version
+        - key
+        - cells
+      properties:
+        version:
+          type: integer
+          format: int64
+          description: The version that the client last read.
+        key:
+          type: string
+          description: The row key. It must not be empty.
+        cells:
+          type: array
+          items:
+            $ref: "#/components/schemas/Cell"
+      additionalProperties: false
+
+    CellsRequest:
+      type: object
+      description: The body of POST /v1/tables/{table}/cells.
+      required:
+        - delta
+      properties:
+        delta:
+          type: array
+          items:
+            $ref: "#/components/schemas/CellDelta"
+      additionalProperties: false
+
+    CellDelta:
+      type: object
+      description: One cell change.
+      required:
+        - row
+        - field
+        - value
+        - version
+      properties:
+        row:
+          type: string
+        field:
+          type: string
+        value:
+          type: string
+        version:
+          type: integer
+          format: int64
+      additionalProperties: false
+
+    SyncResult:
+      type: object
+      description: The body of a successful write.
+      required:
+        - rows
+      properties:
+        rows:
+          type: array
+          description: One entry for each written row.
+          items:
+            $ref: "#/components/schemas/RowResult"
+      additionalProperties: false
+
+    RowResult:
+      type: object
+      description: The version of one written row.
+      required:
+        - key
+        - version
+      properties:
+        key:
+          type: string
+        version:
+          type: integer
+          format: int64
+      additionalProperties: false

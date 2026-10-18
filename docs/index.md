@@ -77,7 +77,7 @@ Each one updates when its release arrives.
 | `docs/testing.md` | v0.1.0 | The kinds of test and the coverage rules. |
 | `docs/releasing.md` | v0.1.0 | The version number, the gate, and the release steps. |
 | `docs/licence.md` | v0.1.0 | The terms for Kibtab and the skill. |
-| `docs/openapi.yaml` | v0.5.0 | The REST interface definition. |
+| `docs/openapi.yaml` | v0.5.0 | [docs/openapi.yaml](openapi.yaml). The REST interface definition. |
 | `docs/self-hosting/` | v0.8.0 | The section for running Kibtab on a server. |
 | `docs/runbook.md` | v0.9.0 | The steps for an operator. |
 
