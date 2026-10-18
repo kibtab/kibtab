@@ -135,7 +135,7 @@ This release holds no REST API.
 * [x] Add the route `POST /v1/tables/{table}/cells`.
 * [x] Add the JSON codec. It lives beside the handlers.
 * [x] Add the request size limit. Reject a body above the limit.
-* [ ] Add the CORS policy for the Office.js origin.
+* [x] Add the CORS policy for the Office.js origin.
 * [ ] Add the structured log. Write one line per request.
 * [x] Add the error type. It holds a code and a message.
 * [ ] Add `docs/openapi.yaml`. It holds the REST interface definition.
