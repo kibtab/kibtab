@@ -128,29 +128,7 @@ This release holds no REST API.
 
 ### Scope
 
-* [x] Add the handlers in `internal/adapters/driver/http/`.
-* [x] Add the route `GET /v1/tables`.
-* [x] Add the route `GET /v1/tables/{table}/rows`.
-* [x] Add the route `POST /v1/tables/{table}/rows`.
-* [x] Add the route `POST /v1/tables/{table}/cells`.
-* [x] Add the JSON codec. It lives beside the handlers.
-* [x] Add the request size limit. Reject a body above the limit.
-* [x] Add the CORS policy for the Office.js origin.
-* [x] Add the structured log. Write one line per request.
-* [x] Add the error type. It holds a code and a message.
-* [x] Add `docs/openapi.yaml`. It holds the REST interface definition.
-* [x] Add a contract test for each route.
-* [x] Write the contract test suite for `SyncService`. Run it for each
-      client.
-* [x] Add the rows for the router and the UUID library to
-      `docs/THIRD_PARTY_NOTICES.md`.
-* [x] Reach 100% coverage on the whole module. Run the tests against a
-      real database.
-* [x] Run the coverage gate in CI. It uses the PostgreSQL service.
-* [x] Add the coverage gate to the target `check`. Keep
-      `COVERAGE_FLOOR` at 100. Never lower it.
-* [x] Keep the floor at 100 for each release after v0.5.0. A drop fails
-      the gate.
+Implemented, see [v0.5.0 changelog](docs/changelogs/v0.5.0.md).
 
 ### Out Of Scope
 
