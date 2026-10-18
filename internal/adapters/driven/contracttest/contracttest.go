@@ -1,8 +1,8 @@
 // Package contracttest holds the shared contract suites of Kibtab.
 //
-// A suite holds an adapter to a port. Each engine adapter runs the same
-// suite. A second adapter must not copy a suite. Release v0.3.0 adds the
-// first suite.
+// A suite holds an adapter to a port. Each adapter runs the same suite.
+// A second adapter must not copy a suite. Release v0.3.0 adds the
+// RowRepository suite. Release v0.5.0 adds the SyncService suite.
 //
 // A suite returns its failures. It does not call the testing package.
 // The caller reports each failure with its own test.

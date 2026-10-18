@@ -125,6 +125,9 @@ func TestHelpersPassOnAGoodValue(t *testing.T) {
 	if err := checkError("l", errors.New("boom")); err != nil {
 		t.Errorf("checkError: got %v, want nil", err)
 	}
+	if err := checkVersion("l", 2, 2); err != nil {
+		t.Errorf("checkVersion: got %v, want nil", err)
+	}
 	if err := checkNilCells("l", nil); err != nil {
 		t.Errorf("checkNilCells: got %v, want nil", err)
 	}
@@ -144,6 +147,7 @@ func TestHelpersReportABadValue(t *testing.T) {
 		{name: "checkMin", err: checkMin("l", 1, 2), want: "l: got 1, want at least 2"},
 		{name: "checkBool", err: checkBool("l", false), want: "l: got false, want true"},
 		{name: "checkError", err: checkError("l", nil), want: "l: got no error, want one"},
+		{name: "checkVersion", err: checkVersion("l", 1, 2), want: "l: got 1, want 2"},
 		{name: "wrap", err: wrap("l", errors.New("boom")), want: "l: boom"},
 	}
 	for _, test := range tests {

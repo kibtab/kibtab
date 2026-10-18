@@ -140,7 +140,7 @@ This release holds no REST API.
 * [x] Add the error type. It holds a code and a message.
 * [x] Add `docs/openapi.yaml`. It holds the REST interface definition.
 * [x] Add a contract test for each route.
-* [ ] Write the contract test suite for `SyncService`. Run it for each
+* [x] Write the contract test suite for `SyncService`. Run it for each
       client.
 * [x] Add the rows for the router and the UUID library to
       `docs/THIRD_PARTY_NOTICES.md`.
