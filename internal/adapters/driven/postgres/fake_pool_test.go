@@ -99,6 +99,11 @@ func (f *fakePool) Ping(_ context.Context) error {
 
 func (f *fakePool) Close() {}
 
+// BeginTx implements txBeginner for testing.
+func (f *fakePool) BeginTx(_ context.Context, _ pgx.TxOptions) (pgx.Tx, error) {
+	return nil, nil
+}
+
 // fakeRow is a minimal implementation of pgx.Row for testing.
 type fakeRow struct {
 	err error

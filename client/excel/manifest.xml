@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<OfficeApp
+  xmlns="http://schemas.microsoft.com/office/appforoffice/1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:bt="http://schemas.microsoft.com/business/2006/08/tasks"
+  xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides"
+  xsi:type="TaskPaneApp">
+  <meta-data>
+    <identity
+      name="Kibtab"
+      publisher="Kibtab"
+      version="0.6.0.0"/>
+    <DisplayName>Kibtab</DisplayName>
+    <Description>
+      Kibtab turns a spreadsheet into a client for a relational database.
+      This add-in reads and writes cells over the Kibtab REST API.
+    </Description>
+  </meta-data>
+  <requirements>
+    <Sets>
+      <Set Name="ExcelApi" MinVersion="1.4"/>
+      <Set Name="IdentityAPI" MinVersion="1.1"/>
+    </Sets>
+  </requirements>
+  <formSettings>
+    <form>
+      <title>Kibtab</title>
+      <view>Taskpane</view>
+    </form>
+  </formSettings>
+  <DesktopFormSettings>
+    <SourceLocation
+      resid="Taskpane.Url"
+      DefaultHeight="400"/>
+    <RequestedHeight>400</RequestedHeight>
+  </DesktopFormSettings>
+  <MobileFormSettings>
+    <SourceLocation resid="Taskpane.Url"/>
+  </MobileFormSettings>
+  <Permissions>ReadWriteDocument</Permissions>
+  <Capabilities>
+    <Capability Name="Workbook"/>
+  </Capabilities>
+  <DefaultServices>
+    <Service Name="api">
+      <AuthorizationURL>https://localhost:8080/authorize</AuthorizationURL>
+      <TokenURL>https://localhost:8080/token</TokenURL>
+      <ResourceURL>https://localhost:8080/</ResourceURL>
+    </Service>
+  </DefaultServices>
+  <Resources>
+    <bt:urls>
+      <bt:url id="Taskpane.Url"
+        defaultValue="https://localhost:8080/taskpane.html"/>
+    </bt:urls>
+    <bt:images>
+      <bt:image id="Icon.16x16" defaultValue="https://localhost:8080/icon-16.png"/>
+      <bt:image id="Icon.32x32" defaultValue="https://localhost:8080/icon-32.png"/>
+      <bt:image id="Icon.80x80" defaultValue="https://localhost:8080/icon-80.png"/>
+    </bt:images>
+  </Resources>
+  <VersionOverrides xmlns="http://schemas.microsoft.com/office/taskpaneappversionoverrides">
+    <VersionOverrides>
+      <Hosts>
+        <Host xsi:type="Workbook">
+          <Page>
+            <SourceLocation resid="Taskpane.Url"/>
+            <SupportUrl resid="Support.Url"/>
+          </Page>
+          <FunctionFile resid="Taskpane.Url"/>
+          <DesktopForm>
+            <SourceLocation resid="Taskpane.Url"/>
+            <RequestedHeight>400</RequestedHeight>
+          </DesktopForm>
+        </Host>
+      </Hosts>
+      <Functions>
+        <Function Name="startSync">
+          <Category>Kibtab</Category>
+          <DisplayName>Start sync</DisplayName>
+          <Description>Start the Kibtab sync for the current selection.</Description>
+          <Action xsi:type="ExecuteFunction">
+            <FunctionName>startSync</FunctionName>
+          </Action>
+        </Function>
+      </Functions>
+      <Resources>
+        <bt:urls>
+          <bt:url id="Taskpane.Url"
+            defaultValue="https://localhost:8080/taskpane.html"/>
+          <bt:url id="Support.Url"
+            defaultValue="https://localhost:8080/support.html"/>
+        </bt:urls>
+      </Resources>
+    </VersionOverrides>
+  </VersionOverrides>
+</OfficeApp>

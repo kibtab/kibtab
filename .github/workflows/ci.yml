@@ -14,6 +14,47 @@ permissions:
   contents: read
 
 jobs:
+  client-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+          cache-dependency-path: client/excel/pnpm-lock.yaml
+
+      - name: Install client deps
+        run: |
+          cd client/excel
+          pnpm install --frozen-lockfile
+
+      - name: Build client
+        run: |
+          cd client/excel
+          pnpm build
+
+      - name: Fail when the client build is missing
+        run: |
+          if [ ! -f client/excel/dist/taskpane.js ]; then
+            echo "client/excel/dist/taskpane.js is missing" >&2
+            exit 1
+          fi
+
+      - name: Zip the client output
+        run: |
+          cd client/excel && zip -r ../../kibtab-taskpane.zip dist manifest.xml
+
+      - name: Fail when the client zip is missing
+        run: |
+          if [ ! -f kibtab-taskpane.zip ]; then
+            echo "kibtab-taskpane.zip is missing" >&2
+            exit 1
+          fi
+
   build-vet-test:
     runs-on: ubuntu-latest
     env:

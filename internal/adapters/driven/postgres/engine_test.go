@@ -227,6 +227,8 @@ func TestDialectImplementsPort(t *testing.T) {
 	var _ ports.Dialect = Dialect{}
 }
 
+
+
 // TestRowRepositoryClosedPoolError tests that Read on a closed pool returns an error.
 func TestRowRepositoryClosedPoolError(t *testing.T) {
 	if !available(t) {

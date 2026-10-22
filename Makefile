@@ -22,7 +22,12 @@ help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) \
 		| awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-14s\033[0m %s\n", $$1, $$2}'
 
-build: ## Build the kibtab binary into bin/
+build: client-build kibtab-build ## Build Kibtab and the client
+
+client-build: ## Build the Office.js taskpane bundle
+	cd client/excel && pnpm build
+
+kibtab-build: ## Build the kibtab binary into bin/
 	CGO_ENABLED=0 $(GO) build -trimpath -ldflags "-s -w" -o $(BINARY) ./cmd/kibtab
 
 install: ## Install the CLI into $GOPATH/bin (go install)
@@ -85,6 +90,14 @@ docs-serve: docs-deps ## Build the docs and serve them at localhost:8000
 
 notice-check: ## Compare go.mod with the dependency table in the notices
 	python3 scripts/notice-check.py
+
+.PHONY: client-build kibtab-build client-zip client-clean build-client
+
+client-zip: ## Zip the client build output as kibtab-taskpane.zip
+	cd client/excel && rm -f kibtab-taskpane.zip && zip -r ../../kibtab-taskpane.zip dist manifest.xml
+
+client-clean: ## Remove client build artefacts
+	cd client/excel && rm -rf dist node_modules pnpm-lock.yaml && rm -f ../../kibtab-taskpane.zip
 
 check: build vet cover-verify docs-check notice-check ## Run every gate before a commit
 

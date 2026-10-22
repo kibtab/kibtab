@@ -148,15 +148,15 @@ This release holds no Office.js taskpane.
 
 ### Scope
 
-* [ ] Create `client/`. It holds the Office.js taskpane.
-* [ ] The taskpane sends a `SyncPayload` and shows the result.
-* [ ] The taskpane shows a conflict message. It offers a reload.
-* [ ] The taskpane groups a burst of edits into one payload.
-* [ ] Add `manifest.xml` for the add-in.
-* [ ] Add the client build. It uses `esbuild`.
-* [ ] Add the CI job for the client. It runs apart from the Go build.
-* [ ] Add the output `kibtab-taskpane.zip`.
-* [ ] Add the rows for the client packages to
+* [x] Create `client/`. It holds the Office.js taskpane.
+* [x] The taskpane sends a `SyncPayload` and shows the result.
+* [x] The taskpane shows a conflict message. It offers a reload.
+* [x] The taskpane groups a burst of edits into one payload.
+* [x] Add `manifest.xml` for the add-in.
+* [x] Add the client build. It uses `esbuild`.
+* [x] Add the CI job for the client. It runs apart from the Go build.
+* [x] Add the output `kibtab-taskpane.zip`.
+* [x] Add the rows for the client packages to
       `docs/THIRD_PARTY_NOTICES.md`.
 
 ### Out Of Scope
