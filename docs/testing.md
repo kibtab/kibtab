@@ -28,8 +28,84 @@ make cover-verify
 
 `make cover` prints the per-function breakdown.
 `make cover-verify` fails below the floor.
-The gate needs a real database. The integration tests skip without one.
-A skipped test lowers the coverage. The gate then fails.
+
+## PostgreSQL Testing
+
+The integration tests need a real PostgreSQL. The Makefile manages this
+for you with dedicated targets.
+
+### Start A Testing Instance
+
+```bash
+make postgres-start
+```
+
+This target starts a dedicated PostgreSQL instance for testing:
+
+* It uses port 5433 by default to avoid conflicts with existing PostgreSQL.
+* It creates a test user `kibtab_test` and database `kibtab_test`.
+* It sets `KIBTAB_TEST_DATABASE_URL` for the test run.
+* It works with a local `pg_ctl` installation or Docker.
+
+### Stop The Testing Instance
+
+```bash
+make postgres-stop
+```
+
+This target stops the testing instance and cleans up:
+
+* It stops the PostgreSQL process or Docker container.
+* It removes temporary data directories.
+* It does not affect any existing PostgreSQL installation.
+
+### Check Instance Status
+
+```bash
+make postgres-status
+```
+
+This target reports whether the testing instance is running.
+
+### Run Coverage With PostgreSQL
+
+```bash
+make cover-verify
+```
+
+`make cover-verify` now depends on `postgres-start`. It:
+
+1. Starts a dedicated PostgreSQL instance.
+2. Runs the tests with coverage.
+3. Checks the coverage against the floor.
+4. Stops the PostgreSQL instance.
+
+The gate no longer skips when there is no database. It starts one.
+
+### Manual Control
+
+For advanced use, you can control the instance manually:
+
+```bash
+make postgres-start
+make test
+make cover-verify
+make postgres-stop
+```
+
+Set the port and credentials with environment variables:
+
+```bash
+make PG_TEST_PORT=5434 PG_TEST_USER=myuser postgres-start
+```
+
+### Fallback Behaviour
+
+When PostgreSQL is not installed and Docker is not available, the
+`postgres-start` target prints a warning and continues. The coverage
+gate then fails because the integration tests skip.
+
+Install PostgreSQL or Docker to run full coverage checks locally.
 
 Read the output before you send a change.
 A file below the floor names the functions that need a test.

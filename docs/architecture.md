@@ -130,10 +130,23 @@ The core needs no change.
 A contract test holds each adapter to the port.
 
 * The core test suite needs no database.
-* The integration suite runs against a real database container.
+* The integration suite runs against a real database.
 * The client suite runs against a fake transport.
 * The CI step fails the build when the core imports an adapter.
 * The CI step fails the build when the core names an engine or a client.
+
+## PostgreSQL Testing
+
+The Makefile manages a dedicated PostgreSQL instance for testing.
+See `docs/testing.md` for the targets and the workflow.
+
+The `postgres-start` target starts a temporary instance on port 5433.
+The `postgres-stop` target stops it and cleans up.
+The `cover-verify` target depends on `postgres-start`.
+
+This approach keeps the testing instance isolated from any existing
+PostgreSQL installation. It does not require Docker when `pg_ctl`
+is available locally.
 
 ## Next Steps
 

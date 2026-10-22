@@ -15,12 +15,18 @@ CHANGELOG_URL_BASE := https://github.com/kibtab/kibtab/blob/main/docs/changelogs
         bench bench-all bench-save bench-compare \
         profile-cpu profile-trace \
         docs-check notice-check docs-deps docs-serve check \
-        tag clean tools
+        tag clean tools \
+        postgres-start postgres-stop postgres-status
 
 help: ## Show this help
 	@printf "kibtab (spreadsheet as client, database as server)\n\n"
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) \
 		| awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-14s\033[0m %s\n", $$1, $$2}'
+	@echo ""
+	@echo "PostgreSQL testing targets:"
+	@echo "  postgres-start  Start a dedicated PostgreSQL instance for testing"
+	@echo "  postgres-stop   Stop the testing PostgreSQL instance"
+	@echo "  postgres-status Check if the testing PostgreSQL instance is running"
 
 build: client-build kibtab-build ## Build Kibtab and the client
 
@@ -52,13 +58,83 @@ cover-html: ## Run the tests and open the HTML coverage report in a browser
 	CGO_ENABLED=0 $(GO) test -coverpkg=./... -coverprofile=coverage.out ./... -count=1
 	$(GO) tool cover -html=coverage.out
 
-cover-verify: ## Fail when module coverage sits below the floor
-	CGO_ENABLED=0 $(GO) test -coverpkg=./... -coverprofile=coverage.out ./... -count=1
+PG_TEST_PORT ?= 5433
+PG_TEST_USER ?= kibtab_test
+PG_TEST_DB ?= kibtab_test
+PG_TEST_URL_BASE := postgres://$(PG_TEST_USER):test@localhost:$(PG_TEST_PORT)/postgres?sslmode=disable
+
+cover-verify: postgres-start ## Fail when module coverage sits below the floor
+	CGO_ENABLED=0 KIBTAB_TEST_DATABASE_URL="$(PG_TEST_URL_BASE)" $(GO) test -coverpkg=./... -coverprofile=coverage.out ./... -count=1
 	@total=$$($(GO) tool cover -func=coverage.out | awk '/^total:/ {gsub("%",""); print $$3}'); \
 	echo "total coverage: $$total% (floor $(COVERAGE_FLOOR)%)"; \
 	rm -f coverage.out; \
 	if awk "BEGIN {exit !($$total < $(COVERAGE_FLOOR))}"; then \
 		echo "coverage below the $(COVERAGE_FLOOR)% floor" >&2; exit 1; \
+	fi
+	@$(MAKE) postgres-stop
+
+postgres-start: ## Start a dedicated PostgreSQL instance for testing
+	@if command -v pg_ctl >/dev/null 2>&1; then \
+		mkdir -p /tmp/kibtab_pg_data /tmp/kibtab_pg_socket; \
+		if [ ! -f /tmp/kibtab_pg_data/PG_VERSION ]; then \
+			echo "Initializing PostgreSQL data directory..."; \
+			initdb -D /tmp/kibtab_pg_data --auth-local=trust --auth-host=trust --no-locale; \
+		fi; \
+		pg_ctl -D /tmp/kibtab_pg_data -l /tmp/kibtab_pg.log -o "-k /tmp/kibtab_pg_socket -p $(PG_TEST_PORT)" status >/dev/null 2>&1; \
+		if [ $$? -ne 0 ]; then \
+			echo "Starting PostgreSQL on port $(PG_TEST_PORT)..."; \
+			pg_ctl -D /tmp/kibtab_pg_data -l /tmp/kibtab_pg.log -o "-k /tmp/kibtab_pg_socket -p $(PG_TEST_PORT)" start; \
+		else \
+			echo "PostgreSQL already running on port $(PG_TEST_PORT)"; \
+		fi; \
+		for i in $$(seq 1 30); do \
+			if pg_isready -h /tmp/kibtab_pg_socket -p $(PG_TEST_PORT) -q 2>/dev/null; then \
+				echo "PostgreSQL ready on port $(PG_TEST_PORT)"; \
+				break; \
+			fi; \
+			sleep 1; \
+		done; \
+		createuser -h /tmp/kibtab_pg_socket -p $(PG_TEST_PORT) --superuser $(PG_TEST_USER) 2>/dev/null || true; \
+		createdb -h /tmp/kibtab_pg_socket -p $(PG_TEST_PORT) -O $(PG_TEST_USER) $(PG_TEST_DB) 2>/dev/null || true; \
+	else \
+		if command -v docker >/dev/null 2>&1; then \
+			echo "Starting PostgreSQL container on port $(PG_TEST_PORT)..."; \
+			docker run -d --rm --name kibtab-pg-test -p $(PG_TEST_PORT):5432 \
+				-e POSTGRES_USER=$(PG_TEST_USER) -e POSTGRES_PASSWORD=test \
+				-e POSTGRES_DB=$(PG_TEST_DB) postgres:16-alpine; \
+			for i in $$(seq 1 30); do \
+				if pg_isready -h localhost -p $(PG_TEST_PORT) -q 2>/dev/null; then \
+					echo "PostgreSQL container ready on port $(PG_TEST_PORT)"; \
+					break; \
+				fi; \
+				sleep 1; \
+			done; \
+		else \
+			echo "WARNING: No PostgreSQL installation found (pg_ctl or docker)."; \
+			echo "Coverage tests for postgres adapter will skip."; \
+			echo "Install PostgreSQL or Docker to run full coverage checks."; \
+		fi; \
+	fi
+
+postgres-stop: ## Stop the testing PostgreSQL instance
+	@if command -v pg_ctl >/dev/null 2>&1; then \
+		pg_ctl -D /tmp/kibtab_pg_data stop -m fast 2>/dev/null || true; \
+		rm -rf /tmp/kibtab_pg_data /tmp/kibtab_pg_socket /tmp/kibtab_pg.log; \
+		echo "PostgreSQL test instance stopped."; \
+	else \
+		if command -v docker >/dev/null 2>&1; then \
+			docker stop kibtab-pg-test 2>/dev/null || true; \
+			echo "PostgreSQL container stopped."; \
+		fi; \
+	fi
+
+postgres-status: ## Check if the testing PostgreSQL instance is running
+	@if pg_isready -h /tmp/kibtab_pg_socket -p $(PG_TEST_PORT) -q 2>/dev/null; then \
+		echo "PostgreSQL test instance is running on port $(PG_TEST_PORT)"; \
+	elif pg_isready -h localhost -p $(PG_TEST_PORT) -q 2>/dev/null; then \
+		echo "PostgreSQL container is running on port $(PG_TEST_PORT)"; \
+	else \
+		echo "No PostgreSQL test instance running."; \
 	fi
 
 vet: ## Run go vet over all packages
