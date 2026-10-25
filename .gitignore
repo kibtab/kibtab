@@ -29,3 +29,4 @@ __pycache__/
 docs/_build/
 
 .headroom
+client/excel/node_modules
