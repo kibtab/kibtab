@@ -155,6 +155,8 @@ This release holds no Office.js taskpane.
 * [x] Add `manifest.xml` for the add-in.
 * [x] Add the client build. It uses `esbuild`.
 * [x] Add the CI job for the client. It runs apart from the Go build.
+* [x] Install pnpm in the client CI job before `setup-node` reads its
+      cache. `actions/setup-node` does not install pnpm.
 * [x] Add the output `kibtab-taskpane.zip`.
 * [x] Add the rows for the client packages to
       `docs/THIRD_PARTY_NOTICES.md`.
