@@ -9,11 +9,16 @@
 package contracttest
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/kibtab/kibtab/internal/core/domain"
 	"github.com/kibtab/kibtab/internal/core/ports"
 )
+
+// bg is the context that the suite passes to the repository. The suite
+// runs no transaction, so a plain context is enough.
+var bg = context.Background()
 
 // Fixture holds what one engine adapter gives to the RowRepository suite.
 type Fixture struct {
@@ -45,6 +50,8 @@ func RowRepository(f Fixture) []error {
 	all = append(all, writeEmptyValues(f)...)
 	all = append(all, writeNulByte(f)...)
 	all = append(all, writeEmptyField(f)...)
+	all = append(all, readRowReturnsOneRow(f)...)
+	all = append(all, readRowMissingRow(f)...)
 	all = append(all, readMissingTable(f)...)
 	return dropNil(all)
 }
@@ -70,8 +77,8 @@ func writeAndReadOneRow(f Fixture) []error {
 		{Field: "name", Value: "alice"},
 		{Field: "email", Value: "alice@example.org"},
 	}
-	errs = append(errs, wrap(label+": Write", f.Repo.Write(f.Table, row, values)))
-	cells, err := f.Repo.Read(f.Table)
+	errs = append(errs, wrap(label+": Write", f.Repo.Write(bg, f.Table, row, values)))
+	cells, err := f.Repo.Read(bg, f.Table)
 	errs = append(errs, wrap(label+": Read", err))
 	errs = append(errs, checkMin(label+": Read cell count", len(cells), 1))
 	if len(cells) > 0 {
@@ -100,11 +107,11 @@ func writeAndReadTwoRows(f Fixture) []error {
 	const label = "write and read two rows"
 	f.Reset()
 	errs := []error{}
-	errs = append(errs, wrap(label+": Write r1", f.Repo.Write(f.Table, "r1",
+	errs = append(errs, wrap(label+": Write r1", f.Repo.Write(bg, f.Table, "r1",
 		[]domain.CellValue{{Field: "name", Value: "alice"}})))
-	errs = append(errs, wrap(label+": Write r2", f.Repo.Write(f.Table, "r2",
+	errs = append(errs, wrap(label+": Write r2", f.Repo.Write(bg, f.Table, "r2",
 		[]domain.CellValue{{Field: "name", Value: "bob"}})))
-	cells, err := f.Repo.Read(f.Table)
+	cells, err := f.Repo.Read(bg, f.Table)
 	errs = append(errs, wrap(label+": Read", err))
 	errs = append(errs, checkMin(label+": Read cell count", len(cells), 4))
 	keys := map[string]bool{}
@@ -123,11 +130,11 @@ func writeUpdatesExistingRow(f Fixture) []error {
 	const label = "write updates existing row"
 	f.Reset()
 	errs := []error{}
-	errs = append(errs, wrap(label+": Write v1", f.Repo.Write(f.Table, "r1",
+	errs = append(errs, wrap(label+": Write v1", f.Repo.Write(bg, f.Table, "r1",
 		[]domain.CellValue{{Field: "name", Value: "alice"}})))
-	errs = append(errs, wrap(label+": Write v2", f.Repo.Write(f.Table, "r1",
+	errs = append(errs, wrap(label+": Write v2", f.Repo.Write(bg, f.Table, "r1",
 		[]domain.CellValue{{Field: "name", Value: "alice2"}})))
-	cells, err := f.Repo.Read(f.Table)
+	cells, err := f.Repo.Read(bg, f.Table)
 	errs = append(errs, wrap(label+": Read", err))
 	found := false
 	for _, c := range cells {
@@ -143,14 +150,14 @@ func writeUpdatesExistingRow(f Fixture) []error {
 func writeEmptyValues(f Fixture) []error {
 	const label = "write with empty values is a no-op"
 	f.Reset()
-	return []error{wrap(label, f.Repo.Write(f.Table, "r1", nil))}
+	return []error{wrap(label, f.Repo.Write(bg, f.Table, "r1", nil))}
 }
 
 // writeNulByte checks that a NUL byte in a value returns an error.
 func writeNulByte(f Fixture) []error {
 	const label = "write with NUL byte in value returns error"
 	f.Reset()
-	return []error{checkError(label, f.Repo.Write(f.Table, "r1",
+	return []error{checkError(label, f.Repo.Write(bg, f.Table, "r1",
 		[]domain.CellValue{{Field: "name", Value: "bad\x00value"}}))}
 }
 
@@ -158,14 +165,46 @@ func writeNulByte(f Fixture) []error {
 func writeEmptyField(f Fixture) []error {
 	const label = "write with empty field name returns error"
 	f.Reset()
-	return []error{checkError(label, f.Repo.Write(f.Table, "r1",
+	return []error{checkError(label, f.Repo.Write(bg, f.Table, "r1",
 		[]domain.CellValue{{Field: "", Value: "v"}}))}
+}
+
+// readRowReturnsOneRow checks that the cells of one row survive a write
+// and a ReadRow.
+func readRowReturnsOneRow(f Fixture) []error {
+	const label = "read row returns the cells of one row"
+	f.Reset()
+	errs := []error{}
+	errs = append(errs, wrap(label+": Write", f.Repo.Write(bg, f.Table, "r1",
+		[]domain.CellValue{{Field: "name", Value: "alice"}})))
+	cells, err := f.Repo.ReadRow(bg, f.Table, "r1")
+	errs = append(errs, wrap(label+": ReadRow", err))
+	found := false
+	for _, c := range cells {
+		if c.Field == "name" && c.Value == "alice" {
+			found = true
+		}
+	}
+	errs = append(errs, checkBool(label+": name cell", found))
+	return errs
+}
+
+// readRowMissingRow checks that ReadRow of an unknown row returns no
+// cell.
+func readRowMissingRow(f Fixture) []error {
+	const label = "read row of an unknown row returns no cell"
+	f.Reset()
+	cells, err := f.Repo.ReadRow(bg, f.Table, "row_that_does_not_exist")
+	return []error{
+		wrap(label+": ReadRow", err),
+		checkNilCells(label, cells),
+	}
 }
 
 // readMissingTable checks that a read of a missing table returns no cells.
 func readMissingTable(f Fixture) []error {
 	const label = "read from non-existent table returns nil"
-	cells, err := f.Repo.Read("does_not_exist_999")
+	cells, err := f.Repo.Read(bg, "does_not_exist_999")
 	return []error{
 		wrap(label+": Read", err),
 		checkNilCells(label, cells),

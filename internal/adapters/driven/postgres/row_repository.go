@@ -28,8 +28,8 @@ func NewRowRepository(pool poolIface, dialect ports.Dialect) *RowRepository {
 }
 
 // Read returns the cell values for one table in key order.
-func (r *RowRepository) Read(table string) ([]domain.CellValue, error) {
-	ctx := context.Background()
+func (r *RowRepository) Read(ctx context.Context,
+	table string) ([]domain.CellValue, error) {
 	quoted := r.dialect.Quote(table)
 	quotedPK := r.dialect.Quote(pkColumn)
 
@@ -54,7 +54,7 @@ func (r *RowRepository) Read(table string) ([]domain.CellValue, error) {
 		selectCols, quoted, quotedPK, clause,
 	)
 
-	rows, err := r.pool.Query(ctx, query, pageArgs...)
+	rows, err := execIn(ctx, r.pool).Query(ctx, query, pageArgs...)
 	if err != nil {
 		return nil, fmt.Errorf("query rows: %w", err)
 	}
@@ -93,9 +93,62 @@ func (r *RowRepository) Read(table string) ([]domain.CellValue, error) {
 	return cells, nil
 }
 
+// ReadRow returns the cells of one row without the row key column. It
+// returns no cell when the row does not exist.
+func (r *RowRepository) ReadRow(ctx context.Context,
+	table string, row string) ([]domain.CellValue, error) {
+	quoted := r.dialect.Quote(table)
+	quotedPK := r.dialect.Quote(pkColumn)
+
+	fields, err := r.tableFields(ctx, table)
+	if err != nil {
+		return nil, fmt.Errorf("read row of table %q: %w", table, err)
+	}
+	if len(fields) == 0 {
+		return nil, nil
+	}
+
+	columns := make([]string, 0, len(fields))
+	for _, f := range fields {
+		columns = append(columns, r.dialect.Quote(f))
+	}
+	query := fmt.Sprintf("SELECT %s FROM %s WHERE %s = $1",
+		strings.Join(columns, ", "), quoted, quotedPK)
+
+	rows, err := execIn(ctx, r.pool).Query(ctx, query, row)
+	if err != nil {
+		return nil, fmt.Errorf("query row %q: %w", row, err)
+	}
+	defer rows.Close()
+
+	if !rows.Next() {
+		if err := rows.Err(); err != nil {
+			return nil, fmt.Errorf("rows error: %w", err)
+		}
+		return nil, nil
+	}
+	texts := make([]pgtype.Text, len(fields))
+	args := make([]any, 0, len(fields))
+	for i := range fields {
+		args = append(args, &texts[i])
+	}
+	if err := rows.Scan(args...); err != nil {
+		return nil, fmt.Errorf("scan row: %w", err)
+	}
+	cells := make([]domain.CellValue, 0, len(fields))
+	for i, f := range fields {
+		val := ""
+		if texts[i].Valid {
+			val = texts[i].String
+		}
+		cells = append(cells, domain.CellValue{Field: f, Value: val})
+	}
+	return cells, nil
+}
+
 // Write writes one row in the table. It is idempotent for the same row key.
-func (r *RowRepository) Write(table string, row string, values []domain.CellValue) error {
-	ctx := context.Background()
+func (r *RowRepository) Write(ctx context.Context, table string, row string,
+	values []domain.CellValue) error {
 	quoted := r.dialect.Quote(table)
 	quotedPK := r.dialect.Quote(pkColumn)
 
@@ -141,7 +194,7 @@ func (r *RowRepository) Write(table string, row string, values []domain.CellValu
 		args = append(args, v.Value)
 	}
 
-	ct, err := r.pool.Exec(ctx, query, args...)
+	ct, err := execIn(ctx, r.pool).Exec(ctx, query, args...)
 	if err != nil {
 		return fmt.Errorf("write row: %w", err)
 	}
@@ -156,7 +209,7 @@ func (r *RowRepository) tableFields(ctx context.Context, table string) ([]string
 	query := `SELECT column_name FROM information_schema.columns
 WHERE table_name = $1 AND column_name != $2
 ORDER BY ordinal_position`
-	rows, err := r.pool.Query(ctx, query, table, pkColumn)
+	rows, err := execIn(ctx, r.pool).Query(ctx, query, table, pkColumn)
 	if err != nil {
 		return nil, fmt.Errorf("query columns: %w", err)
 	}

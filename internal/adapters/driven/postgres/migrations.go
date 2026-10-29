@@ -26,10 +26,19 @@ CREATE TABLE IF NOT EXISTS _kibtab_meta.audit_log (
     table_name text NOT NULL,
     row_key text NOT NULL,
     field_name text NOT NULL,
+    changed_by text,
     old_value text,
     new_value text,
     changed_at timestamptz NOT NULL DEFAULT now()
 );
+
+ALTER TABLE _kibtab_meta.audit_log ADD COLUMN IF NOT EXISTS changed_by text;
+
+CREATE INDEX IF NOT EXISTS audit_log_cell_idx
+    ON _kibtab_meta.audit_log (table_name, row_key, field_name, id);
+
+CREATE INDEX IF NOT EXISTS audit_log_changed_at_idx
+    ON _kibtab_meta.audit_log (changed_at);
 `
 
 // splitStatements splits the migration SQL into individual statements.

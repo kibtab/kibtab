@@ -25,12 +25,14 @@ const EnvKeyTestDatabaseURL = "KIBTAB_TEST_DATABASE_URL"
 
 // Engine holds the PostgreSQL connection pool and the table list.
 type Engine struct {
-	pool       *pgxpool.Pool
-	dialect    Dialect
-	tables     []string
-	registry   *TableRegistry
-	repository *RowRepository
-	runner     *TransactionRunner
+	pool          *pgxpool.Pool
+	dialect       Dialect
+	tables        []string
+	retentionDays int
+	registry      *TableRegistry
+	repository    *RowRepository
+	audit         *AuditRepository
+	runner        *TransactionRunner
 }
 
 // Compile-time proof that Engine methods satisfy the port interfaces.
@@ -38,6 +40,8 @@ var (
 	_ ports.Dialect           = Dialect{}
 	_ ports.TableRegistry     = (*TableRegistry)(nil)
 	_ ports.RowRepository     = (*RowRepository)(nil)
+	_ ports.AuditWriter       = (*AuditRepository)(nil)
+	_ ports.AuditReader       = (*AuditRepository)(nil)
 	_ ports.TransactionRunner = (*TransactionRunner)(nil)
 )
 
@@ -77,13 +81,20 @@ func NewEngine(ctx context.Context, getenv func(string) string) (*Engine, error)
 
 	tables := ParseTableList(getenv(EnvKeyTables))
 
+	retentionDays, err := parseRetentionDays(getenv)
+	if err != nil {
+		return nil, err
+	}
+
 	engine := &Engine{
-		pool:    pool,
-		dialect: Dialect{},
-		tables:  tables,
+		pool:          pool,
+		dialect:       Dialect{},
+		tables:        tables,
+		retentionDays: retentionDays,
 	}
 	engine.registry = NewTableRegistry(pool, tables)
 	engine.repository = NewRowRepository(pool, engine.dialect)
+	engine.audit = NewAuditRepository(pool, engine.dialect)
 	engine.runner = NewTransactionRunner(pool)
 
 	return engine, nil
@@ -115,6 +126,16 @@ func (e *Engine) TableRegistry() ports.TableRegistry {
 // RowRepository returns the RowRepository port.
 func (e *Engine) RowRepository() ports.RowRepository {
 	return e.repository
+}
+
+// AuditWriter returns the AuditWriter port.
+func (e *Engine) AuditWriter() ports.AuditWriter {
+	return e.audit
+}
+
+// AuditReader returns the AuditReader port.
+func (e *Engine) AuditReader() ports.AuditReader {
+	return e.audit
 }
 
 // TransactionRunner returns the TransactionRunner port.

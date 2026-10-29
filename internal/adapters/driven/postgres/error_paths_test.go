@@ -55,7 +55,7 @@ func TestReadQueryError(t *testing.T) {
 		selectQueryErr: errDummy,
 	}
 	repo := NewRowRepository(pool, Dialect{})
-	_, err := repo.Read("users")
+	_, err := repo.Read(ctx, "users")
 	if err == nil {
 		t.Fatal("Read with SELECT query error: got nil, want error")
 	}
@@ -71,7 +71,7 @@ func TestReadScanError(t *testing.T) {
 		selectRows: selectRows,
 	}
 	repo := NewRowRepository(pool, Dialect{})
-	_, err := repo.Read("users")
+	_, err := repo.Read(ctx, "users")
 	if err == nil {
 		t.Fatal("Read with scan error: got nil, want error")
 	}
@@ -88,7 +88,7 @@ func TestReadRowsErr(t *testing.T) {
 		selectRows: selectRows,
 	}
 	repo := NewRowRepository(pool, Dialect{})
-	_, err := repo.Read("users")
+	_, err := repo.Read(ctx, "users")
 	if err == nil {
 		t.Fatal("Read with rows.Err: got nil, want error")
 	}
@@ -99,7 +99,7 @@ func TestWriteExecError(t *testing.T) {
 		execErr: errDummy,
 	}
 	repo := NewRowRepository(pool, Dialect{})
-	err := repo.Write("users", "r1", []domain.CellValue{
+	err := repo.Write(ctx, "users", "r1", []domain.CellValue{
 		{Field: "name", Value: "test"},
 	})
 	if err == nil {
@@ -112,7 +112,7 @@ func TestWriteNoRowsAffected(t *testing.T) {
 		execNoRows: true,
 	}
 	repo := NewRowRepository(pool, Dialect{})
-	err := repo.Write("users", "r1", []domain.CellValue{
+	err := repo.Write(ctx, "users", "r1", []domain.CellValue{
 		{Field: "name", Value: "test"},
 	})
 	if err == nil {
@@ -131,7 +131,7 @@ func TestReadTableFieldsScanError(t *testing.T) {
 		rows: rows,
 	}
 	repo := NewRowRepository(pool, Dialect{})
-	_, err := repo.Read("users")
+	_, err := repo.Read(ctx, "users")
 	if err == nil {
 		t.Fatal("Read with tableFields scan error: got nil, want error")
 	}
@@ -147,7 +147,7 @@ func TestReadTableFieldsRowsErr(t *testing.T) {
 		rows: rows,
 	}
 	repo := NewRowRepository(pool, Dialect{})
-	_, err := repo.Read("users")
+	_, err := repo.Read(ctx, "users")
 	if err == nil {
 		t.Fatal("Read with tableFields rows.Err: got nil, want error")
 	}
@@ -164,7 +164,7 @@ func TestColumnsScanError(t *testing.T) {
 		rows: rows,
 	}
 	reg := NewTableRegistry(pool, []string{"users"})
-	_, err := reg.Metadata("users")
+	_, err := reg.Metadata(ctx, "users")
 	if err == nil {
 		t.Fatal("Metadata with columns scan error: got nil, want error")
 	}
@@ -180,7 +180,7 @@ func TestColumnsRowsErr(t *testing.T) {
 		rows: rows,
 	}
 	reg := NewTableRegistry(pool, []string{"users"})
-	_, err := reg.Metadata("users")
+	_, err := reg.Metadata(ctx, "users")
 	if err == nil {
 		t.Fatal("Metadata with columns rows.Err: got nil, want error")
 	}
@@ -215,9 +215,10 @@ func TestRunMigrationsAcquireLockError(t *testing.T) {
 }
 
 func TestRunMigrationsReleaseLockError(t *testing.T) {
-	// Number of Exec calls: 1 (lock) + 3 (migration stmts) + 1 (unlock) = 5.
+	// The calls are: the lock, one call for each statement, the unlock.
+	failAt := 1 + len(splitStatements(migrationStmts)) + 1
 	execer := &fakeExecer{
-		failAt:  5,
+		failAt:  failAt,
 		execErr: errDummy,
 	}
 	err := runMigrations(context.Background(), execer)
@@ -244,10 +245,30 @@ type fakeTx struct {
 	pgx.Tx
 	commitErr   error
 	rollbackErr error
+	execCalls   int
+	queryErr    error
+	rows        pgx.Rows
 }
 
 func (f *fakeTx) Commit(_ context.Context) error   { return f.commitErr }
 func (f *fakeTx) Rollback(_ context.Context) error { return f.rollbackErr }
+
+func (f *fakeTx) Exec(_ context.Context, _ string,
+	_ ...any) (pgconn.CommandTag, error) {
+	f.execCalls++
+	return pgconn.NewCommandTag("INSERT 0 1"), nil
+}
+
+func (f *fakeTx) Query(_ context.Context, _ string, _ ...any) (pgx.Rows, error) {
+	if f.queryErr != nil {
+		return nil, f.queryErr
+	}
+	return f.rows, nil
+}
+
+func (f *fakeTx) QueryRow(_ context.Context, _ string, _ ...any) pgx.Row {
+	return &fakeRow{val: int64(1)}
+}
 
 type fakeTxBeginner struct {
 	tx  pgx.Tx
@@ -263,7 +284,7 @@ func TestTransactionRunnerBeginTxError(t *testing.T) {
 		tx:  &fakeTx{},
 		err: errDummy,
 	})
-	err := tr.Run(func() error { return nil })
+	err := tr.Run(func(ctx context.Context) error { return nil })
 	if err == nil {
 		t.Fatal("Run with begin error: got nil, want error")
 	}
@@ -275,7 +296,7 @@ func TestTransactionRunnerRollbackError(t *testing.T) {
 			rollbackErr: errDummy,
 		},
 	})
-	err := tr.Run(func() error { return errors.New("fn error") })
+	err := tr.Run(func(ctx context.Context) error { return errors.New("fn error") })
 	if err == nil {
 		t.Fatal("Run with rollback error: got nil, want error")
 	}
@@ -287,7 +308,7 @@ func TestTransactionRunnerCommitError(t *testing.T) {
 			commitErr: errDummy,
 		},
 	})
-	err := tr.Run(func() error { return nil })
+	err := tr.Run(func(ctx context.Context) error { return nil })
 	if err == nil {
 		t.Fatal("Run with commit error: got nil, want error")
 	}

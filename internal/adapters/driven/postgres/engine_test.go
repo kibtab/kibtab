@@ -53,6 +53,20 @@ func TestEngineAccessors(t *testing.T) {
 		}
 	})
 
+	t.Run("AuditWriter returns a working writer", func(t *testing.T) {
+		writer := engine.AuditWriter()
+		if writer == nil {
+			t.Fatal("AuditWriter returned nil")
+		}
+	})
+
+	t.Run("AuditReader returns a working reader", func(t *testing.T) {
+		reader := engine.AuditReader()
+		if reader == nil {
+			t.Fatal("AuditReader returned nil")
+		}
+	})
+
 	t.Run("TransactionRunner returns a working runner", func(t *testing.T) {
 		tr := engine.TransactionRunner()
 		if tr == nil {
@@ -97,7 +111,7 @@ func TestNewEngineValidURL(t *testing.T) {
 	if err != nil {
 		t.Fatalf("NewEngine: %v", err)
 	}
-	defer engine.Close()
+	defer func() { _ = engine.Close() }()
 
 	if err := engine.Migrate(ctx); err != nil {
 		t.Fatalf("Migrate: %v", err)
@@ -170,6 +184,46 @@ func TestNewEngineInvalidMaxConns(t *testing.T) {
 	}
 }
 
+// TestNewEngineInvalidRetentionDays tests that NewEngine rejects a bad
+// retention value.
+func TestNewEngineInvalidRetentionDays(t *testing.T) {
+	ctx := context.Background()
+	getenv := func(key string) string {
+		if key == "DATABASE_URL" {
+			return "postgres://localhost/kibtab"
+		}
+		if key == EnvKeyAuditRetentionDays {
+			return "ninety"
+		}
+		return ""
+	}
+
+	_, err := NewEngine(ctx, getenv)
+	if err == nil {
+		t.Fatal("NewEngine with bad retention days: got nil, want error")
+	}
+}
+
+// TestNewEngineNegativeRetentionDays tests that NewEngine rejects a
+// negative retention value.
+func TestNewEngineNegativeRetentionDays(t *testing.T) {
+	ctx := context.Background()
+	getenv := func(key string) string {
+		if key == "DATABASE_URL" {
+			return "postgres://localhost/kibtab"
+		}
+		if key == EnvKeyAuditRetentionDays {
+			return "-5"
+		}
+		return ""
+	}
+
+	_, err := NewEngine(ctx, getenv)
+	if err == nil {
+		t.Fatal("NewEngine with negative retention days: got nil, want error")
+	}
+}
+
 // TestNewEngineInvalidMinConns tests that NewEngine rejects a bad pool minimum.
 func TestNewEngineInvalidMinConns(t *testing.T) {
 	ctx := context.Background()
@@ -213,7 +267,7 @@ func TestNewEngineSetsPoolConfig(t *testing.T) {
 	if err != nil {
 		t.Fatalf("NewEngine: %v", err)
 	}
-	defer engine.Close()
+	defer func() { _ = engine.Close() }()
 
 	stats := engine.Pool().Stat()
 	if stats.MaxConns() != 10 {
@@ -226,8 +280,6 @@ func TestNewEngineSetsPoolConfig(t *testing.T) {
 func TestDialectImplementsPort(t *testing.T) {
 	var _ ports.Dialect = Dialect{}
 }
-
-
 
 // TestRowRepositoryClosedPoolError tests that Read on a closed pool returns an error.
 func TestRowRepositoryClosedPoolError(t *testing.T) {
@@ -248,7 +300,7 @@ func TestRowRepositoryClosedPoolError(t *testing.T) {
 	repo := NewRowRepository(pool, Dialect{})
 	pool.Close()
 
-	cells, err := repo.Read("test_table")
+	cells, err := repo.Read(ctx, "test_table")
 	if err == nil {
 		t.Fatalf("Read on closed pool: got %v, want error", cells)
 	}
@@ -271,7 +323,7 @@ func TestTableRegistryClosedPoolError(t *testing.T) {
 	reg := NewTableRegistry(pool, []string{"items"})
 	pool.Close()
 
-	_, err := reg.Metadata("items")
+	_, err := reg.Metadata(ctx, "items")
 	if err == nil {
 		t.Fatal("Metadata on closed pool: got nil, want error")
 	}
@@ -294,7 +346,7 @@ func TestTableRegistryListError(t *testing.T) {
 	reg := NewTableRegistry(pool, []string{"items"})
 	pool.Close()
 
-	_, err := reg.List()
+	_, err := reg.List(ctx)
 	if err == nil {
 		t.Fatal("List on closed pool: got nil, want error")
 	}
@@ -313,7 +365,7 @@ func TestTableRegistryVersionError(t *testing.T) {
 	createTestTable(t, pool, "items", []string{"title", "price"})
 
 	reg := NewTableRegistry(pool, []string{"items"})
-	_, err := reg.Metadata("items")
+	_, err := reg.Metadata(ctx, "items")
 	if err == nil {
 		t.Fatal("Metadata without migrations: got nil, want error")
 	}
@@ -336,7 +388,7 @@ func TestRowRepositoryWriteToNonExistentTable(t *testing.T) {
 
 	repo := NewRowRepository(pool, Dialect{})
 
-	err := repo.Write("nonexistent_table_12345", "r1",
+	err := repo.Write(ctx, "nonexistent_table_12345", "r1",
 		[]domain.CellValue{{Field: "name", Value: "test"}})
 	if err == nil {
 		t.Fatal("Write to non-existent table: got nil, want error")
@@ -361,7 +413,7 @@ func TestTransactionRunnerBeginError(t *testing.T) {
 	runner := NewTransactionRunner(pool)
 	pool.Close()
 
-	err := runner.Run(func() error {
+	err := runner.Run(func(ctx context.Context) error {
 		return nil
 	})
 	if err == nil {

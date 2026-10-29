@@ -1,6 +1,7 @@
 package contracttest
 
 import (
+	"context"
 	"errors"
 	"strings"
 	"testing"
@@ -23,7 +24,8 @@ func newFakeRepo(key string) *fakeRepo {
 	return &fakeRepo{key: key, rows: map[string]map[string]string{}}
 }
 
-func (f *fakeRepo) Write(table string, row string, values []domain.CellValue) error {
+func (f *fakeRepo) Write(_ context.Context, table string, row string,
+	values []domain.CellValue) error {
 	for _, v := range values {
 		if v.Field == "" {
 			return errors.New("field name is empty")
@@ -46,7 +48,7 @@ func (f *fakeRepo) Write(table string, row string, values []domain.CellValue) er
 	return nil
 }
 
-func (f *fakeRepo) Read(table string) ([]domain.CellValue, error) {
+func (f *fakeRepo) Read(_ context.Context, table string) ([]domain.CellValue, error) {
 	var cells []domain.CellValue
 	for _, id := range f.order {
 		if !strings.HasPrefix(id, table+"/") {
@@ -62,6 +64,21 @@ func (f *fakeRepo) Read(table string) ([]domain.CellValue, error) {
 				Value: f.rows[id][field],
 			})
 		}
+	}
+	return cells, nil
+}
+
+// ReadRow returns the cells of one row without the row key column.
+func (f *fakeRepo) ReadRow(_ context.Context, table string,
+	row string) ([]domain.CellValue, error) {
+	id := table + "/" + row
+	stored, seen := f.rows[id]
+	if !seen {
+		return nil, nil
+	}
+	var cells []domain.CellValue
+	for _, field := range fields {
+		cells = append(cells, domain.CellValue{Field: field, Value: stored[field]})
 	}
 	return cells, nil
 }
@@ -107,9 +124,20 @@ func TestRowRepositoryReportsAnEmptyRead(t *testing.T) {
 // emptyRepo reads no cells and writes nothing.
 type emptyRepo struct{}
 
-func (emptyRepo) Write(string, string, []domain.CellValue) error { return nil }
+func (emptyRepo) Write(context.Context, string, string,
+	[]domain.CellValue) error {
+	return nil
+}
 
-func (emptyRepo) Read(string) ([]domain.CellValue, error) { return nil, nil }
+func (emptyRepo) Read(context.Context,
+	string) ([]domain.CellValue, error) {
+	return nil, nil
+}
+
+func (emptyRepo) ReadRow(context.Context, string,
+	string) ([]domain.CellValue, error) {
+	return nil, nil
+}
 
 // TestHelpersPassOnAGoodValue checks that each helper returns no error.
 func TestHelpersPassOnAGoodValue(t *testing.T) {

@@ -66,7 +66,7 @@ func TestIntegrationTableRegistry(t *testing.T) {
 	reg := NewTableRegistry(pool, []string{"items"})
 
 	t.Run("list returns metadata", func(t *testing.T) {
-		metas, err := reg.List()
+		metas, err := reg.List(ctx)
 		if err != nil {
 			t.Fatalf("List: %v", err)
 		}
@@ -84,15 +84,15 @@ func TestIntegrationTableRegistry(t *testing.T) {
 		}
 	})
 
-	t.Run("metadata returns zero version when not set", func(t *testing.T) {
+	t.Run("metadata returns the first version when not set", func(t *testing.T) {
 		createTestTable(t, pool, "empty_version", []string{"f1"})
 		reg2 := NewTableRegistry(pool, []string{"empty_version"})
-		meta, err := reg2.Metadata("empty_version")
+		meta, err := reg2.Metadata(ctx, "empty_version")
 		if err != nil {
 			t.Fatalf("Metadata: %v", err)
 		}
-		if meta.Version != 0 {
-			t.Fatalf("Version: got %d, want 0", meta.Version)
+		if meta.Version != firstVersion {
+			t.Fatalf("Version: got %d, want %d", meta.Version, firstVersion)
 		}
 	})
 }
@@ -133,7 +133,7 @@ func TestIntegrationTransactionRunner(t *testing.T) {
 	runner := NewTransactionRunner(pool)
 
 	t.Run("commit on success", func(t *testing.T) {
-		err := runner.Run(func() error {
+		err := runner.Run(func(ctx context.Context) error {
 			return nil
 		})
 		if err != nil {
@@ -142,7 +142,7 @@ func TestIntegrationTransactionRunner(t *testing.T) {
 	})
 
 	t.Run("rollback on error", func(t *testing.T) {
-		err := runner.Run(func() error {
+		err := runner.Run(func(ctx context.Context) error {
 			return fmt.Errorf("simulated failure")
 		})
 		if err == nil {
@@ -167,7 +167,7 @@ func TestIntegrationTransactionRunner(t *testing.T) {
 		engine.runner = NewTransactionRunner(pool)
 
 		reg := engine.TableRegistry()
-		meta, err := reg.Metadata("txn_test")
+		meta, err := reg.Metadata(ctx, "txn_test")
 		if err != nil {
 			t.Fatalf("Metadata: %v", err)
 		}
@@ -178,7 +178,7 @@ func TestIntegrationTransactionRunner(t *testing.T) {
 			t.Fatalf("Version: got %d, want 3", meta.Version)
 		}
 
-		if err := engine.RowRepository().Write("txn_test", "e1",
+		if err := engine.RowRepository().Write(ctx, "txn_test", "e1",
 			[]domain.CellValue{{Field: "name", Value: "test"}}); err != nil {
 			t.Fatalf("Write: %v", err)
 		}

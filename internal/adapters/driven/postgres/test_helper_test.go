@@ -15,6 +15,10 @@ import (
 // local socket of a development PostgreSQL.
 const defaultTestDSN = "host=/tmp/pgsocket port=5433 user=postgres sslmode=disable"
 
+// ctx is the context that the error-path tests pass to a port. A test
+// that needs another context declares its own.
+var ctx = context.Background()
+
 // testEnvURL returns the connection string for the named database.
 // It reads KIBTAB_TEST_DATABASE_URL for the host and the credentials.
 // It falls back to defaultTestDSN for a developer run.
@@ -51,24 +55,6 @@ func buildDSN(c *pgconn.Config) string {
 		parts = append(parts, "sslmode=disable")
 	}
 	return strings.Join(parts, " ")
-}
-
-// testPool creates a connection pool for the named database.
-func testPool(t *testing.T, dbName string) *pgxpool.Pool {
-	t.Helper()
-	url := testEnvURL(t, dbName)
-	config, err := pgxpool.ParseConfig(url)
-	if err != nil {
-		t.Fatalf("parse test database URL: %v", err)
-	}
-	pool, err := pgxpool.NewWithConfig(context.Background(), config)
-	if err != nil {
-		t.Fatalf("create pool: %v", err)
-	}
-	t.Cleanup(func() {
-		pool.Close()
-	})
-	return pool
 }
 
 // testDBName sanitises a test name into a database name.

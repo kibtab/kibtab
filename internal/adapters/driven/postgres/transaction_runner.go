@@ -27,8 +27,9 @@ func NewTransactionRunner(pool txBeginner) *TransactionRunner {
 }
 
 // Run runs fn inside one transaction. It commits on success and rolls back
-// on error.
-func (t *TransactionRunner) Run(fn func() error) error {
+// on error. The context that fn receives holds the transaction, so each
+// port call of fn runs on that transaction.
+func (t *TransactionRunner) Run(fn func(context.Context) error) error {
 	ctx := context.Background()
 	opts := pgx.TxOptions{
 		IsoLevel:   pgx.ReadCommitted,
@@ -42,7 +43,7 @@ func (t *TransactionRunner) Run(fn func() error) error {
 		_ = tx.Rollback(ctx)
 	}()
 
-	if err := fn(); err != nil {
+	if err := fn(withTx(ctx, tx)); err != nil {
 		if rbErr := tx.Rollback(ctx); rbErr != nil {
 			return fmt.Errorf("rollback: %v (after error: %v)", rbErr, err)
 		}
