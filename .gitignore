@@ -5,10 +5,10 @@ dist/
 *.zip
 
 # Test and coverage output
-coverage.out
+coverage*.out
 coverage.svg
-build-errors.log
 *.test
+build-errors.log
 cpu.prof
 trace.out
 bench.txt
@@ -21,13 +21,13 @@ new-bench.txt
 # Editor and OS files
 .DS_Store
 *.swp
+
 # Python bytecode from the scripts
 __pycache__/
 *.pyc
 
-# Documentation build (make docs-serve) and its virtual environment
+# Installed dependencies and the output of a tool
+node_modules/
 .venv/
 docs/_build/
-
 .headroom
-client/excel/node_modules
