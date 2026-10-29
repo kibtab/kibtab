@@ -14,7 +14,7 @@ func discardLogger() *slog.Logger {
 }
 
 func TestNewHandlerUnknownRoute(t *testing.T) {
-	handler := NewHandler(fakeRegistry{}, fakeRows{}, &fakeSync{},
+	handler := NewHandler(fakeRegistry{}, fakeRows{}, &fakeAudit{}, &fakeSync{},
 		discardLogger())
 
 	recorder := httptest.NewRecorder()

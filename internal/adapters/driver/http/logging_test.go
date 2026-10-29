@@ -16,7 +16,7 @@ func bufferLogger(buffer *bytes.Buffer) *slog.Logger {
 
 func TestRequestLog(t *testing.T) {
 	var buffer bytes.Buffer
-	handler := NewHandler(fakeRegistry{}, fakeRows{}, &fakeSync{},
+	handler := NewHandler(fakeRegistry{}, fakeRows{}, &fakeAudit{}, &fakeSync{},
 		bufferLogger(&buffer))
 	recorder := httptest.NewRecorder()
 
@@ -45,7 +45,7 @@ func TestRequestLog(t *testing.T) {
 
 func TestRequestLogNotFound(t *testing.T) {
 	var buffer bytes.Buffer
-	handler := NewHandler(fakeRegistry{}, fakeRows{}, &fakeSync{},
+	handler := NewHandler(fakeRegistry{}, fakeRows{}, &fakeAudit{}, &fakeSync{},
 		bufferLogger(&buffer))
 	recorder := httptest.NewRecorder()
 

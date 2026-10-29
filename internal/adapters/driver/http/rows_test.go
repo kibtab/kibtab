@@ -1,6 +1,7 @@
 package http
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	nethttp "net/http"
@@ -17,11 +18,18 @@ type fakeRows struct {
 	err   error
 }
 
-func (f fakeRows) Read(string) ([]domain.CellValue, error) {
+func (f fakeRows) Read(context.Context,
+	string) ([]domain.CellValue, error) {
 	return f.cells, f.err
 }
 
-func (f fakeRows) Write(string, string, []domain.CellValue) error {
+func (f fakeRows) ReadRow(context.Context,
+	string, string) ([]domain.CellValue, error) {
+	return f.cells, f.err
+}
+
+func (f fakeRows) Write(context.Context,
+	string, string, []domain.CellValue) error {
 	return f.err
 }
 
@@ -49,7 +57,8 @@ func TestListRows(t *testing.T) {
 		{Field: "k", Value: "2"},
 		{Field: "name", Value: "bob"},
 	}}
-	handler := NewHandler(registry, rows, &fakeSync{}, discardLogger())
+	handler := NewHandler(registry, rows, &fakeAudit{}, &fakeSync{},
+		discardLogger())
 
 	recorder := httptest.NewRecorder()
 	handler.ServeHTTP(recorder,
@@ -75,7 +84,7 @@ func TestListRows(t *testing.T) {
 }
 
 func TestListRowsEmpty(t *testing.T) {
-	handler := NewHandler(fakeRegistry{}, fakeRows{}, &fakeSync{}, discardLogger())
+	handler := NewHandler(fakeRegistry{}, fakeRows{}, &fakeAudit{}, &fakeSync{}, discardLogger())
 
 	recorder := httptest.NewRecorder()
 	handler.ServeHTTP(recorder,
@@ -91,7 +100,7 @@ func TestListRowsEmpty(t *testing.T) {
 
 func TestListRowsMetadataError(t *testing.T) {
 	handler := NewHandler(fakeRegistry{metadataErr: errors.New("boom")},
-		fakeRows{}, &fakeSync{}, discardLogger())
+		fakeRows{}, &fakeAudit{}, &fakeSync{}, discardLogger())
 
 	recorder := httptest.NewRecorder()
 	handler.ServeHTTP(recorder,
@@ -106,7 +115,7 @@ func TestListRowsMetadataError(t *testing.T) {
 
 func TestListRowsReadError(t *testing.T) {
 	handler := NewHandler(fakeRegistry{}, fakeRows{err: errors.New("boom")},
-		&fakeSync{}, discardLogger())
+		&fakeAudit{}, &fakeSync{}, discardLogger())
 
 	recorder := httptest.NewRecorder()
 	handler.ServeHTTP(recorder,
@@ -164,7 +173,8 @@ func usersTable() fakeRegistry {
 func postRow(t *testing.T, registry fakeRegistry, syncService *fakeSync, body string) *httptest.ResponseRecorder {
 	t.Helper()
 
-	handler := NewHandler(registry, fakeRows{}, syncService, discardLogger())
+	handler := NewHandler(registry, fakeRows{}, &fakeAudit{}, syncService,
+		discardLogger())
 	recorder := httptest.NewRecorder()
 	handler.ServeHTTP(recorder, httptest.NewRequest(
 		nethttp.MethodPost, "/v1/tables/users/rows", strings.NewReader(body)))

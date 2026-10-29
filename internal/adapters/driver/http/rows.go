@@ -37,7 +37,7 @@ type rowWrite struct {
 func (h handlers) listRows(w nethttp.ResponseWriter, r *nethttp.Request) {
 	table := chi.URLParam(r, "table")
 
-	meta, err := h.tables.Metadata(table)
+	meta, err := h.tables.Metadata(r.Context(), table)
 	if err != nil {
 		h.log.Error("read the table metadata", "error", err)
 		h.writeError(w, nethttp.StatusInternalServerError, codeInternal,
@@ -45,7 +45,7 @@ func (h handlers) listRows(w nethttp.ResponseWriter, r *nethttp.Request) {
 		return
 	}
 
-	cells, err := h.rows.Read(table)
+	cells, err := h.rows.Read(r.Context(), table)
 	if err != nil {
 		h.log.Error("read the rows", "error", err)
 		h.writeError(w, nethttp.StatusInternalServerError, codeInternal,
@@ -72,7 +72,7 @@ func (h handlers) addRow(w nethttp.ResponseWriter, r *nethttp.Request) {
 		return
 	}
 
-	h.writeSync(w, table, rowDelta(body))
+	h.writeSync(w, r, table, rowDelta(body))
 }
 
 // rowDelta expands one row write into one cell change for each cell.

@@ -46,6 +46,13 @@ func routeContracts() []routeContract {
 			bodyKey:  "rows",
 		},
 		{
+			name:     "GET /v1/tables/{table}/rows/{row}/audit",
+			method:   nethttp.MethodGet,
+			path:     "/v1/tables/users/rows/1/audit?field=name",
+			registry: usersTable(),
+			bodyKey:  "audit",
+		},
+		{
 			name:   "POST /v1/tables/{table}/rows",
 			method: nethttp.MethodPost,
 			path:   "/v1/tables/users/rows",
@@ -88,7 +95,7 @@ func TestRouteContractSuccess(t *testing.T) {
 			if sync == nil {
 				sync = &fakeSync{}
 			}
-			handler := NewHandler(c.registry, fakeRows{}, sync, discardLogger())
+			handler := NewHandler(c.registry, fakeRows{}, &fakeAudit{}, sync, discardLogger())
 			recorder := httptest.NewRecorder()
 
 			handler.ServeHTTP(recorder, c.request(c.method))
@@ -114,7 +121,8 @@ func TestRouteContractFailure(t *testing.T) {
 		t.Run(c.name, func(t *testing.T) {
 			registry := fakeRegistry{err: errors.New("boom"),
 				metadataErr: errors.New("boom")}
-			handler := NewHandler(registry, fakeRows{}, &fakeSync{},
+			handler := NewHandler(registry, fakeRows{}, &fakeAudit{
+				err: errors.New("boom")}, &fakeSync{},
 				discardLogger())
 			recorder := httptest.NewRecorder()
 
@@ -139,7 +147,7 @@ func TestRouteContractFailure(t *testing.T) {
 func TestRouteContractMethod(t *testing.T) {
 	for _, c := range routeContracts() {
 		t.Run(c.name, func(t *testing.T) {
-			handler := NewHandler(c.registry, fakeRows{}, &fakeSync{},
+			handler := NewHandler(c.registry, fakeRows{}, &fakeAudit{}, &fakeSync{},
 				discardLogger())
 			recorder := httptest.NewRecorder()
 

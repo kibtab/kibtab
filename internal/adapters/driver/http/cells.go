@@ -21,5 +21,5 @@ func (h handlers) addCells(w nethttp.ResponseWriter, r *nethttp.Request) {
 		return
 	}
 
-	h.writeSync(w, table, body.Delta)
+	h.writeSync(w, r, table, body.Delta)
 }

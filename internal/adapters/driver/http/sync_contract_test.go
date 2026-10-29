@@ -18,7 +18,7 @@ var errStaleWrite = errors.New("stale write")
 
 func TestSyncServiceContract(t *testing.T) {
 	recorder := &contracttest.SyncRecorder{}
-	handler := NewHandler(usersTable(), fakeRows{}, recorder, discardLogger())
+	handler := NewHandler(usersTable(), fakeRows{}, &fakeAudit{}, recorder, discardLogger())
 
 	fixture := contracttest.SyncFixture{
 		Service: recorder,

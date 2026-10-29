@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	nethttp "net/http"
+	"strings"
 
 	"github.com/kibtab/kibtab/internal/core/domain"
 )
@@ -27,11 +28,18 @@ type syncJSON struct {
 	Rows []syncRowJSON `json:"rows"`
 }
 
+// headerUser is the request header that names the user of a write.
+const headerUser = "X-Kibtab-User"
+
+// unknownUser is the audit user of a write that names no user.
+const unknownUser = "unknown"
+
 // writeSync checks the delta against the table and runs the sync. It
-// writes the response for the result.
-func (h handlers) writeSync(w nethttp.ResponseWriter, table string,
-	delta []deltaJSON) {
-	meta, err := h.tables.Metadata(table)
+// writes the response for the result. It reads the user of the write
+// from the request header.
+func (h handlers) writeSync(w nethttp.ResponseWriter, r *nethttp.Request,
+	table string, delta []deltaJSON) {
+	meta, err := h.tables.Metadata(r.Context(), table)
 	if err != nil {
 		h.log.Error("read the table metadata", "error", err)
 		h.writeError(w, nethttp.StatusInternalServerError, codeInternal,
@@ -45,7 +53,10 @@ func (h handlers) writeSync(w nethttp.ResponseWriter, table string,
 		return
 	}
 
-	result, err := h.syncService.Sync(toDeltaPayload(table, delta))
+	payload := toDeltaPayload(table, delta)
+	payload.User = requestUser(r)
+
+	result, err := h.syncService.Sync(payload)
 	if err != nil {
 		h.writeSyncError(w, err)
 		return
@@ -76,6 +87,16 @@ func (h handlers) writeSyncError(w nethttp.ResponseWriter, err error) {
 	h.log.Error("run the sync", "error", err)
 	h.writeError(w, nethttp.StatusInternalServerError, codeInternal,
 		"the row write failed")
+}
+
+// requestUser returns the user of one write request. It returns the
+// unknown user when the header is empty or when it holds spaces only.
+func requestUser(r *nethttp.Request) string {
+	user := strings.TrimSpace(r.Header.Get(headerUser))
+	if user == "" {
+		return unknownUser
+	}
+	return user
 }
 
 // unknownField returns the first delta field outside the table fields.

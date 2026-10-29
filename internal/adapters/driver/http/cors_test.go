@@ -16,7 +16,7 @@ func checkHeader(t *testing.T, recorder *httptest.ResponseRecorder, key, want st
 }
 
 func TestCORSPreflight(t *testing.T) {
-	handler := NewHandler(fakeRegistry{}, fakeRows{}, &fakeSync{},
+	handler := NewHandler(fakeRegistry{}, fakeRows{}, &fakeAudit{}, &fakeSync{},
 		discardLogger())
 	request := httptest.NewRequest(nethttp.MethodOptions, "/v1/tables", nil)
 	request.Header.Set("Origin", "https://localhost:3000")
@@ -35,7 +35,7 @@ func TestCORSPreflight(t *testing.T) {
 }
 
 func TestCORSRequestWithOrigin(t *testing.T) {
-	handler := NewHandler(fakeRegistry{}, fakeRows{}, &fakeSync{},
+	handler := NewHandler(fakeRegistry{}, fakeRows{}, &fakeAudit{}, &fakeSync{},
 		discardLogger())
 	request := httptest.NewRequest(nethttp.MethodGet, "/v1/tables", nil)
 	request.Header.Set("Origin", "https://contoso.example")
@@ -51,7 +51,7 @@ func TestCORSRequestWithOrigin(t *testing.T) {
 }
 
 func TestCORSNoOrigin(t *testing.T) {
-	handler := NewHandler(fakeRegistry{}, fakeRows{}, &fakeSync{},
+	handler := NewHandler(fakeRegistry{}, fakeRows{}, &fakeAudit{}, &fakeSync{},
 		discardLogger())
 	recorder := httptest.NewRecorder()
 

@@ -13,7 +13,7 @@ import (
 func postCells(t *testing.T, registry fakeRegistry, syncService *fakeSync, body string) *httptest.ResponseRecorder {
 	t.Helper()
 
-	handler := NewHandler(registry, fakeRows{}, syncService, discardLogger())
+	handler := NewHandler(registry, fakeRows{}, &fakeAudit{}, syncService, discardLogger())
 	recorder := httptest.NewRecorder()
 	handler.ServeHTTP(recorder, httptest.NewRequest(
 		nethttp.MethodPost, "/v1/tables/users/cells", strings.NewReader(body)))

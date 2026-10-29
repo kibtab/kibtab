@@ -13,16 +13,19 @@ import (
 type handlers struct {
 	tables      ports.TableRegistry
 	rows        ports.RowRepository
+	audit       ports.AuditReader
 	syncService ports.SyncService
 	log         *slog.Logger
 }
 
 // NewHandler builds the HTTP routes of the transport.
 func NewHandler(tables ports.TableRegistry, rows ports.RowRepository,
-	syncService ports.SyncService, log *slog.Logger) nethttp.Handler {
+	audit ports.AuditReader, syncService ports.SyncService,
+	log *slog.Logger) nethttp.Handler {
 	h := handlers{
 		tables:      tables,
 		rows:        rows,
+		audit:       audit,
 		syncService: syncService,
 		log:         log,
 	}
@@ -33,6 +36,7 @@ func NewHandler(tables ports.TableRegistry, rows ports.RowRepository,
 	router.Get("/v1/tables", h.listTables)
 	router.Get("/v1/tables/{table}/rows", h.listRows)
 	router.Post("/v1/tables/{table}/rows", h.addRow)
+	router.Get("/v1/tables/{table}/rows/{row}/audit", h.listAudit)
 	router.Post("/v1/tables/{table}/cells", h.addCells)
 	return router
 }

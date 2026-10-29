@@ -20,7 +20,7 @@ type tableList struct {
 
 // listTables answers GET /v1/tables.
 func (h handlers) listTables(w nethttp.ResponseWriter, r *nethttp.Request) {
-	tables, err := h.tables.List()
+	tables, err := h.tables.List(r.Context())
 	if err != nil {
 		h.log.Error("list the tables", "error", err)
 		h.writeError(w, nethttp.StatusInternalServerError, codeInternal,

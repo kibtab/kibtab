@@ -65,33 +65,33 @@ func TestOfficeJsSyncServiceContract(t *testing.T) {
 
 	fixture := contracttest.SyncFixture{
 		Service: recorder,
-	Send: func(payload domain.SyncPayload) (domain.SyncResult, error) {
-		body, err := officePayloadJSON(payload)
-		if err != nil {
-			return domain.SyncResult{}, err
-		}
-		result, err := recorder.Sync(payload)
-		if err != nil {
-			return domain.SyncResult{}, err
-		}
-		// Extract row errors from the result, like the HTTP transport does.
-		if rerr := rowError(result); rerr != nil {
-			var conflict domain.ConflictError
-			if errors.As(rerr, &conflict) {
-				return domain.SyncResult{}, errStaleWrite
+		Send: func(payload domain.SyncPayload) (domain.SyncResult, error) {
+			body, err := officePayloadJSON(payload)
+			if err != nil {
+				return domain.SyncResult{}, err
 			}
-			var invalid domain.ValidationError
-			if errors.As(rerr, &invalid) {
+			result, err := recorder.Sync(payload)
+			if err != nil {
+				return domain.SyncResult{}, err
+			}
+			// Extract row errors from the result, like the HTTP transport does.
+			if rerr := rowError(result); rerr != nil {
+				var conflict domain.ConflictError
+				if errors.As(rerr, &conflict) {
+					return domain.SyncResult{}, errStaleWrite
+				}
+				var invalid domain.ValidationError
+				if errors.As(rerr, &invalid) {
+					return domain.SyncResult{}, rerr
+				}
 				return domain.SyncResult{}, rerr
 			}
-			return domain.SyncResult{}, rerr
-		}
-		// The client reads the result from the HTTP body.
-		if _, merr := officeResultFromJSON(body); merr == nil {
-			// Result parsed successfully.
-		}
-		return result, nil
-	},
+			// The client reads the result from the HTTP body.
+			if _, merr := officeResultFromJSON(body); merr != nil {
+				return domain.SyncResult{}, merr
+			}
+			return result, nil
+		},
 		IsConflict: func(err error) bool {
 			return errors.Is(err, errStaleWrite)
 		},

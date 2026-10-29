@@ -1,6 +1,7 @@
 package http
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	nethttp "net/http"
@@ -18,12 +19,21 @@ type fakeRegistry struct {
 	metadataErr error
 }
 
-func (f fakeRegistry) List() ([]domain.TableMetadata, error) {
+func (f fakeRegistry) List(context.Context) ([]domain.TableMetadata, error) {
 	return f.tables, f.err
 }
 
-func (f fakeRegistry) Metadata(string) (domain.TableMetadata, error) {
+func (f fakeRegistry) Metadata(context.Context,
+	string) (domain.TableMetadata, error) {
 	return f.meta, f.metadataErr
+}
+
+func (f fakeRegistry) LockVersion(context.Context, string) (int64, error) {
+	return f.meta.Version, nil
+}
+
+func (f fakeRegistry) BumpVersion(context.Context, string) (int64, error) {
+	return f.meta.Version + 1, nil
 }
 
 func TestListTables(t *testing.T) {
@@ -31,7 +41,7 @@ func TestListTables(t *testing.T) {
 		{Name: "users", Fields: []string{"id", "name"}, Version: 3},
 		{Name: "orders", Fields: []string{"id"}, Version: 1},
 	}}
-	handler := NewHandler(registry, fakeRows{}, &fakeSync{}, discardLogger())
+	handler := NewHandler(registry, fakeRows{}, &fakeAudit{}, &fakeSync{}, discardLogger())
 
 	recorder := httptest.NewRecorder()
 	handler.ServeHTTP(recorder,
@@ -57,7 +67,7 @@ func TestListTables(t *testing.T) {
 }
 
 func TestListTablesEmpty(t *testing.T) {
-	handler := NewHandler(fakeRegistry{}, fakeRows{}, &fakeSync{},
+	handler := NewHandler(fakeRegistry{}, fakeRows{}, &fakeAudit{}, &fakeSync{},
 		discardLogger())
 
 	recorder := httptest.NewRecorder()
@@ -74,7 +84,7 @@ func TestListTablesEmpty(t *testing.T) {
 
 func TestListTablesError(t *testing.T) {
 	handler := NewHandler(fakeRegistry{err: errors.New("boom")}, fakeRows{},
-		&fakeSync{}, discardLogger())
+		&fakeAudit{}, &fakeSync{}, discardLogger())
 
 	recorder := httptest.NewRecorder()
 	handler.ServeHTTP(recorder,
