@@ -1,7 +1,8 @@
 # Build output
 bin/
 dist/
-kibtab
+/kibtab
+*.zip
 
 # Test and coverage output
 coverage.out
