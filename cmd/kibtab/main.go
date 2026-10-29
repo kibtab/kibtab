@@ -14,12 +14,16 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"log/slog"
 	"net"
 	"net/http"
 	"os"
 	"strconv"
 
 	"github.com/kibtab/kibtab/internal/adapters/driven/postgres"
+	driverhttp "github.com/kibtab/kibtab/internal/adapters/driver/http"
+	"github.com/kibtab/kibtab/internal/core/ports"
+	"github.com/kibtab/kibtab/internal/core/services"
 )
 
 // version is the Kibtab version. The plan in plan.md holds the releases.
@@ -90,6 +94,13 @@ func (e errMissingDatabaseURL) Error() string {
 // dbEngine is the minimal interface that run needs from the database engine.
 type dbEngine interface {
 	Migrate(ctx context.Context) error
+	PruneAudit(ctx context.Context) (int64, error)
+	Dialect() ports.Dialect
+	TableRegistry() ports.TableRegistry
+	RowRepository() ports.RowRepository
+	AuditWriter() ports.AuditWriter
+	AuditReader() ports.AuditReader
+	TransactionRunner() ports.TransactionRunner
 	Close() error
 }
 
@@ -99,11 +110,34 @@ var newEngine = func(ctx context.Context, getenv func(string) string) (dbEngine,
 	return postgres.NewEngine(ctx, getenv)
 }
 
-// newMux builds the HTTP routes of the instance.
-func newMux() *http.ServeMux {
+// newMux builds the routes of the instance. It serves the health check.
+// It serves the REST routes when the instance has a database.
+func newMux(api http.Handler) *http.ServeMux {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/healthz", healthzHandler)
+	if api != nil {
+		mux.Handle("/v1/", api)
+	}
 	return mux
+}
+
+// newAPI maps the ports of one engine onto the HTTP transport. It
+// builds the sync service and it hands each port to the transport.
+func newAPI(engine dbEngine, logger *slog.Logger) http.Handler {
+	syncService := services.NewSyncService(
+		engine.TableRegistry(),
+		engine.RowRepository(),
+		engine.AuditWriter(),
+		engine.Dialect(),
+		engine.TransactionRunner(),
+	)
+	return driverhttp.NewHandler(
+		engine.TableRegistry(),
+		engine.RowRepository(),
+		engine.AuditReader(),
+		syncService,
+		logger,
+	)
 }
 
 // run wires the adapters and it serves the instance. It returns the error
@@ -114,6 +148,7 @@ func run(getenv func(string) string, stderr io.Writer) error {
 	if err != nil {
 		return err
 	}
+	var api http.Handler
 	if err := checkDatabaseURL(getenv); err != nil {
 		log.Printf("config: %v", err)
 	} else {
@@ -122,18 +157,26 @@ func run(getenv func(string) string, stderr io.Writer) error {
 		if err != nil {
 			return err
 		}
-		defer engine.Close()
+		defer func() {
+			if err := engine.Close(); err != nil {
+				log.Printf("close: %v", err)
+			}
+		}()
 		if err := engine.Migrate(ctx); err != nil {
 			return fmt.Errorf("migrate: %w", err)
 		}
 		log.Printf("kibtab %s connected to the database", version)
+		logger := slog.New(slog.NewTextHandler(stderr, nil))
+		api = newAPI(engine, logger)
+		stop := startAuditRetention(engine)
+		defer stop()
 	}
 	listener, err := net.Listen("tcp", address)
 	if err != nil {
 		return err
 	}
 	log.Printf("kibtab %s listens on http://%s", version, listener.Addr().String())
-	return serve(listener, newMux())
+	return serve(listener, newMux(api))
 }
 
 // serve holds the serve call of the standard library. The test replaces it.

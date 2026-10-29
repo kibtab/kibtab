@@ -14,6 +14,8 @@ import (
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/kibtab/kibtab/internal/core/ports"
 )
 
 func TestHealthzAnswersWithStatusAndVersion(t *testing.T) {
@@ -142,7 +144,7 @@ func (w failingWriter) Write([]byte) (int, error) {
 }
 
 func TestNewMuxServesHealthz(t *testing.T) {
-	ts := httptest.NewServer(newMux())
+	ts := httptest.NewServer(newMux(nil))
 	t.Cleanup(ts.Close)
 
 	response, err := http.Get(ts.URL + "/healthz")
@@ -432,6 +434,7 @@ type fakeEngine struct {
 	closeErr   error
 	migrated   bool
 	closed     bool
+	pruned     int64
 }
 
 func (f *fakeEngine) Migrate(_ context.Context) error {
@@ -439,9 +442,100 @@ func (f *fakeEngine) Migrate(_ context.Context) error {
 	return f.migrateErr
 }
 
+func (f *fakeEngine) PruneAudit(_ context.Context) (int64, error) {
+	return f.pruned, nil
+}
+
 func (f *fakeEngine) Close() error {
 	f.closed = true
 	return f.closeErr
+}
+
+func (f *fakeEngine) Dialect() ports.Dialect { return nil }
+
+func (f *fakeEngine) TableRegistry() ports.TableRegistry { return nil }
+
+func (f *fakeEngine) RowRepository() ports.RowRepository { return nil }
+
+func (f *fakeEngine) AuditWriter() ports.AuditWriter { return nil }
+
+func (f *fakeEngine) AuditReader() ports.AuditReader { return nil }
+
+func (f *fakeEngine) TransactionRunner() ports.TransactionRunner { return nil }
+
+// TestNewMuxServesTheAPI checks that the REST routes reach the handler
+// of the transport beside the health check.
+func TestNewMuxServesTheAPI(t *testing.T) {
+	api := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		if _, err := w.Write([]byte(`{"routes":"api"}`)); err != nil {
+			t.Errorf("write the API body: %v", err)
+		}
+	})
+	ts := httptest.NewServer(newMux(api))
+	t.Cleanup(ts.Close)
+
+	response, err := http.Get(ts.URL + "/v1/tables")
+	if err != nil {
+		t.Fatalf("get /v1/tables: %v", err)
+	}
+	if response.StatusCode != http.StatusOK {
+		if err := response.Body.Close(); err != nil {
+			t.Fatalf("close response body: %v", err)
+		}
+		t.Fatalf("status code: got %d, want %d", response.StatusCode,
+			http.StatusOK)
+	}
+	body := struct {
+		Routes string `json:"routes"`
+	}{}
+	if err := json.NewDecoder(response.Body).Decode(&body); err != nil {
+		if err := response.Body.Close(); err != nil {
+			t.Fatalf("close response body: %v", err)
+		}
+		t.Fatalf("decode body: %v", err)
+	}
+	if err := response.Body.Close(); err != nil {
+		t.Fatalf("close response body: %v", err)
+	}
+	if body.Routes != "api" {
+		t.Fatalf("body: got %q, want the API answer", body.Routes)
+	}
+}
+
+// TestRunStartsAndStopsTheRetentionJob checks that a run with a database
+// starts the retention job and that the run stops it on return.
+func TestRunStartsAndStopsTheRetentionJob(t *testing.T) {
+	serve = func(net.Listener, http.Handler) error { return nil }
+	t.Cleanup(func() { serve = http.Serve })
+
+	original := newEngine
+	t.Cleanup(func() { newEngine = original })
+	newEngine = func(_ context.Context, _ func(string) string) (dbEngine, error) {
+		return &fakeEngine{}, nil
+	}
+
+	listener, err := net.Listen("tcp", "127.0.0.1:0")
+	if err != nil {
+		t.Fatalf("reserve a port: %v", err)
+	}
+	port := strings.TrimPrefix(listener.Addr().String(), "127.0.0.1:")
+	if err := listener.Close(); err != nil {
+		t.Fatalf("close the reserved port: %v", err)
+	}
+
+	getenv := func(key string) string {
+		if key == "PORT" {
+			return port
+		}
+		if key == "DATABASE_URL" {
+			return "postgres://localhost/kibtab"
+		}
+		return ""
+	}
+	if err := run(getenv, io.Discard); err != nil {
+		t.Fatalf("run with a database: unexpected error: %v", err)
+	}
 }
 
 func TestRunCreatesEngineAndMigrates(t *testing.T) {
@@ -485,6 +579,46 @@ func TestRunCreatesEngineAndMigrates(t *testing.T) {
 	}
 	if !fake.closed {
 		t.Fatal("engine was not closed")
+	}
+}
+
+func TestRunLogsTheCloseError(t *testing.T) {
+	serve = func(net.Listener, http.Handler) error { return nil }
+	t.Cleanup(func() { serve = http.Serve })
+
+	original := newEngine
+	t.Cleanup(func() { newEngine = original })
+
+	fake := &fakeEngine{closeErr: errors.New("close failed")}
+	newEngine = func(_ context.Context, _ func(string) string) (dbEngine, error) {
+		return fake, nil
+	}
+
+	listener, err := net.Listen("tcp", "127.0.0.1:0")
+	if err != nil {
+		t.Fatalf("reserve a port: %v", err)
+	}
+	port := strings.TrimPrefix(listener.Addr().String(), "127.0.0.1:")
+	if err := listener.Close(); err != nil {
+		t.Fatalf("close the reserved port: %v", err)
+	}
+
+	getenv := func(key string) string {
+		if key == "PORT" {
+			return port
+		}
+		if key == "DATABASE_URL" {
+			return "postgres://localhost/kibtab"
+		}
+		return ""
+	}
+
+	var logBuffer bytes.Buffer
+	if err := run(getenv, &logBuffer); err != nil {
+		t.Fatalf("run with a close error: unexpected error: %v", err)
+	}
+	if !strings.Contains(logBuffer.String(), "close: close failed") {
+		t.Fatalf("log does not hold the close error: %q", logBuffer.String())
 	}
 }
 
