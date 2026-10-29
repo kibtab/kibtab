@@ -1,6 +1,7 @@
 package ports
 
 import (
+	"context"
 	"errors"
 	"testing"
 	"time"
@@ -9,9 +10,9 @@ import (
 )
 
 func TestFakesCompile(t *testing.T) {
-	_, _, _, _, _, _, _ = newFakeDialect(), newFakeRowRepository(),
-		newFakeTableRegistry(), newFakeAuditWriter(), newFakeTransactionRunner(),
-		newFakeClock(), newFakeSyncService()
+	_, _, _, _, _, _, _, _ = newFakeDialect(), newFakeRowRepository(),
+		newFakeTableRegistry(), newFakeAuditWriter(), newFakeAuditReader(),
+		newFakeTransactionRunner(), newFakeClock(), newFakeSyncService()
 }
 
 func newFakeDialect() Dialect {
@@ -41,7 +42,8 @@ func newFakeRowRepository() RowRepository {
 
 type fakeRowRepository struct{}
 
-func (f *fakeRowRepository) Read(table string) ([]domain.CellValue, error) {
+func (f *fakeRowRepository) Read(_ context.Context,
+	table string) ([]domain.CellValue, error) {
 	if table == "" {
 		return nil, errFakeRead{table: table}
 	}
@@ -57,7 +59,16 @@ func (e errFakeRead) Error() string {
 	return "row repository read failed for " + e.table
 }
 
-func (f *fakeRowRepository) Write(table string, row string, values []domain.CellValue) error {
+func (f *fakeRowRepository) ReadRow(_ context.Context,
+	table string, row string) ([]domain.CellValue, error) {
+	if table == "" || row == "" {
+		return nil, errFakeRead{table: table}
+	}
+	return []domain.CellValue{{Field: "f1", Value: "old"}}, nil
+}
+
+func (f *fakeRowRepository) Write(_ context.Context,
+	table string, row string, values []domain.CellValue) error {
 	if table == "" {
 		return errFakeWrite{table: table}
 	}
@@ -76,7 +87,7 @@ func newFakeTableRegistry() TableRegistry {
 
 type fakeTableRegistry struct{}
 
-func (f *fakeTableRegistry) List() ([]domain.TableMetadata, error) {
+func (f *fakeTableRegistry) List(context.Context) ([]domain.TableMetadata, error) {
 	return []domain.TableMetadata{
 		{
 			Name:    "t1",
@@ -86,7 +97,8 @@ func (f *fakeTableRegistry) List() ([]domain.TableMetadata, error) {
 	}, nil
 }
 
-func (f *fakeTableRegistry) Metadata(table string) (domain.TableMetadata, error) {
+func (f *fakeTableRegistry) Metadata(_ context.Context,
+	table string) (domain.TableMetadata, error) {
 	if table == "" {
 		return domain.TableMetadata{}, errors.New("table registry metadata failed for " + table)
 	}
@@ -97,15 +109,32 @@ func (f *fakeTableRegistry) Metadata(table string) (domain.TableMetadata, error)
 	}, nil
 }
 
+func (f *fakeTableRegistry) LockVersion(_ context.Context,
+	table string) (int64, error) {
+	if table == "" {
+		return 0, errors.New("table registry lock failed for " + table)
+	}
+	return 1, nil
+}
+
+func (f *fakeTableRegistry) BumpVersion(_ context.Context,
+	table string) (int64, error) {
+	if table == "" {
+		return 0, errors.New("table registry bump failed for " + table)
+	}
+	return 2, nil
+}
+
 func newFakeAuditWriter() AuditWriter {
 	return &fakeAuditWriter{}
 }
 
 type fakeAuditWriter struct{}
 
-func (f *fakeAuditWriter) Write(table string, row string, field string, oldValue string, newValue string) error {
-	if table == "" {
-		return errFakeAudit{table: table}
+func (f *fakeAuditWriter) Record(_ context.Context,
+	entry domain.AuditRow) error {
+	if entry.Table == "" {
+		return errFakeAudit{table: entry.Table}
 	}
 	return nil
 }
@@ -116,14 +145,28 @@ func (e errFakeAudit) Error() string {
 	return "audit writer failed for " + e.table
 }
 
+func newFakeAuditReader() AuditReader {
+	return &fakeAuditReader{}
+}
+
+type fakeAuditReader struct{}
+
+func (f *fakeAuditReader) Read(_ context.Context, table string,
+	row string, field string) ([]domain.AuditRow, error) {
+	if table == "" || row == "" || field == "" {
+		return nil, errors.New("audit reader failed")
+	}
+	return []domain.AuditRow{{Table: table, Row: row, Field: field}}, nil
+}
+
 func newFakeTransactionRunner() TransactionRunner {
 	return &fakeTransactionRunner{}
 }
 
 type fakeTransactionRunner struct{}
 
-func (f *fakeTransactionRunner) Run(fn func() error) error {
-	return fn()
+func (f *fakeTransactionRunner) Run(fn func(context.Context) error) error {
+	return fn(context.Background())
 }
 
 func newFakeClock() Clock {

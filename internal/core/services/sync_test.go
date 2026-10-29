@@ -13,20 +13,27 @@ func oneRowPayload(version int64) domain.SyncPayload {
 	return domain.SyncPayload{
 		Table: "t1",
 		Delta: []domain.CellDelta{{
-			Row:     "r1",
-			Field:   "name",
-			Value:   "alice",
-			Version: version,
+			Row:   "r1",
+			Field: "name",
+			Value: "alice", Version: version,
 		}},
 	}
+}
+
+// newService builds a SyncService with one fake for each port.
+func newService(registry *fakeRegistry, repository *fakeRepository,
+	audit *fakeAudit, dialect *fakeDialect,
+	runner *fakeRunner) *SyncService {
+	return NewSyncService(registry, repository, audit, dialect, runner)
 }
 
 func TestSyncWritesEachRowGroupInOneTransaction(t *testing.T) {
 	registry := &fakeRegistry{meta: domain.TableMetadata{Version: 3}}
 	repository := &fakeRepository{}
+	audit := &fakeAudit{}
 	dialect := &fakeDialect{coerced: map[string]string{"alice": "ALICE"}}
 	runner := &fakeRunner{}
-	service := NewSyncService(registry, repository, dialect, runner)
+	service := newService(registry, repository, audit, dialect, runner)
 
 	payload := domain.SyncPayload{
 		Table: "t1",
@@ -52,14 +59,23 @@ func TestSyncWritesEachRowGroupInOneTransaction(t *testing.T) {
 		if rowResult.Error != nil {
 			t.Fatalf("Sync() row %q error: %v", rowResult.Row, rowResult.Error)
 		}
-		if rowResult.Version != 3 {
-			t.Fatalf("Sync() row %q version: got %d, want 3",
-				rowResult.Row, rowResult.Version)
-		}
+	}
+	// Each written group bumps the table version by one, so the row
+	// results hold versions 4 and 5.
+	if result.RowResults[0].Version != 4 {
+		t.Fatalf("Sync() first row version: got %d, want 4",
+			result.RowResults[0].Version)
+	}
+	if result.RowResults[1].Version != 5 {
+		t.Fatalf("Sync() second row version: got %d, want 5",
+			result.RowResults[1].Version)
 	}
 	if runner.runs != 2 || runner.commits != 2 || runner.rollbacks != 0 {
 		t.Fatalf("runner: got %d runs, %d commits, %d rollbacks, want 2, 2, 0",
 			runner.runs, runner.commits, runner.rollbacks)
+	}
+	if registry.bumps != 2 {
+		t.Fatalf("registry bumps: got %d, want 2", registry.bumps)
 	}
 	if len(repository.writes) != 2 {
 		t.Fatalf("repository writes: got %d, want 2", len(repository.writes))
@@ -74,11 +90,60 @@ func TestSyncWritesEachRowGroupInOneTransaction(t *testing.T) {
 	}
 }
 
+func TestSyncWritesOneAuditRowPerCellChange(t *testing.T) {
+	registry := &fakeRegistry{meta: domain.TableMetadata{Version: 1}}
+	repository := &fakeRepository{
+		oldRow: map[string][]domain.CellValue{
+			"r1": {{Field: "name", Value: "bob"}},
+		},
+	}
+	audit := &fakeAudit{}
+	runner := &fakeRunner{}
+	service := newService(registry, repository, audit, &fakeDialect{}, runner)
+
+	payload := domain.SyncPayload{
+		Table: "t1",
+		User:  "rita",
+		Delta: []domain.CellDelta{
+			{Row: "r1", Field: "name", Value: "alice", Version: 1},
+			{Row: "r1", Field: "email", Value: "alice@example.org", Version: 1},
+		},
+	}
+
+	result, err := service.Sync(payload)
+	if err != nil {
+		t.Fatalf("Sync() error: %v", err)
+	}
+	if result.RowResults[0].Error != nil {
+		t.Fatalf("Sync() row error: %v", result.RowResults[0].Error)
+	}
+	if len(audit.entries) != 2 {
+		t.Fatalf("audit rows: got %d, want 2", len(audit.entries))
+	}
+	name := audit.entries[0]
+	if name.Table != "t1" || name.Row != "r1" || name.Field != "name" {
+		t.Fatalf("audit row: got %+v, want the cell t1/r1/name", name)
+	}
+	if name.User != "rita" {
+		t.Fatalf("audit user: got %q, want %q", name.User, "rita")
+	}
+	if name.OldValue != "bob" || name.NewValue != "alice" {
+		t.Fatalf("audit values: got old %q new %q, want old bob new alice",
+			name.OldValue, name.NewValue)
+	}
+	email := audit.entries[1]
+	if email.Field != "email" || email.OldValue != "" {
+		t.Fatalf("audit row: got %+v, want the cell t1/r1/email with no old value",
+			email)
+	}
+}
+
 func TestSyncConflictReturnsError(t *testing.T) {
 	registry := &fakeRegistry{meta: domain.TableMetadata{Version: 4}}
 	repository := &fakeRepository{}
+	audit := &fakeAudit{}
 	runner := &fakeRunner{}
-	service := NewSyncService(registry, repository, &fakeDialect{}, runner)
+	service := newService(registry, repository, audit, &fakeDialect{}, runner)
 
 	result, err := service.Sync(oneRowPayload(3))
 	if err != nil {
@@ -106,6 +171,12 @@ func TestSyncConflictReturnsError(t *testing.T) {
 	if len(repository.writes) != 0 {
 		t.Fatalf("repository writes: got %d, want 0", len(repository.writes))
 	}
+	if len(audit.entries) != 0 {
+		t.Fatalf("audit rows: got %d, want 0", len(audit.entries))
+	}
+	if registry.bumps != 0 {
+		t.Fatalf("registry bumps: got %d, want 0", registry.bumps)
+	}
 	if runner.rollbacks != 1 {
 		t.Fatalf("runner rollbacks: got %d, want 1", runner.rollbacks)
 	}
@@ -114,8 +185,9 @@ func TestSyncConflictReturnsError(t *testing.T) {
 func TestSyncRollbackKeepsOtherGroups(t *testing.T) {
 	registry := &fakeRegistry{meta: domain.TableMetadata{Version: 1}}
 	repository := &fakeRepository{failRow: "r1"}
+	audit := &fakeAudit{}
 	runner := &fakeRunner{}
-	service := NewSyncService(registry, repository, &fakeDialect{}, runner)
+	service := newService(registry, repository, audit, &fakeDialect{}, runner)
 
 	payload := domain.SyncPayload{
 		Table: "t1",
@@ -145,14 +217,20 @@ func TestSyncRollbackKeepsOtherGroups(t *testing.T) {
 	if len(repository.writes) != 2 {
 		t.Fatalf("repository writes: got %d, want 2", len(repository.writes))
 	}
+	// The failed group keeps the expected version for the next group, so
+	// the second group still matches the stored version.
+	if registry.bumps != 1 {
+		t.Fatalf("registry bumps: got %d, want 1", registry.bumps)
+	}
 }
 
 func TestSyncCoercionErrorRollsBack(t *testing.T) {
 	registry := &fakeRegistry{meta: domain.TableMetadata{Version: 1}}
 	repository := &fakeRepository{}
+	audit := &fakeAudit{}
 	dialect := &fakeDialect{err: errors.New("bad value")}
 	runner := &fakeRunner{}
-	service := NewSyncService(registry, repository, dialect, runner)
+	service := newService(registry, repository, audit, dialect, runner)
 
 	result, err := service.Sync(oneRowPayload(1))
 	if err != nil {
@@ -170,10 +248,11 @@ func TestSyncCoercionErrorRollsBack(t *testing.T) {
 }
 
 func TestSyncRegistryErrorRollsBack(t *testing.T) {
-	registry := &fakeRegistry{err: errors.New("no metadata")}
+	registry := &fakeRegistry{lockErr: errors.New("no metadata")}
 	repository := &fakeRepository{}
+	audit := &fakeAudit{}
 	runner := &fakeRunner{}
-	service := NewSyncService(registry, repository, &fakeDialect{}, runner)
+	service := newService(registry, repository, audit, &fakeDialect{}, runner)
 
 	result, err := service.Sync(oneRowPayload(1))
 	if err != nil {
@@ -190,8 +269,75 @@ func TestSyncRegistryErrorRollsBack(t *testing.T) {
 	}
 }
 
+func TestSyncReadRowErrorRollsBack(t *testing.T) {
+	registry := &fakeRegistry{meta: domain.TableMetadata{Version: 1}}
+	repository := &fakeRepository{readErr: errors.New("no old value")}
+	audit := &fakeAudit{}
+	runner := &fakeRunner{}
+	service := newService(registry, repository, audit, &fakeDialect{}, runner)
+
+	result, err := service.Sync(oneRowPayload(1))
+	if err != nil {
+		t.Fatalf("Sync() error: %v", err)
+	}
+	if result.RowResults[0].Error == nil {
+		t.Fatal("Sync() read row: got no error, want one")
+	}
+	if len(repository.writes) != 0 {
+		t.Fatalf("repository writes: got %d, want 0", len(repository.writes))
+	}
+	if runner.rollbacks != 1 {
+		t.Fatalf("runner rollbacks: got %d, want 1", runner.rollbacks)
+	}
+}
+
+func TestSyncAuditErrorRollsBack(t *testing.T) {
+	registry := &fakeRegistry{meta: domain.TableMetadata{Version: 1}}
+	repository := &fakeRepository{}
+	audit := &fakeAudit{err: errors.New("audit failed")}
+	runner := &fakeRunner{}
+	service := newService(registry, repository, audit, &fakeDialect{}, runner)
+
+	result, err := service.Sync(oneRowPayload(1))
+	if err != nil {
+		t.Fatalf("Sync() error: %v", err)
+	}
+	if result.RowResults[0].Error == nil {
+		t.Fatal("Sync() audit: got no error, want one")
+	}
+	if registry.bumps != 0 {
+		t.Fatalf("registry bumps: got %d, want 0", registry.bumps)
+	}
+	if runner.rollbacks != 1 {
+		t.Fatalf("runner rollbacks: got %d, want 1", runner.rollbacks)
+	}
+}
+
+func TestSyncBumpErrorRollsBack(t *testing.T) {
+	registry := &fakeRegistry{
+		meta:    domain.TableMetadata{Version: 1},
+		bumpErr: errors.New("bump failed"),
+	}
+	repository := &fakeRepository{}
+	audit := &fakeAudit{}
+	runner := &fakeRunner{}
+	service := newService(registry, repository, audit, &fakeDialect{}, runner)
+
+	result, err := service.Sync(oneRowPayload(1))
+	if err != nil {
+		t.Fatalf("Sync() error: %v", err)
+	}
+	if result.RowResults[0].Error == nil {
+		t.Fatal("Sync() bump: got no error, want one")
+	}
+	if runner.rollbacks != 1 {
+		t.Fatalf("runner rollbacks: got %d, want 1", runner.rollbacks)
+	}
+}
+
 func TestSyncValidationError(t *testing.T) {
-	service := NewSyncService(&fakeRegistry{}, &fakeRepository{}, &fakeDialect{}, &fakeRunner{})
+	service := newService(&fakeRegistry{}, &fakeRepository{}, &fakeAudit{},
+		&fakeDialect{}, &fakeRunner{})
 
 	result, err := service.Sync(domain.SyncPayload{})
 	if err == nil {
@@ -204,7 +350,8 @@ func TestSyncValidationError(t *testing.T) {
 
 func TestSyncRaceOneWriteWins(t *testing.T) {
 	engine := &raceEngine{version: 1}
-	service := NewSyncService(engine, engine, engine, engine)
+	audit := &fakeAudit{}
+	service := NewSyncService(engine, engine, audit, engine, engine)
 
 	const writers = 2
 	results := make([]domain.SyncResult, writers)
