@@ -2,13 +2,14 @@ openapi: 3.0.3
 
 info:
   title: Kibtab API
-  version: 0.5.0
+  version: 0.7.0
   description: >
     Kibtab turns a spreadsheet into a client for a relational database.
-    This file holds the REST interface of the HTTP transport at v0.5.0.
+    This file holds the REST interface of the HTTP transport at v0.7.0.
     The transport answers each request with one structured log line, and it
     sets the `X-Request-Id` response header. The CORS policy reflects the
-    origin of an Office.js taskpane.
+    origin of an Office.js taskpane. A write reads the user from the
+    `X-Kibtab-User` header and it stores the user in each audit row.
 
 servers:
   - url: http://localhost:8080
@@ -57,6 +58,7 @@ paths:
         every cell of the row.
       parameters:
         - $ref: "#/components/parameters/Table"
+        - $ref: "#/components/parameters/User"
       requestBody:
         required: true
         content:
@@ -88,6 +90,7 @@ paths:
       summary: Write a group of cells through the sync service.
       parameters:
         - $ref: "#/components/parameters/Table"
+        - $ref: "#/components/parameters/User"
       requestBody:
         required: true
         content:
@@ -113,6 +116,29 @@ paths:
         "500":
           $ref: "#/components/responses/InternalError"
 
+  /v1/tables/{table}/rows/{row}/audit:
+    get:
+      operationId: listAudit
+      summary: Read the audit rows of one cell.
+      parameters:
+        - $ref: "#/components/parameters/Table"
+        - $ref: "#/components/parameters/Row"
+        - $ref: "#/components/parameters/Field"
+      responses:
+        "200":
+          description: The audit rows of the cell in write order.
+          headers:
+            X-Request-Id:
+              $ref: "#/components/headers/RequestID"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuditList"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/InternalError"
+
 components:
   parameters:
     Table:
@@ -120,6 +146,29 @@ components:
       in: path
       required: true
       description: The table name. The registry must hold it.
+      schema:
+        type: string
+    Row:
+      name: row
+      in: path
+      required: true
+      description: The row key. The registry must hold the table.
+      schema:
+        type: string
+    Field:
+      name: field
+      in: query
+      required: true
+      description: The field name of the cell. The registry must hold it.
+      schema:
+        type: string
+    User:
+      name: X-Kibtab-User
+      in: header
+      required: false
+      description: >
+        The user of the write. The instance stores it in each audit row.
+        A write without the header stores `unknown`.
       schema:
         type: string
 
@@ -322,7 +371,7 @@ components:
 
     RowResult:
       type: object
-      description: The version of one written row.
+      description: The new version of one written row.
       required:
         - key
         - version
@@ -332,4 +381,41 @@ components:
         version:
           type: integer
           format: int64
+      additionalProperties: false
+
+    AuditList:
+      type: object
+      description: The body of GET /v1/tables/{table}/rows/{row}/audit.
+      required:
+        - audit
+      properties:
+        audit:
+          type: array
+          description: One entry for each audit row of the cell.
+          items:
+            $ref: "#/components/schemas/AuditEntry"
+      additionalProperties: false
+
+    AuditEntry:
+      type: object
+      description: One audit row of one cell.
+      required:
+        - field
+        - user
+        - old_value
+        - new_value
+        - changed_at
+      properties:
+        field:
+          type: string
+        user:
+          type: string
+          description: The user of the write. It is `unknown` without a header.
+        old_value:
+          type: string
+        new_value:
+          type: string
+        changed_at:
+          type: string
+          format: date-time
       additionalProperties: false

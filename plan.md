@@ -148,18 +148,7 @@ This release holds no Office.js taskpane.
 
 ### Scope
 
-* [x] Create `client/`. It holds the Office.js taskpane.
-* [x] The taskpane sends a `SyncPayload` and shows the result.
-* [x] The taskpane shows a conflict message. It offers a reload.
-* [x] The taskpane groups a burst of edits into one payload.
-* [x] Add `manifest.xml` for the add-in.
-* [x] Add the client build. It uses `esbuild`.
-* [x] Add the CI job for the client. It runs apart from the Go build.
-* [x] Install pnpm in the client CI job before `setup-node` reads its
-      cache. `actions/setup-node` does not install pnpm.
-* [x] Add the output `kibtab-taskpane.zip`.
-* [x] Add the rows for the client packages to
-      `docs/THIRD_PARTY_NOTICES.md`.
+Implemented, see [v0.6.0 changelog](docs/changelogs/v0.6.0.md).
 
 ### Out Of Scope
 
@@ -169,8 +158,8 @@ This release holds no store submission.
 ### Done When
 
 * [ ] A manual test edits a cell in Excel. `psql` shows the new value.
-* [ ] The build produces the `kibtab-taskpane.zip` file.
-* [ ] `docs/changelogs/v0.6.0.md` exists.
+* [x] The build produces the `kibtab-taskpane.zip` file.
+* [x] `docs/changelogs/v0.6.0.md` exists.
 
 ## 8. Release v0.7.0 - Audit And Locking
 
@@ -178,13 +167,7 @@ This release holds no store submission.
 
 ### Scope
 
-* [ ] Write each cell change to `_kibtab_meta.audit_log`.
-* [ ] Store the user, the time, the old value, and the new value.
-* [ ] Bump the version. Run it in the same transaction as the data write.
-* [ ] Add the query path. It reads the audit rows for one cell.
-* [ ] Add the retention job. It removes old audit rows.
-* [ ] Read the retention days from `KIBTAB_AUDIT_RETENTION_DAYS`.
-* [ ] Add a test. It writes a cell and finds the audit row.
+Implemented, see [v0.7.0 changelog](docs/changelogs/v0.7.0.md).
 
 ### Out Of Scope
 
@@ -192,9 +175,9 @@ This release holds no export of an audit row.
 
 ### Done When
 
-* [ ] The test writes a cell and finds the audit row.
-* [ ] A stale write returns the conflict code. It writes nothing.
-* [ ] `docs/changelogs/v0.7.0.md` exists.
+* [x] The test writes a cell and finds the audit row.
+* [x] A stale write returns the conflict code. It writes nothing.
+* [x] `docs/changelogs/v0.7.0.md` exists.
 
 ## 9. Release v0.8.0 - Packaging
 

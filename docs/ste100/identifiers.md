@@ -33,6 +33,33 @@ Read [the catalogue](index.md) first.
 - **Correct Example:** *The core declares `AuditWriter` in `ports/`.*
 - **Incorrect Example:** *The core declares `AuditLogger` in `ports/`.*
 
+## Technical Name: AuditRow
+- **Part of Speech:** Noun
+- **Category:** Identifier
+- **Definition:** The domain model that holds one audit row.
+- **Approved Form:** AuditRow
+- **Do Not Use:** AuditEntry, AuditRecord, ChangeRow
+- **Correct Example:** *The core declares `AuditRow` in `domain/`.*
+- **Incorrect Example:** *The core declares `AuditEntry` in `domain/`.*
+
+## Technical Name: AuditReader
+- **Part of Speech:** Noun
+- **Category:** Identifier
+- **Definition:** The port that reads the audit rows of one cell.
+- **Approved Form:** AuditReader
+- **Do Not Use:** AuditQuery, AuditHistory, ChangeReader
+- **Correct Example:** *The core declares `AuditReader` in `ports/`.*
+- **Incorrect Example:** *The core declares `AuditQuery` in `ports/`.*
+
+## Technical Name: AuditRepository
+- **Part of Speech:** Noun
+- **Category:** Identifier
+- **Definition:** The adapter that reads and writes audit rows.
+- **Approved Form:** AuditRepository
+- **Do Not Use:** AuditStore, AuditGateway, AuditDao
+- **Correct Example:** *The adapter declares `AuditRepository` in `postgres/`.*
+- **Incorrect Example:** *The adapter declares `AuditStore` in `postgres/`.*
+
 ## Technical Name: Dialect
 - **Part of Speech:** Noun
 - **Category:** Identifier

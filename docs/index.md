@@ -46,8 +46,8 @@ The plan in `plan.md` holds the scope for each version.
 | v0.3.0 | PostgreSQL adapter | [v0.3.0.md](changelogs/v0.3.0.md) |
 | v0.4.0 | Write path | [v0.4.0.md](changelogs/v0.4.0.md) |
 | v0.5.0 | HTTP API | [v0.5.0.md](changelogs/v0.5.0.md) |
-| v0.6.0 | Office.js client | Not written yet |
-| v0.7.0 | Audit and locking | Not written yet |
+| v0.6.0 | Office.js client | [v0.6.0.md](changelogs/v0.6.0.md) |
+| v0.7.0 | Audit and locking | [v0.7.0.md](changelogs/v0.7.0.md) |
 | v0.8.0 | Packaging | Not written yet |
 | v0.9.0 | Hardening | Not written yet |
 | v1.0.0 | Stable | Not written yet |

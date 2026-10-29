@@ -1,6 +1,6 @@
 # Architecture
 
-Version 0.2.0. This document holds the design of Kibtab.
+Version 0.7.0. This document holds the design of Kibtab.
 It holds the layer rules and the port contract.
 
 This document holds the canonical layout and the canonical port table.
@@ -63,9 +63,10 @@ The table lives in this document.
 
 | Port | Need it fills |
 | --- | --- |
-| `RowRepository` | Read and write rows in a table. |
-| `TableRegistry` | List the tables. Read the metadata for a table. |
+| `RowRepository` | Read and write rows in a table. Read one row. |
+| `TableRegistry` | List the tables. Read the metadata for a table. Lock the version. Bump the version. |
 | `AuditWriter` | Record a change to a cell. |
+| `AuditReader` | Read the audit rows of one cell. |
 | `Dialect` | Quote an identifier. Map a value to a type. Page a query. |
 | `TransactionRunner` | Run a group of writes as one unit. |
 | `Clock` | Give the current time. |
@@ -73,6 +74,15 @@ The table lives in this document.
 
 Add a port to the table in this document first.
 Then define it in `internal/core/ports/`.
+
+Each port call takes a context.
+`TransactionRunner.Run` puts the transaction in the context that it gives
+to its function.
+Each port call of that function then runs on the same transaction.
+
+The sync service locks the version row and it compares the version.
+It writes the data, the audit rows, and the new version.
+All of it runs in that one transaction.
 
 ## The Data Flow
 
