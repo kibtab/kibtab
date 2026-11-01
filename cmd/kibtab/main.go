@@ -3,8 +3,9 @@
 // Kibtab turns a spreadsheet into a client for a relational database.
 // Release v0.1.0 starts the instance and it answers a health check.
 //
-// The command reads PORT for the listen address and DATABASE_URL for the
-// database. Release v0.3.0 connects to the database. It reads the address,
+// The command reads PORT and KIBTAB_HOST for the listen address. It reads
+// DATABASE_URL for the database. Release v0.3.0 connects to the database.
+// It reads the address,
 // it creates the PostgreSQL engine, and it runs the migrations at start.
 package main
 
@@ -51,11 +52,16 @@ func healthzHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// listenAddress reads the listen address from PORT. It defaults to 8080.
+// listenAddress reads the listen address from KIBTAB_HOST and PORT.
+// It defaults to 127.0.0.1 on port 8080.
 func listenAddress(getenv func(string) string) (string, error) {
+	host := getenv("KIBTAB_HOST")
+	if host == "" {
+		host = "127.0.0.1"
+	}
 	raw := getenv("PORT")
 	if raw == "" {
-		return "127.0.0.1:8080", nil
+		return host + ":8080", nil
 	}
 	port, err := strconv.Atoi(raw)
 	if err != nil {
@@ -64,7 +70,7 @@ func listenAddress(getenv func(string) string) (string, error) {
 	if port < 1 || port > 65535 {
 		return "", errInvalidPort{port: port}
 	}
-	return "127.0.0.1:" + strconv.Itoa(port), nil
+	return host + ":" + strconv.Itoa(port), nil
 }
 
 // errInvalidPort reports a PORT value outside the TCP port range.

@@ -191,6 +191,7 @@ This release holds no export of an audit row.
 
 ### Scope
 
+* [x] Add the host setting `KIBTAB_HOST`. The container needs it.
 * [x] Add `.goreleaser.yaml`. It builds for Linux, macOS, and Windows.
 * [ ] Set `CGO_ENABLED=0` in the GoReleaser build environment.
 * [ ] Build an archive for each target. Use `tar.gz` for Linux and macOS.
