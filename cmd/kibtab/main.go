@@ -25,6 +25,7 @@ import (
 	driverhttp "github.com/kibtab/kibtab/internal/adapters/driver/http"
 	"github.com/kibtab/kibtab/internal/core/ports"
 	"github.com/kibtab/kibtab/internal/core/services"
+	"github.com/kibtab/kibtab/internal/core/metrics"
 )
 
 // version is the Kibtab version. The plan in plan.md holds the releases.
@@ -49,6 +50,20 @@ func healthzHandler(w http.ResponseWriter, r *http.Request) {
 	body := healthResponse{Status: "ok", Version: version}
 	if err := encoder.Encode(body); err != nil {
 		log.Printf("healthz: write response: %v", err)
+	}
+}
+
+// metricsHandler answers GET /metrics with Prometheus text format metrics.
+func metricsHandler(m *metrics.Metrics) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			w.Header().Set("Allow", http.MethodGet)
+			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+		m.IncrRequestsByRoute(r.URL.Path, "/metrics")
+		m.IncrRequestsTotal()
+		m.WriteMetrics(w)
 	}
 }
 
@@ -118,9 +133,11 @@ var newEngine = func(ctx context.Context, getenv func(string) string) (dbEngine,
 
 // newMux builds the routes of the instance. It serves the health check.
 // It serves the REST routes when the instance has a database.
-func newMux(api http.Handler) *http.ServeMux {
+// It serves the metrics endpoint at /metrics.
+func newMux(api http.Handler, metrics *metrics.Metrics) *http.ServeMux {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/healthz", healthzHandler)
+	mux.HandleFunc("/metrics", metricsHandler(metrics))
 	if api != nil {
 		mux.Handle("/v1/", api)
 	}
@@ -155,6 +172,7 @@ func run(getenv func(string) string, stderr io.Writer) error {
 		return err
 	}
 	var api http.Handler
+	var m metrics.Metrics
 	if err := checkDatabaseURL(getenv); err != nil {
 		log.Printf("config: %v", err)
 	} else {
@@ -174,6 +192,7 @@ func run(getenv func(string) string, stderr io.Writer) error {
 		log.Printf("kibtab %s connected to the database", version)
 		logger := slog.New(slog.NewTextHandler(stderr, nil))
 		api = newAPI(engine, logger)
+		api = metrics.TrackMetrics(api, &m)
 		stop := startAuditRetention(engine)
 		defer stop()
 	}
@@ -182,7 +201,7 @@ func run(getenv func(string) string, stderr io.Writer) error {
 		return err
 	}
 	log.Printf("kibtab %s listens on http://%s", version, listener.Addr().String())
-	return serve(listener, newMux(api))
+	return serve(listener, newMux(api, &m))
 }
 
 // serve holds the serve call of the standard library. The test replaces it.

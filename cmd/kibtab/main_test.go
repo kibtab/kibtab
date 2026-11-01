@@ -16,6 +16,7 @@ import (
 	"time"
 
 	"github.com/kibtab/kibtab/internal/core/ports"
+	"github.com/kibtab/kibtab/internal/core/metrics"
 )
 
 func TestHealthzAnswersWithStatusAndVersion(t *testing.T) {
@@ -161,7 +162,7 @@ func (w failingWriter) Write([]byte) (int, error) {
 }
 
 func TestNewMuxServesHealthz(t *testing.T) {
-	ts := httptest.NewServer(newMux(nil))
+	ts := httptest.NewServer(newMux(nil, nil))
 	t.Cleanup(ts.Close)
 
 	response, err := http.Get(ts.URL + "/healthz")
@@ -489,7 +490,7 @@ func TestNewMuxServesTheAPI(t *testing.T) {
 			t.Errorf("write the API body: %v", err)
 		}
 	})
-	ts := httptest.NewServer(newMux(api))
+	ts := httptest.NewServer(newMux(api, &metrics.Metrics{}))
 	t.Cleanup(ts.Close)
 
 	response, err := http.Get(ts.URL + "/v1/tables")
