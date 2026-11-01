@@ -137,7 +137,7 @@ Use the name of the folder in the repository.
 | `deploy` | The `Dockerfile`, the `Caddyfile`, and the compose file. |
 | `release` | GoReleaser, the tags, and the archives. |
 | `build` | The `Makefile`, `air.toml`, and `.gitignore`. |
-| `docs` | Every file under `docs/`, plus `README.md` and `AGENTS.md`. |
+| `docs` | Every file under `docs/`, plus `README.md`, `AGENTS.md`, and `plan.md`. |
 | `deps` | `go.mod` and `go.sum`. |
 | `ci` | The workflow files. |
 | `scripts` | The check scripts under `scripts/`. |

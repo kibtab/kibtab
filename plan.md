@@ -51,6 +51,12 @@ The gate for a release lives in `AGENTS.md` section 5.
 | v1.0.0 | Stable | The interface freezes. |
 | v1.1.0 and later | Growth | New adapters and new features. |
 
+Every version keeps the Go 1 compatibility promise.
+Read [the Go 1 compatibility document](https://go.dev/doc/go1compat)
+before you change the code.
+Code that builds on Go 1.22 keeps building on each later release.
+Section 2 of [the agent rules](AGENTS.md) holds each rule for the code.
+
 ## 2. Release v0.1.0 - Skeleton
 
 **Goal:** Kibtab starts and it answers a health check.
@@ -258,6 +264,8 @@ This release holds no horizontal scale.
 
 * [ ] Freeze the REST paths and the JSON field names.
 * [ ] Freeze the CLI flags and the exit codes.
+* [ ] Confirm the Go 1 compatibility promise for each package.
+      Read [the Go 1 compatibility document](https://go.dev/doc/go1compat).
 * [ ] Write the migration guide for each earlier version.
 * [ ] Confirm the Apache License 2.0 covers every file that Kibtab wrote.
       The licence does not change at this version.

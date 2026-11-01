@@ -51,6 +51,16 @@ table, the data flow, and the steps to add an adapter.
 ## 2. Code
 
 * Use Go 1.22. Set `go 1.22` in `go.mod`. Run `gofmt` and `go vet`.
+* Keep the Go 1 compatibility promise. Read
+  [the Go 1 compatibility document](https://go.dev/doc/go1compat).
+  Code that builds on Go 1.22 keeps building on each later release.
+* Never use a language feature or a standard package that a release after
+  Go 1.22 adds. Raise the pin in `go.mod` first.
+* Use a keyed struct literal for a type from another package.
+  Write `domain.Row{ID: id}`. Never write `domain.Row{id}`.
+* Never use a dot import. Name the package at each use.
+* Never import `unsafe`. Never depend on undefined behaviour or on a
+  compiler bug.
 * Handle all errors directly. Never ignore a returned error.
 * Set `CGO_ENABLED=0` in every build, test, and release command.
 * Add no dependency that needs CGO.
