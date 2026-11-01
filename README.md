@@ -1,13 +1,7 @@
-<!--
-Badges. Uncomment these lines once `make coverage-svg` writes coverage.svg.
-The coverage badge needs a test run first. Keep the badge links in step
-with the repository name.
-
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/kibtab/kibtab?style=for-the-badge&logo=go)
 ![GitHub License](https://img.shields.io/github/license/kibtab/kibtab?style=for-the-badge)
 
 ![Coverage](coverage.svg)
--->
 
 # Kibtab
 

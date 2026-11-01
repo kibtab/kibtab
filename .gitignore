@@ -6,7 +6,6 @@ dist/
 
 # Test and coverage output
 coverage*.out
-coverage.svg
 *.test
 build-errors.log
 cpu.prof
