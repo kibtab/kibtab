@@ -42,8 +42,11 @@ install: ## Install the CLI into $GOPATH/bin (go install)
 run: ## Run the CLI (extra args after --)
 	CGO_ENABLED=0 $(GO) run ./cmd/kibtab -- $(filter-out $@,$(MAKECMDGOALS))
 
-test: ## Run all tests with a coverage summary
-	CGO_ENABLED=0 $(GO) test -cover ./...
+test: postgres-start ## Run all tests with a coverage summary
+	CGO_ENABLED=0 KIBTAB_TEST_DATABASE_URL="$(PG_TEST_URL_BASE)" $(GO) test -cover ./... -count=1; \
+	status=$$?; \
+	$(MAKE) postgres-stop; \
+	exit $$status
 
 cover: ## Run the tests and print the per-function coverage breakdown
 	CGO_ENABLED=0 $(GO) test -coverpkg=./... -coverprofile=coverage.out ./... -count=1

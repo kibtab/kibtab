@@ -216,6 +216,7 @@ This section holds no Kubernetes guide.
 
 ### Scope
 
+* [x] Make `make test` reach 100% coverage. It starts the database.
 * [ ] Add the connection pool settings. Read them from the environment.
 * [ ] Add the rate limit. Caddy sets the limit at the edge.
 * [ ] Add the route `GET /metrics`. It uses the Prometheus text format.
