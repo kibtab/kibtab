@@ -38,7 +38,7 @@ func (m *Metrics) IncrRequestsByRoute(route, status string) {
 
 // ObserveRequestLatency records the latency of a request in seconds.
 func (m *Metrics) ObserveRequestLatency(d time.Duration) {
-	// no-op for now; can be extended with a histogram later
+	// stored for potential future use; no-op for now
 	_ = d
 }
 
