@@ -37,6 +37,8 @@ services:
       # The container is reachable through its own address, not the loopback.
       KIBTAB_HOST: "0.0.0.0"
       DATABASE_URL: postgres://kibtab:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}@db:5432/kibtab?sslmode=disable
+      # The list that GET /v1/tables returns.
+      KIBTAB_TABLES: ${KIBTAB_TABLES:-}
     ports:
       # The operator checks the health route on the loopback of the host.
       - "127.0.0.1:8080:8080"
