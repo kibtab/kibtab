@@ -58,6 +58,8 @@ This target starts a dedicated PostgreSQL instance for testing:
 * It creates a test user `kibtab_test` and database `kibtab_test`.
 * It sets `KIBTAB_TEST_DATABASE_URL` for the test run.
 * It works with a local `pg_ctl` installation or Docker.
+* It reuses a database that already answers on the port.
+* It fails when the instance does not become ready.
 
 ### Stop The Testing Instance
 
@@ -67,7 +69,7 @@ make postgres-stop
 
 This target stops the testing instance and cleans up:
 
-* It stops the PostgreSQL process or Docker container.
+* It stops the local instance and the container.
 * It removes temporary data directories.
 * It does not affect any existing PostgreSQL installation.
 
