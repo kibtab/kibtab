@@ -36,7 +36,11 @@ git clone https://github.com/kibtab/kibtab.git
 cd kibtab
 printf 'POSTGRES_PASSWORD=%s\n' "$(openssl rand -hex 16)" > .env
 printf 'KIBTAB_DOMAIN=%s\n' example.com >> .env
+printf 'KIBTAB_TABLES=%s\n' orders,customers >> .env
 ```
+
+Set `KIBTAB_TABLES` to the tables for the table list.
+Read [the configuration guide](configuration.md) for the variable.
 
 Do not commit the `.env` file. The ignore rules hold that name.
 

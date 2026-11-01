@@ -62,8 +62,8 @@ Set each table in the registry. Use a comma between the names.
 KIBTAB_TABLES=orders,customers,inventory
 ```
 
-The registry limits the tables that a request can name.
-The instance rejects a table that the registry does not hold.
+The route `GET /v1/tables` returns the tables in this list.
+The list holds each table that the taskpane shows.
 
 ## The Pool
 
