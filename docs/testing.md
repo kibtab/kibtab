@@ -119,11 +119,43 @@ Kibtab holds three kinds of test.
 | Unit | The core. It uses a fake for each port. | No |
 | Contract | One adapter. It holds the adapter to a port. | For an engine |
 | Integration | Kibtab against a real database. | Yes |
+| End-to-end | The image, the stack, and the release binary. | For the stack |
 
 * Keep the core test suite free of a container.
 * Run the integration suite against a real database container.
 * Run the contract suite for an adapter. Never repeat it in each adapter.
 * Keep the client suite against a fake transport.
+
+## The End-To-End Layer
+
+The end-to-end tests carry the build tag `e2e`.
+A plain test run skips them.
+They check the two install paths of the self-hosting guides.
+
+| Test | Path that it checks | Needs |
+| --- | --- | --- |
+| `TestStackEndToEnd` | The compose stack with Caddy, Kibtab, and PostgreSQL. | Docker |
+| `TestImageEndToEnd` | The instance image with a database container. | Docker |
+| `TestReleaseEndToEnd` | The release binary with a native PostgreSQL and Caddy. | GoReleaser and Caddy |
+
+Run each test in the repository root.
+
+```bash
+go test -tags e2e ./cmd/kibtab/ -v
+```
+
+Run one test on its own.
+
+```bash
+go test -tags e2e ./cmd/kibtab/ -run TestImageEndToEnd -v
+```
+
+A test skips when a tool that it needs is missing.
+Each test holds its own compose project, port, and folder.
+Each test removes what it started when it ends.
+
+The deploy file suite needs no tag and no container.
+It reads each deploy file and it checks each setting.
 
 ## The Rules For A Test
 
