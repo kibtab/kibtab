@@ -193,12 +193,15 @@ This release holds no export of an audit row.
 
 * [x] Add the host setting `KIBTAB_HOST`. The container needs it.
 * [x] Add `.goreleaser.yaml`. It builds for Linux, macOS, and Windows.
-* [ ] Set `CGO_ENABLED=0` in the GoReleaser build environment.
-* [ ] Build an archive for each target. Use `tar.gz` for Linux and macOS.
+* [x] Set `CGO_ENABLED=0` in the GoReleaser build environment.
+* [x] Build an archive for each target. Use `tar.gz` for Linux and macOS.
       Use `zip` for Windows.
-* [ ] Add the checksum file for each release.
-* [ ] Read the release notes from `docs/changelogs/`.
-* [ ] Add `docs/THIRD_PARTY_NOTICES.md` to each archive.
+* [x] Add the checksum file for each release.
+* [x] Read the release notes from `docs/changelogs/`.
+* [x] Add `docs/THIRD_PARTY_NOTICES.md` to each archive.
+* [x] Add the target `make release-check`. It runs `goreleaser check`.
+* [x] Add the rows for GoReleaser, Caddy, and PostgreSQL to
+      `docs/THIRD_PARTY_NOTICES.md`.
 * [x] Keep `air.toml` at the repository root as the only reload file.
 * [x] Set `CGO_ENABLED=0` in every GoReleaser build and in every Make target
       that calls the Go tool.
