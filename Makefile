@@ -141,14 +141,14 @@ vet: ## Run go vet over all packages
 	CGO_ENABLED=0 $(GO) vet ./...
 
 lint: ## Run the Go linter over all packages
-	golangci-lint run ./...
+	CGO_ENABLED=0 golangci-lint run ./...
 
 fmt: ## Format all Go source with gofmt and golangci-lint
-	gofmt -w .
-	golangci-lint fmt
+	CGO_ENABLED=0 gofmt -w .
+	CGO_ENABLED=0 golangci-lint fmt
 
 tidy: ## Tidy the Go module files
-	$(GO) mod tidy
+	CGO_ENABLED=0 $(GO) mod tidy
 
 watch: ## Hot-reload cmd/kibtab on save (needs air)
 	air -c air.toml
@@ -240,8 +240,8 @@ clean: ## Remove the build artefacts
 		cpu.prof trace.out *.test
 
 tools: ## Install the development tools (air, goreleaser, golangci-lint)
-	go install github.com/air-verse/air@latest
-	go install github.com/goreleaser/goreleaser/v2@latest
-	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
-	go install github.com/vladopajic/go-test-coverage/v2@latest
-	go install golang.org/x/perf/cmd/benchstat@latest
+	CGO_ENABLED=0 $(GO) install github.com/air-verse/air@latest
+	CGO_ENABLED=0 $(GO) install github.com/goreleaser/goreleaser/v2@latest
+	CGO_ENABLED=0 $(GO) install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+	CGO_ENABLED=0 $(GO) install github.com/vladopajic/go-test-coverage/v2@latest
+	CGO_ENABLED=0 $(GO) install golang.org/x/perf/cmd/benchstat@latest

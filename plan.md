@@ -198,8 +198,8 @@ This release holds no export of an audit row.
 * [ ] Add the checksum file for each release.
 * [ ] Read the release notes from `docs/changelogs/`.
 * [ ] Add `docs/THIRD_PARTY_NOTICES.md` to each archive.
-* [ ] Keep `air.toml` at the repository root as the only reload file.
-* [ ] Set `CGO_ENABLED=0` in every GoReleaser build and in every Make target
+* [x] Keep `air.toml` at the repository root as the only reload file.
+* [x] Set `CGO_ENABLED=0` in every GoReleaser build and in every Make target
       that calls the Go tool.
 * [ ] Add `Dockerfile`. Use a multi-stage build and a `scratch` base.
 * [ ] Add `docker-compose.yml`. It holds Caddy, Kibtab, and PostgreSQL.
