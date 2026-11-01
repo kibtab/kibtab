@@ -18,6 +18,7 @@ The instance reads each setting from the environment.
 | Variable | Default | Purpose |
 | --- | --- | --- |
 | `PORT` | `8080` | The port for the API. |
+| `KIBTAB_HOST` | `127.0.0.1` | The address that the instance binds. |
 | `DATABASE_URL` | None | The connection string for the database. |
 | `KIBTAB_TABLES` | None | The tables in the registry. |
 | `KIBTAB_DB_MAX_CONNS` | `20` | The size of the connection pool. |
@@ -29,6 +30,18 @@ The instance reads each setting from the environment.
 
 The instance exits at start when a value is missing.
 The instance exits at start when a chosen adapter has no package.
+
+## The Host
+
+Keep `KIBTAB_HOST` at `127.0.0.1` on a bare host.
+The proxy holds the public address.
+
+A container sets `KIBTAB_HOST=0.0.0.0`.
+The other container in the stack then reaches the API.
+
+```bash
+KIBTAB_HOST=0.0.0.0
+```
 
 ## The Database
 

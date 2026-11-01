@@ -12,8 +12,7 @@ Each guide owns its own task.
 Kibtab is pre-release.
 The first release is v0.1.0.
 The stack arrives at v0.8.0.
-The file `docker-compose.yml` does not exist yet.
-Each guide in this folder is a pre-release draft.
+The file `docker-compose.yml` starts the three services.
 
 ## The Guides
 
@@ -36,7 +35,7 @@ The stack holds three services.
 | Service | Purpose |
 | --- | --- |
 | `caddy` | The edge proxy. It manages the TLS. |
-| `engine` | The Kibtab engine. It serves the API. |
+| `kibtab` | The instance. It serves the API. |
 | `db` | PostgreSQL. It holds the data. |
 
 Caddy handles the certificate.

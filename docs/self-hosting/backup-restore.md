@@ -48,7 +48,7 @@ Stop the instance before a restore.
 Keep the API closed while the data changes.
 
 ```bash
-docker compose stop engine
+docker compose stop kibtab
 ```
 
 Load the file into the database.
@@ -60,7 +60,7 @@ docker compose exec -T db psql -U kibtab_user kibtab_db < backup.sql
 Start the instance after the load.
 
 ```bash
-docker compose start engine
+docker compose start kibtab
 curl localhost:8080/healthz
 ```
 

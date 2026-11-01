@@ -205,20 +205,17 @@ This release holds no export of an audit row.
 * [x] Keep `air.toml` at the repository root as the only reload file.
 * [x] Set `CGO_ENABLED=0` in every GoReleaser build and in every Make target
       that calls the Go tool.
-* [ ] Add `Dockerfile`. Use a multi-stage build and a `scratch` base.
-* [ ] Add `docker-compose.yml`. It holds Caddy, Kibtab, and PostgreSQL.
-* [ ] Add `Caddyfile`. It holds the domain and the rate limit.
-* [ ] Add the target `make release-check`. It runs `goreleaser check`.
-* [ ] Add the rows for GoReleaser, Caddy, and PostgreSQL to
-      `docs/THIRD_PARTY_NOTICES.md`.
-* [ ] Add the section `docs/self-hosting/`. It holds the guides for a server.
-* [ ] Add the guide `docs/self-hosting/README.md`. It indexes the section.
-* [ ] Add the guide `docs/self-hosting/deployment.md`. It owns the first start.
-* [ ] Add the guide `docs/self-hosting/configuration.md`. It owns each setting.
-* [ ] Add the guide `docs/self-hosting/upgrade.md`. It owns each version change.
-* [ ] Add the guide `docs/self-hosting/backup-restore.md`. It owns the data.
-* [ ] Add the guide `docs/self-hosting/troubleshooting.md`. It owns each fault.
-* [ ] Link each self-hosting guide from the section index and from
+* [x] Add `Dockerfile`. Use a multi-stage build and a `scratch` base.
+* [x] Add `docker-compose.yml`. It holds Caddy, Kibtab, and PostgreSQL.
+* [x] Add `Caddyfile`. It holds the domain and the rate limit.
+* [x] Add the section `docs/self-hosting/`. It holds the guides for a server.
+* [x] Add the guide `docs/self-hosting/README.md`. It indexes the section.
+* [x] Add the guide `docs/self-hosting/deployment.md`. It owns the first start.
+* [x] Add the guide `docs/self-hosting/configuration.md`. It owns each setting.
+* [x] Add the guide `docs/self-hosting/upgrade.md`. It owns each version change.
+* [x] Add the guide `docs/self-hosting/backup-restore.md`. It owns the data.
+* [x] Add the guide `docs/self-hosting/troubleshooting.md`. It owns each fault.
+* [x] Link each self-hosting guide from the section index and from
       `docs/index.md`.
 
 ### Out Of Scope
@@ -228,11 +225,11 @@ This section holds no Kubernetes guide.
 
 ### Done When
 
-* [ ] `goreleaser check` passes.
-* [ ] A dry run produces an archive for each target.
+* [x] `goreleaser check` passes.
+* [x] A dry run produces an archive for each target.
 * [ ] The image starts and answers the health check.
-* [ ] `ldd` reports no dynamic library for the Linux binary.
-* [ ] `docs/changelogs/v0.8.0.md` exists.
+* [x] `ldd` reports no dynamic library for the Linux binary.
+* [x] `docs/changelogs/v0.8.0.md` exists.
 
 ## 10. Release v0.9.0 - Hardening
 

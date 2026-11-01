@@ -12,7 +12,6 @@ Read [the troubleshooting guide](troubleshooting.md) when a service fails.
 Kibtab is pre-release.
 The first release is v0.1.0.
 The stack arrives at v0.8.0.
-The file `docker-compose.yml` does not exist yet.
 The steps below apply from v0.8.0.
 
 ## The Requirements
@@ -30,12 +29,21 @@ docker compose version
 
 ## Deploy With Docker
 
-Clone the repository and start the stack.
+Clone the repository and set the secrets.
 
 ```bash
 git clone https://github.com/kibtab/kibtab.git
 cd kibtab
-docker compose up -d
+printf 'POSTGRES_PASSWORD=%s\n' "$(openssl rand -hex 16)" > .env
+printf 'KIBTAB_DOMAIN=%s\n' example.com >> .env
+```
+
+Do not commit the `.env` file. The ignore rules hold that name.
+
+Build the images and start the stack.
+
+```bash
+docker compose up -d --build
 ```
 
 Check each service after the start.
@@ -50,8 +58,11 @@ The route `GET /healthz` returns the status and the version.
 ## Set The Domain
 
 Caddy needs a domain name for the certificate.
+Set `KIBTAB_DOMAIN` in the `.env` file.
 Read the file `Caddyfile` before you start the stack.
-Set the domain in that file.
+
+The rate limit lives in the `Caddyfile`.
+The compose file builds the proxy with the module for it.
 
 ```bash
 docker compose down

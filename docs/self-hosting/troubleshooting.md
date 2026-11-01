@@ -22,7 +22,7 @@ docker compose ps
 Read the log of the service that failed.
 
 ```bash
-docker compose logs engine
+docker compose logs kibtab
 docker compose logs db
 docker compose logs caddy
 ```
@@ -34,7 +34,7 @@ Check the value of `DATABASE_URL`.
 Read [the configuration guide](configuration.md) for the variable.
 
 ```bash
-docker compose logs engine
+docker compose logs kibtab
 ```
 
 The instance exits when a chosen adapter has no package.
