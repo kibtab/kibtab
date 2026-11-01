@@ -29,6 +29,18 @@ make cover-verify
 `make cover` prints the per-function breakdown.
 `make cover-verify` fails below the floor.
 
+## Run The Tests
+
+`make test` starts the testing database and it runs each test.
+It prints the coverage of each package.
+It stops the database when the run ends.
+Without PostgreSQL or Docker, the integration tests skip.
+Read [the fallback section](#fallback-behaviour) for that case.
+
+```bash
+make test
+```
+
 ## PostgreSQL Testing
 
 The integration tests need a real PostgreSQL. The Makefile manages this
