@@ -27,7 +27,7 @@ This copy holds the skill only. Kibtab does not keep the upstream tools.
 
 ## Why Kibtab Vendors It
 
-The rules in `AGENTS.md` section 3 refer to this directory.
+The rules in `docs/conventions.md` refer to this directory.
 A vendored copy makes the rules stable.
 Upstream changes must not alter the output of a Kibtab release without a
 review.
