@@ -1,0 +1,27 @@
+# Caddy at the edge of the Kibtab stack.
+#
+# Caddy holds the domain and the TLS certificate. It holds the rate limit.
+# The instance holds no rate limit code.
+#
+# Set KIBTAB_DOMAIN to the domain of the server. The default is localhost.
+# Read docs/self-hosting/deployment.md for the first start.
+
+{
+	# The module order puts the rate limit before the other handlers.
+	order rate_limit before basicauth
+}
+
+{$KIBTAB_DOMAIN:localhost} {
+	encode zstd gzip
+
+	# 120 requests a minute for one client address.
+	rate_limit {
+		zone kibtab {
+			key {remote_host}
+			events 120
+			window 1m
+		}
+	}
+
+	reverse_proxy kibtab:8080
+}

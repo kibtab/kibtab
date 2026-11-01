@@ -1,0 +1,65 @@
+# The self-hosted Kibtab stack.
+#
+# Caddy holds the domain and the rate limit. Kibtab serves the API.
+# PostgreSQL holds the data.
+#
+# Read docs/self-hosting/deployment.md before the first start.
+# Set POSTGRES_PASSWORD and KIBTAB_DOMAIN in a .env file first.
+
+name: kibtab
+
+services:
+  caddy:
+    build:
+      context: .
+      target: caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      KIBTAB_DOMAIN: ${KIBTAB_DOMAIN:-localhost}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - kibtab
+
+  kibtab:
+    build:
+      context: .
+      target: kibtab
+    restart: unless-stopped
+    environment:
+      PORT: "8080"
+      # The container is reachable through its own address, not the loopback.
+      KIBTAB_HOST: "0.0.0.0"
+      DATABASE_URL: postgres://kibtab:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}@db:5432/kibtab?sslmode=disable
+    ports:
+      # The operator checks the health route on the loopback of the host.
+      - "127.0.0.1:8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: kibtab
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: kibtab
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kibtab -d kibtab"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  caddy_data:
+  caddy_config:
+  db_data:
