@@ -15,16 +15,16 @@ Each document holds its own rules. Do not work from this guide alone.
 | Reader | Read |
 | --- | --- |
 | A person | [the documentation index](https://kibtab.readthedocs.io/en/latest/). It lists every guide. |
-| An AI agent | [the agent rules](AGENTS.md). They bind an agent. |
+| An AI agent | [the agent context](AGENTS.md). It holds the agent protocol. |
 | A person who commits | [the commit format](#the-commit-message) below. |
 | A person who tests | [the testing guide](https://kibtab.readthedocs.io/en/latest/testing.html). |
 | A person who releases | [the releasing guide](https://kibtab.readthedocs.io/en/latest/releasing.html). |
 | A person who writes words | [the conventions guide](https://kibtab.readthedocs.io/en/latest/conventions.html). |
 | A person who adds a term | [the catalogue](https://kibtab.readthedocs.io/en/latest/ste100/index.html). |
 
-This guide holds the steps to send a change.
+This guide holds each rule for a change.
 The [documentation index](https://kibtab.readthedocs.io/en/latest/) holds the detail of each topic.
-The [agent rules](AGENTS.md) hold the rules that bind an AI agent.
+[The agent context](AGENTS.md) holds the protocol for an AI agent.
 
 ## Ways To Contribute
 
@@ -137,7 +137,7 @@ Use the name of the folder in the repository.
 | `deploy` | The `Dockerfile`, the `Caddyfile`, and the compose file. |
 | `release` | GoReleaser, the tags, and the archives. |
 | `build` | The `Makefile`, `air.toml`, and `.gitignore`. |
-| `docs` | Every file under `docs/`, plus `README.md`, `AGENTS.md`, and `plan.md`. |
+| `docs` | Every file under `docs/`, plus each document at the repository root. |
 | `deps` | `go.mod` and `go.sum`. |
 | `ci` | The workflow files. |
 | `scripts` | The check scripts under `scripts/`. |
@@ -204,8 +204,6 @@ The floor is 100.
 Never lower the floor to make a build pass.
 Never skip a test to make a build pass.
 
-Read section 4 of [the agent rules](AGENTS.md) for the rules that bind an agent.
-
 ## The Rules For A Change
 
 Read [the conventions guide](https://kibtab.readthedocs.io/en/latest/conventions.html) for the full rules.
@@ -220,9 +218,11 @@ The rules that most often catch a change:
 * Wrap a multi-cell update in one transaction.
 * Set `CGO_ENABLED=0` in every build and test command.
 * Write the documentation in Simplified Technical English and British English.
-  Read section 3 of [the agent rules](AGENTS.md) for both.
+  Read [the conventions guide](https://kibtab.readthedocs.io/en/latest/conventions.html)
+  for both.
 
-Read section 7 of [the agent rules](AGENTS.md) for the scope rules.
+Read [the conventions guide](https://kibtab.readthedocs.io/en/latest/conventions.html)
+for the scope rules.
 
 ## Run The Checks
 
@@ -246,7 +246,8 @@ make notice-check
 ```
 
 Read `make help` for the full list of targets.
-Read the gate rules in section 5 of [the agent rules](AGENTS.md).
+Read [the releasing guide](https://kibtab.readthedocs.io/en/latest/releasing.html)
+for the gate rules.
 
 ## Pull Requests
 

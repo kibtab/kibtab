@@ -113,7 +113,7 @@ Do not edit the copied work under `skills/simple-english/`.
 A change to that folder needs a new pinned commit.
 Read `skills/simple-english/VENDOR.md` for the refresh steps.
 
-Read [the agent rules](https://github.com/kibtab/kibtab/blob/main/AGENTS.md) before you contribute.
+Read [the contributing guide](https://github.com/kibtab/kibtab/blob/main/CONTRIBUTING.md) before you contribute.
 
 ## Next Steps
 

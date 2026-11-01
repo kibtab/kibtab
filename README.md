@@ -78,7 +78,7 @@ Read [the architecture guide](https://kibtab.readthedocs.io/en/latest/architectu
 | --- | --- |
 | [Plan](https://kibtab.readthedocs.io/en/latest/#releases) | The release plan. It splits the work by version. |
 | [Documentation index](https://kibtab.readthedocs.io/en/latest/) | The list of every document. |
-| [Agent rules](AGENTS.md) | The rules for AI coding agents. |
+| [Agent context](AGENTS.md) | The working agreement for AI coding agents. |
 | [Conventions](https://kibtab.readthedocs.io/en/latest/conventions.html) | The code, the documentation, and the scope rules. |
 | [Technical names](https://kibtab.readthedocs.io/en/latest/ste100/index.html) | The approved technical names for Kibtab. |
 | [Testing](https://kibtab.readthedocs.io/en/latest/testing.html) | The kinds of test and the coverage rules. |
@@ -94,17 +94,19 @@ Read [the architecture guide](https://kibtab.readthedocs.io/en/latest/architectu
 Documentation follows two styles at the same time.
 The first style is Simplified Technical English.
 The second style is British English.
-Read section 3 of [the agent rules](AGENTS.md) for both.
+Read [the conventions guide](https://kibtab.readthedocs.io/en/latest/conventions.html)
+for both.
 
 ## Contributing
 
-Read [the agent rules](AGENTS.md) before you write code.
+Read [the contributing guide](CONTRIBUTING.md) before you write code.
+Read [the agent context](AGENTS.md) when you are an AI agent.
 Read [the plan](https://kibtab.readthedocs.io/en/latest/#releases) before you start a task.
 Each task in the plan is a markdown check box.
 Read [the contributing guide](CONTRIBUTING.md) for the full steps.
 
 Every commit uses Conventional Commits.
-Read section 6 of [the agent rules](AGENTS.md) for the format and the scopes.
+Read [the contributing guide](CONTRIBUTING.md) for the format and the scopes.
 
 ## Acknowledgements
 

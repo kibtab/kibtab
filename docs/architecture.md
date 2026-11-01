@@ -4,7 +4,7 @@ Version 0.7.0. This document holds the design of Kibtab.
 It holds the layer rules and the port contract.
 
 This document holds the canonical layout and the canonical port table.
-Read section 1 of [the agent rules](https://github.com/kibtab/kibtab/blob/main/AGENTS.md) for the rules for agents.
+Read [the contributing guide](https://github.com/kibtab/kibtab/blob/main/CONTRIBUTING.md) for the rules for a change.
 
 ## The Goal
 
@@ -39,7 +39,7 @@ kibtab/
 │   └── self-hosting/        The guides for a server.
 ├── scripts/                 The checks that run without a container.
 ├── skills/simple-english/   The vendored writing skill.
-├── AGENTS.md                The rules for agents.
+├── AGENTS.md                The agent context and the routing.
 ├── CONTRIBUTING.md          The steps to send a change.
 ├── plan.md                  The implementation plan.
 ├── Makefile                 The build, test, and release targets.
@@ -161,5 +161,5 @@ is available locally.
 ## Next Steps
 
 * Read [the plan](https://github.com/kibtab/kibtab/blob/main/plan.md) for the version that adds each adapter.
-* Read section 1 of [the agent rules](https://github.com/kibtab/kibtab/blob/main/AGENTS.md) for the rules.
+* Read [the conventions guide](conventions.md) for the code rules.
 * Read [the install guide](install.md) to build Kibtab.

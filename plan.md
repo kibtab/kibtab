@@ -34,8 +34,8 @@ The template is in `docs/changelogs/TEMPLATE.md`.
 ## 1. Release Milestones
 
 This plan holds the work, not the rules.
-The rules live in [the agent rules](AGENTS.md).
-The gate for a release lives in `AGENTS.md` section 5.
+The rules live in [the contributing guide](CONTRIBUTING.md).
+The gate for a release lives in [the releasing guide](docs/releasing.md).
 
 | Version | Theme | Result |
 | --- | --- | --- |
@@ -55,7 +55,7 @@ Every version keeps the Go 1 compatibility promise.
 Read [the Go 1 compatibility document](https://go.dev/doc/go1compat)
 before you change the code.
 Code that builds on Go 1.22 keeps building on each later release.
-Section 2 of [the agent rules](AGENTS.md) holds each rule for the code.
+The [conventions guide](docs/conventions.md) holds each rule for the code.
 
 ## 2. Release v0.1.0 - Skeleton
 
@@ -348,5 +348,5 @@ The boxes stay open until the work starts.
 
 ## 14. When A Release Is Done
 
-A release is done when each check in `AGENTS.md` section 5 passes.
-Read that section before you tag a release.
+A release is done when each check in [the releasing guide](docs/releasing.md)
+passes. Read that guide before you tag a release.

@@ -36,7 +36,7 @@ The `Added` and `Upgrade` sections must stay.
   tag.
 * Put the version number in the first line of the file.
 * Write in Simplified Technical English and British English.
-  The rules are in `../../AGENTS.md` section 3.
+  The rules are in [the conventions guide](../conventions.md).
 * Keep each sentence under 20 words.
 * Add the links to the issues and to the pull requests.
 * The `Upgrade` section holds numbered steps. Put the condition before each

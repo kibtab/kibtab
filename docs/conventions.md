@@ -2,7 +2,6 @@
 
 Version 0.0.0-docs. This document holds the conventions for the Kibtab codebase.
 
-Read [the agent rules](https://github.com/kibtab/kibtab/blob/main/AGENTS.md) for the rules that bind an agent.
 Read [the contributing guide](https://github.com/kibtab/kibtab/blob/main/CONTRIBUTING.md) for the steps to send a change.
 Read [the architecture guide](architecture.md) for the tree and the ports.
 
@@ -11,6 +10,16 @@ Read [the architecture guide](architecture.md) for the tree and the ports.
 * Use Go 1.22. Kibtab targets `go 1.22` in `go.mod`. Kibtab does not raise
   the version for a newer release. Go 1.22 is mature and it runs on every
   CI platform, on `golang:1.22-alpine`, and in the GoReleaser pipeline.
+* Keep the Go 1 compatibility promise. Read
+  [the Go 1 compatibility document](https://go.dev/doc/go1compat).
+  Code that builds on Go 1.22 keeps building on each later release.
+* Never use a language feature or a standard package that a release after
+  Go 1.22 adds. Raise the pin in `go.mod` first.
+* Use a keyed struct literal for a type from another package.
+  Write `domain.Row{ID: id}`. Never write `domain.Row{id}`.
+* Never use a dot import. Name the package at each use.
+* Never import `unsafe`. Never depend on undefined behaviour or on a
+  compiler bug.
 * Run `gofmt` on all code. Run `go vet` before you commit.
 * Handle all errors directly. Never ignore a returned error.
 * Use the standard library first. Add a dependency only for a real need.

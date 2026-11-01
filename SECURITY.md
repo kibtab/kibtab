@@ -8,7 +8,8 @@ Report a vulnerability in private.
 Do not open a public issue.
 
 Read [the documentation index](https://kibtab.readthedocs.io/en/latest/) for every guide.
-Read [the agent rules](AGENTS.md) before you change code for a report.
+Read [the contributing guide](CONTRIBUTING.md) before you change code for a
+report.
 
 ## How To Report
 

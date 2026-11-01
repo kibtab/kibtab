@@ -2,7 +2,7 @@
 
 Version 0.0.0-docs. This document holds the versioning and the release steps.
 
-Read section 5 of [the agent rules](https://github.com/kibtab/kibtab/blob/main/AGENTS.md) for the rules that bind an agent.
+Read [the contributing guide](https://github.com/kibtab/kibtab/blob/main/CONTRIBUTING.md) for the rules that bind a release.
 Read [the changelog format](changelogs/README.md) for the file layout.
 Read [the plan](https://github.com/kibtab/kibtab/blob/main/plan.md) for the scope of each version.
 

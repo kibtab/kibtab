@@ -12,7 +12,7 @@ It rejects a write from an old client.
 | --- | --- |
 | [Readme](https://github.com/kibtab/kibtab/blob/main/README.md) | The project summary. It is the front page. |
 | [Plan](https://github.com/kibtab/kibtab/blob/main/plan.md) | The release plan. It splits the work by version. |
-| [Agent Rules](https://github.com/kibtab/kibtab/blob/main/AGENTS.md) | The rules for AI coding agents. |
+| [Agent Context](https://github.com/kibtab/kibtab/blob/main/AGENTS.md) | The working agreement for AI coding agents. |
 | [Install](install.md) | The install steps for a binary or a source build. |
 | [Self-hosting](self-hosting/README.md) | The section for running Kibtab on a server. |
 | [Architecture](architecture.md) | The layers, the ports, and the extension steps. |
@@ -86,7 +86,7 @@ Each one updates when its release arrives.
 Write each document in two styles at the same time.
 The first style is Simplified Technical English.
 The second style is British English.
-The full rules are in `../AGENTS.md` section 3.
+The full rules are in [the conventions guide](conventions.md).
 The detail is in [the conventions guide](conventions.md).
 The approved technical names are in [the catalogue](ste100/index.md).
 
