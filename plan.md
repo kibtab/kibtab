@@ -227,7 +227,7 @@ This section holds no Kubernetes guide.
 
 * [x] `goreleaser check` passes.
 * [x] A dry run produces an archive for each target.
-* [ ] The image starts and answers the health check.
+* [x] The image starts and answers the health check.
 * [x] `ldd` reports no dynamic library for the Linux binary.
 * [x] `docs/changelogs/v0.8.0.md` exists.
 

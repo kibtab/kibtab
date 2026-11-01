@@ -1,0 +1,36 @@
+# The build context holds the Go source and the documents only.
+# Each entry below is large, generated, or secret.
+
+# Version control and tool output
+.git
+.github
+bin
+dist
+tmp
+.headroom
+
+# The client build runs in its own job. The instance does not need it.
+client/excel/node_modules
+client/excel/dist
+
+# Documentation output and the local Python environment
+.venv
+docs/_build
+__pycache__
+
+# Test, coverage, and benchmark output
+coverage.out
+coverage.svg
+*.test
+build-errors.log
+bench.txt
+new-bench.txt
+cpu.prof
+trace.out
+
+# Build artefacts and local secrets
+*.zip
+.env
+.env.*
+*.swp
+.DS_Store

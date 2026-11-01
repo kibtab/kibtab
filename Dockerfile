@@ -31,7 +31,7 @@ EXPOSE 8080
 ENTRYPOINT ["/kibtab"]
 
 # Caddy holds the rate limit, so the image carries the module for it.
-FROM caddy:builder AS caddy-build
+FROM caddy:2-builder AS caddy-build
 RUN xcaddy build --with github.com/mholt/caddy-ratelimit
 
 FROM caddy:2-alpine AS caddy
