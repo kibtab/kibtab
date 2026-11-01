@@ -66,6 +66,6 @@ release:
   # release and not a draft. The body links the changelog file of the tag.
   draft: false
   header: |
-    [The release notes for {{ .Tag }}](https://github.com/kibtab/kibtab/blob/main/docs/changelogs/{{ .Tag }}.md)
+    [The release notes for {{ .Tag }}](https://kibtab.readthedocs.io/en/latest/docs/changelogs/{{ .Tag }}.md)
   footer: |
-    [The full changelog](https://github.com/kibtab/kibtab/blob/main/docs/index.md)
+    [The full changelog](https://kibtab.readthedocs.io/en/latest/docs/index.md)
