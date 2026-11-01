@@ -191,32 +191,7 @@ This release holds no export of an audit row.
 
 ### Scope
 
-* [x] Add the host setting `KIBTAB_HOST`. The container needs it.
-* [x] Add `.goreleaser.yaml`. It builds for Linux, macOS, and Windows.
-* [x] Set `CGO_ENABLED=0` in the GoReleaser build environment.
-* [x] Build an archive for each target. Use `tar.gz` for Linux and macOS.
-      Use `zip` for Windows.
-* [x] Add the checksum file for each release.
-* [x] Read the release notes from `docs/changelogs/`.
-* [x] Add `docs/THIRD_PARTY_NOTICES.md` to each archive.
-* [x] Add the target `make release-check`. It runs `goreleaser check`.
-* [x] Add the rows for GoReleaser, Caddy, and PostgreSQL to
-      `docs/THIRD_PARTY_NOTICES.md`.
-* [x] Keep `air.toml` at the repository root as the only reload file.
-* [x] Set `CGO_ENABLED=0` in every GoReleaser build and in every Make target
-      that calls the Go tool.
-* [x] Add `Dockerfile`. Use a multi-stage build and a `scratch` base.
-* [x] Add `docker-compose.yml`. It holds Caddy, Kibtab, and PostgreSQL.
-* [x] Add `Caddyfile`. It holds the domain and the rate limit.
-* [x] Add the section `docs/self-hosting/`. It holds the guides for a server.
-* [x] Add the guide `docs/self-hosting/README.md`. It indexes the section.
-* [x] Add the guide `docs/self-hosting/deployment.md`. It owns the first start.
-* [x] Add the guide `docs/self-hosting/configuration.md`. It owns each setting.
-* [x] Add the guide `docs/self-hosting/upgrade.md`. It owns each version change.
-* [x] Add the guide `docs/self-hosting/backup-restore.md`. It owns the data.
-* [x] Add the guide `docs/self-hosting/troubleshooting.md`. It owns each fault.
-* [x] Link each self-hosting guide from the section index and from
-      `docs/index.md`.
+Implemented, see [v0.8.0 changelog](docs/changelogs/v0.8.0.md).
 
 ### Out Of Scope
 
@@ -231,6 +206,8 @@ This section holds no Kubernetes guide.
 * [x] `ldd` reports no dynamic library for the Linux binary.
 * [x] A unit test reads each deploy file. It needs no Docker.
 * [x] The end-to-end test writes a row through the stack.
+* [x] The image test checks the container itself.
+* [x] The release test runs the binary behind Caddy.
 * [x] `docs/changelogs/v0.8.0.md` exists.
 
 ## 10. Release v0.9.0 - Hardening
