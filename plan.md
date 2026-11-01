@@ -218,6 +218,7 @@ This section holds no Kubernetes guide.
 
 * [x] Make `make test` reach 100% coverage. It starts the database.
 * [x] Reuse a database that already answers on the test port.
+* [x] Start the database in each coverage target.
 * [ ] Add the connection pool settings. Read them from the environment.
 * [ ] Add the rate limit. Caddy sets the limit at the edge.
 * [ ] Add the route `GET /metrics`. It uses the Prometheus text format.

@@ -10,7 +10,7 @@ CHANGELOG_URL_BASE := https://github.com/kibtab/kibtab/blob/main/docs/changelogs
 
 .DEFAULT_GOAL := help
 
-.PHONY: help build install run test cover cover-html cover-verify coverage-svg \
+.PHONY: help build install run test cover cover-test cover-html cover-verify coverage-svg \
         vet lint fmt tidy watch release-test release-check snapshot \
         bench bench-all bench-save bench-compare \
         profile-cpu profile-trace \
@@ -48,17 +48,20 @@ test: postgres-start ## Run all tests with a coverage summary
 	$(MAKE) postgres-stop; \
 	exit $$status
 
-cover: ## Run the tests and print the per-function coverage breakdown
-	CGO_ENABLED=0 $(GO) test -coverpkg=./... -coverprofile=coverage.out ./... -count=1
+cover-test: postgres-start ## Run every test with the module instrumented into coverage.out
+	CGO_ENABLED=0 KIBTAB_TEST_DATABASE_URL="$(PG_TEST_URL_BASE)" $(GO) test -coverpkg=./... -coverprofile=coverage.out ./... -count=1; \
+	status=$$?; \
+	$(MAKE) postgres-stop; \
+	exit $$status
+
+cover: cover-test ## Run the tests and print the per-function coverage breakdown
 	@$(GO) tool cover -func=coverage.out
 
-coverage-svg: ## Regenerate the coverage badge from the test run
-	CGO_ENABLED=0 $(GO) test -coverpkg=./... -coverprofile=coverage.out ./... -count=1
+coverage-svg: cover-test ## Regenerate the coverage badge from the test run
 	@go-test-coverage -p coverage.out -b coverage.svg 2>/dev/null || \
 		echo "install go-test-coverage to regenerate the badge (make tools)"
 
-cover-html: ## Run the tests and open the HTML coverage report in a browser
-	CGO_ENABLED=0 $(GO) test -coverpkg=./... -coverprofile=coverage.out ./... -count=1
+cover-html: cover-test ## Run the tests and open the HTML coverage report in a browser
 	$(GO) tool cover -html=coverage.out
 
 PG_TEST_PORT ?= 5433
@@ -66,15 +69,13 @@ PG_TEST_USER ?= kibtab_test
 PG_TEST_DB ?= kibtab_test
 PG_TEST_URL_BASE := postgres://$(PG_TEST_USER):test@localhost:$(PG_TEST_PORT)/postgres?sslmode=disable
 
-cover-verify: postgres-start ## Fail when module coverage sits below the floor
-	CGO_ENABLED=0 KIBTAB_TEST_DATABASE_URL="$(PG_TEST_URL_BASE)" $(GO) test -coverpkg=./... -coverprofile=coverage.out ./... -count=1
+cover-verify: cover-test ## Fail when module coverage sits below the floor
 	@total=$$($(GO) tool cover -func=coverage.out | awk '/^total:/ {gsub("%",""); print $$3}'); \
 	echo "total coverage: $$total% (floor $(COVERAGE_FLOOR)%)"; \
 	rm -f coverage.out; \
 	if awk "BEGIN {exit !($$total < $(COVERAGE_FLOOR))}"; then \
 		echo "coverage below the $(COVERAGE_FLOOR)% floor" >&2; exit 1; \
 	fi
-	@$(MAKE) postgres-stop
 
 postgres-start: ## Start a dedicated PostgreSQL instance for testing
 	@if command -v pg_isready >/dev/null 2>&1 && \

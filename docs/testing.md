@@ -23,10 +23,16 @@ The floor lives in `Makefile` as `COVERAGE_FLOOR`.
 
 ```bash
 make cover
+make coverage-svg
+make cover-html
 make cover-verify
 ```
 
+Each target uses one run of the tests.
+The run starts the testing database, so the integration tests count.
 `make cover` prints the per-function breakdown.
+`make coverage-svg` writes the badge.
+`make cover-html` opens the report in a browser.
 `make cover-verify` fails below the floor.
 
 ## Run The Tests
