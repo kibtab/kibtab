@@ -64,7 +64,7 @@ coverage-svg: cover-test ## Regenerate the coverage badge from the test run
 cover-html: cover-test ## Run the tests and open the HTML coverage report in a browser
 	$(GO) tool cover -html=coverage.out
 
-PG_TEST_PORT ?= 5433
+PG_TEST_PORT ?= 5432
 PG_TEST_USER ?= kibtab_test
 PG_TEST_DB ?= kibtab_test
 PG_TEST_URL_BASE := postgres://$(PG_TEST_USER):test@localhost:$(PG_TEST_PORT)/postgres?sslmode=disable

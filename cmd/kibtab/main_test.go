@@ -686,3 +686,81 @@ func TestRunReturnsEngineCreationError(t *testing.T) {
 		t.Fatalf("run with engine error: got %v, want %v", err, creationErr)
 	}
 }
+
+// TestMetricsEndpoint tests the /metrics endpoint returns Prometheus text format.
+func TestMetricsEndpoint(t *testing.T) {
+	m := &metrics.Metrics{}
+	handler := metricsHandler(m)
+
+	ts := httptest.NewServer(newMux(nil, m))
+	t.Cleanup(ts.Close)
+
+	// Test GET /metrics
+	req := httptest.NewRequest(http.MethodGet, "/metrics", nil)
+	recorder := httptest.NewRecorder()
+	handler(recorder, req)
+
+	if recorder.Code != http.StatusOK {
+		t.Fatalf("status code: got %d, want %d", recorder.Code, http.StatusOK)
+	}
+
+	// Verify content type is Prometheus text format
+	contentType := recorder.Header().Get("Content-Type")
+	if !strings.Contains(contentType, "text/plain") {
+		t.Fatalf("content type: got %q, want text/plain", contentType)
+	}
+
+	// Verify metrics output
+	body := recorder.Body.String()
+	if body == "" {
+		t.Fatal("metrics output is empty")
+	}
+	if !strings.Contains(body, "kibtab_requests_total") {
+		t.Fatalf("metrics: expected 'kibtab_requests_total' in output, got: %s", body)
+	}
+	if !strings.Contains(body, "kibtab_requests") {
+		t.Fatalf("metrics: expected 'kibtab_requests' in output, got: %s", body)
+	}
+}
+
+// TestMetricsEndpointRejectsNonGetMethod tests that /metrics rejects non-GET methods.
+func TestMetricsEndpointRejectsNonGetMethod(t *testing.T) {
+	m := &metrics.Metrics{}
+	handler := metricsHandler(m)
+
+	// Test POST /metrics
+	recorder := httptest.NewRecorder()
+	request := httptest.NewRequest(http.MethodPost, "/metrics", nil)
+	handler(recorder, request)
+
+	if recorder.Code != http.StatusMethodNotAllowed {
+		t.Fatalf("POST: got %d, want %d", recorder.Code, http.StatusMethodNotAllowed)
+	}
+	if got := recorder.Header().Get("Allow"); got != http.MethodGet {
+		t.Fatalf("POST: Allow header: got %q, want %q", got, http.MethodGet)
+	}
+
+	// Test PUT /metrics
+	recorder = httptest.NewRecorder()
+	request = httptest.NewRequest(http.MethodPut, "/metrics", nil)
+	handler(recorder, request)
+
+	if recorder.Code != http.StatusMethodNotAllowed {
+		t.Fatalf("PUT: got %d, want %d", recorder.Code, http.StatusMethodNotAllowed)
+	}
+	if got := recorder.Header().Get("Allow"); got != http.MethodGet {
+		t.Fatalf("PUT: Allow header: got %q, want %q", got, http.MethodGet)
+	}
+
+	// Test DELETE /metrics
+	recorder = httptest.NewRecorder()
+	request = httptest.NewRequest(http.MethodDelete, "/metrics", nil)
+	handler(recorder, request)
+
+	if recorder.Code != http.StatusMethodNotAllowed {
+		t.Fatalf("DELETE: got %d, want %d", recorder.Code, http.StatusMethodNotAllowed)
+	}
+	if got := recorder.Header().Get("Allow"); got != http.MethodGet {
+		t.Fatalf("DELETE: Allow header: got %q, want %q", got, http.MethodGet)
+	}
+}
