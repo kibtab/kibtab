@@ -5,7 +5,7 @@ dist/
 *.zip
 
 # Test and coverage output
-coverage*.out
+*out
 *.test
 build-errors.log
 cpu.prof
