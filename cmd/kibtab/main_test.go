@@ -85,6 +85,18 @@ func TestListenAddress(t *testing.T) {
 		{name: "host and port",
 			env:  map[string]string{"KIBTAB_HOST": "0.0.0.0", "PORT": "9001"},
 			want: "0.0.0.0:9001"},
+		{name: "host and one",
+			env:  map[string]string{"KIBTAB_HOST": "0.0.0.0", "PORT": "1"},
+			want: "0.0.0.0:1"},
+		{name: "host and a bad port",
+			env:     map[string]string{"KIBTAB_HOST": "0.0.0.0", "PORT": "http"},
+			wantErr: true},
+		{name: "host and zero",
+			env:     map[string]string{"KIBTAB_HOST": "0.0.0.0", "PORT": "0"},
+			wantErr: true},
+		{name: "host and a port above the range",
+			env:     map[string]string{"KIBTAB_HOST": "0.0.0.0", "PORT": "65536"},
+			wantErr: true},
 	}
 	for _, testCase := range cases {
 		t.Run(testCase.name, func(t *testing.T) {

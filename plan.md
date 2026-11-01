@@ -229,6 +229,8 @@ This section holds no Kubernetes guide.
 * [x] A dry run produces an archive for each target.
 * [x] The image starts and answers the health check.
 * [x] `ldd` reports no dynamic library for the Linux binary.
+* [x] A unit test reads each deploy file. It needs no Docker.
+* [x] The end-to-end test writes a row through the stack.
 * [x] `docs/changelogs/v0.8.0.md` exists.
 
 ## 10. Release v0.9.0 - Hardening
